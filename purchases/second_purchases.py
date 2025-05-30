@@ -115,11 +115,11 @@
 import pandas as pd
 import random
 
-input_file = "/home/thrymr/Downloads/Puchase_Agri_Feb_24-25.xlsx"
+input_file = "/home/thrymr/Downloads/january.xlsx"
 
 
 zone_file = "/home/thrymr/Downloads/zone_user_category_modified.xlsx"
-output_file = "/home/thrymr/Downloads/Puchase_Agri_Feb_24-25.xlsx"
+output_file = "/home/thrymr/Downloads/Puchase_Jan_24-25.xlsx"
 
 # Load data
 input_df = pd.read_excel(input_file)
@@ -168,12 +168,14 @@ district_hesaathi_map = zone_df.groupby("District")["Hesaathi Code"].apply(list)
 
 # Custom district mappings for fallback logic
 district_code_mappings = {
-    # "vijayawada": ["srikakulam", "kurnool", "guntur", "visakhapatnam"],
-    # "wanaparthy": ["medak", "warangal", "adilabad", "nalgonda"],
-    # "balasore": ["angul", "balangir", "boudh", "cuttak"],
-    # "sangareddy": ["karim nagar", "nizamabad", "rangareddy", "warangal"],
-    # "vikarabad": ["medak", "warangal","nizamabad", "rangareddy"],
- 
+    "vijayawada": ["srikakulam", "kurnool", "guntur", "visakhapatnam"],
+    "wanaparthy": ["medak", "warangal", "adilabad", "nalgonda"],
+    "balasore": ["angul", "balangir", "boudh", "cuttak"],
+    "sangareddy": ["karim nagar", "nizamabad", "rangareddy", "warangal"],
+    "vikarabad": ["medak", "warangal","nizamabad", "rangareddy"],
+    "ujjain": ["dhule", "jalgaon", "buldhana", "amravati"],
+    "dhar": ["dhule", "jalgaon", "buldhana", "amravati"]
+
 }
 
 def get_hesaathi_for_district(district):

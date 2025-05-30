@@ -29,13 +29,13 @@ def draw_product_table(c, items, margin_left, first_page_table_y, subsequent_pag
         product_name = item['Product_Name'][:26]  
         if len(item['Product_Name']) > 26:
             product_name += ".."  
-
+        hsn = item.get('Hsn_Code')
         amount = (item['Product_Qty'] * float(item['Net_Price_Pu'])) + float(item['Cgst']) + float(item['Sgst'])
         total_amount += amount  
         table_data.append([
             str(i),
             product_name,
-            str(int(item['Hsn_Code'])) if item['Hsn_Code'] and not math.isnan(item['Hsn_Code']) else "",
+            hsn,
             round(item['Product_Qty'], 2),
             f"{float(item['Net_Price_Pu']):.2f}",
             item["Gst_Rate"] * 100,
@@ -352,9 +352,9 @@ def generate_challans_from_excel(excel_file, output_pdf):
  
     print(f"PDF generated as {output_pdf}")
 
-excel_file = '/home/thrymr/Desktop/Purchase_order_PDFs(2024-25)/PO_input_files_Agri(24-25)_apr-sep/with_vendordata_Agri Purchase September-24.xlsx'
+excel_file = '/home/thrymr/Desktop/Purchase_order_PDFs(2024-25)/PO_input_files_Consumer(24-25)_apr-sep/with_vendordata_Consumer Purchase May-24.xlsx'
 
-output_pdf = '/home/thrymr/Downloads/Agri_PO_September(24-25).pdf'
+output_pdf = '/home/thrymr/Desktop/Purchase_order_PDFs(2024-25)/Consumer_PO_pdfs_apr-sep(24-25)/Consumer_PO_May(24-25).pdf'
  
 generate_challans_from_excel(excel_file, output_pdf)
 

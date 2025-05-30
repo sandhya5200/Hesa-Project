@@ -1,11 +1,11 @@
 import pandas as pd
 
 # Load your Excel file
-df = pd.read_excel("/home/thrymr/Downloads/sample_September(24).xlsx")
+df = pd.read_excel("/home/thrymr/Downloads/for_percentages.xlsx")
 
 # Group by state, district, sub_vertical, gst_rate and sum taxable_value
 grouped = df.groupby(
-    ['Date', 'Vertical', 'Sub Vertical', 'State', 'District', 'gst_rate'],
+    ['Date', 'Vertical', 'Sub Vertical', 'State', 'District', 'GST Rate'],
     as_index=False
 )['Taxable Value'].sum()
 
@@ -20,4 +20,4 @@ grouped['percentage_of_total'] = grouped['percentage_of_total'].round(100)
 grouped['Taxable Value'] = grouped['Taxable Value'].round(100)
 
 # Save to Excel
-grouped.to_excel("/home/thrymr/Downloads/output_summary_september.xlsx", index=False)
+grouped.to_excel("/home/thrymr/Downloads/output_summary_April.xlsx", index=False)

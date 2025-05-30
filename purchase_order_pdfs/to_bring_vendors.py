@@ -1,7 +1,7 @@
 import pandas as pd
 
 # Load input file
-input_df = pd.read_excel("/home/thrymr/Desktop/purchases(2024-25)/Hesa Agritech Private Limited/Agri Purchase Sep-24.xlsx")  # Change to .csv if needed
+input_df = pd.read_excel("/home/thrymr/Desktop/purchases(2024-25)/Hesa Consumer Products Private Limited/Consumer Purchase May-24.xlsx")  # Change to .csv if needed
 
 input_df['vendor_id_norm'] = input_df['Vendor_Id'].astype(str).str.lower().str.replace(" ", "")
 input_df['vendor_state_norm'] = input_df['Vendor_State'].astype(str).str.lower().str.replace(" ", "")
@@ -65,5 +65,5 @@ for idx, row in input_df.iterrows():
 final_df = pd.DataFrame(merged_rows)
 
 # Save to Excel
-final_df.to_excel("/home/thrymr/Downloads/with_vendordata_Agri Purchase September-24.xlsx", index=False)
+final_df.to_excel("/home/thrymr/Desktop/Purchase_order_PDFs(2024-25)/PO_input_files_Consumer(24-25)_apr-sep/with_vendordata_Consumer Purchase May-24.xlsx", index=False)
 print("✅ Merged output saved!")

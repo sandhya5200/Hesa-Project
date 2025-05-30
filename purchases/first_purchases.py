@@ -11,18 +11,18 @@ month_map = [
     "Oct'24", "Nov'24", "Dec'24","Jan'25", "Feb'25", "Mar'25"
 ]
 business_dict = {
-    "Agri inputs": [0, 8.95, 0, 8.75, 8.72, 8.76, 8.75, 8.76, 8.71, 0, 0, 0],                #these are in the order of  jan-dec
-    "Market Linkages": [0, 9.77, 0, 9.6, 9.65, 9.69, 9.68, 9.69, 9.69, 0, 0, 0],
-    "Value Intervention": [0, 15.23, 0, 14.71, 14.74, 14.78, 14.77, 14.75, 14.79, 0, 0, 0],
-    "Fmcg": [0, 8.88, 0, 8.77, 8.79, 8.79, 8.78, 8.79, 8.80, 0, 0, 0],
-    "White Label": [0, 24.50, 0, 24.39, 24.44, 24.45, 24.44, 24.45, 24.45, 0, 0, 0]
+    "Agri inputs": [8.92, 8.95, 9.04, 8.75, 8.72, 8.76, 8.75, 8.76, 8.71, 8.77, 8.90, 8.91],                #these are in the order of  jan-dec
+    "Market Linkages": [9.75, 9.77, 9.80, 9.6, 9.65, 9.69, 9.68, 9.69, 9.69, 9.70, 9.73, 9.74],
+    "Value Intervention": [14.87, 15.23, 15.24, 14.71, 14.74, 14.78, 14.77, 14.75, 14.79, 14.79, 14.85, 14.86],
+    "Fmcg": [8.87, 8.88, 8.91, 8.77, 8.79, 8.79, 8.78, 8.79, 8.80, 8.81, 8.91, 8.86],
+    "White Label": [24.48, 24.50, 24.52, 24.39, 24.44, 24.45, 24.44, 24.45, 24.45, 24.47, 24.47, 24.48]
 }
 
 # @app.post("/purchases")
 def purchase():
     print("before")
-    product_quantity = pd.read_excel("/home/thrymr/Downloads/FEB -Quantity.xlsx")
-    product_gross = pd.read_excel("/home/thrymr/Downloads/Agri sales taxable feb-25.xlsx")
+    product_quantity = pd.read_excel("/home/thrymr/Downloads/oct_qty.xlsx")
+    product_gross = pd.read_excel("/home/thrymr/Downloads/oct-gross.xlsx")
     zone_df = pd.read_excel("/home/thrymr/Downloads/zone_user_category (5) 1.xlsx",sheet_name="Data")
     products_data = pd.read_excel("/home/thrymr/Downloads/Copy of telangana_logics_new (1)(1).xlsx",sheet_name="Products")
     #vendor = pd.read_excel("/home/thrymr/Downloads/Vendor data 1 1.xlsx",sheet_name="10-15 vendors from this data")
@@ -48,8 +48,8 @@ def purchase():
 
         print(row_data[0])
 
-        # date_value = datetime.datetime.strptime(row_data[0], '%d-%m-%Y')
-        date_value = datetime.datetime.strptime(str(row_data[0]), '%Y-%m-%d %H:%M:%S')
+        date_value = datetime.datetime.strptime(row_data[0], '%d-%m-%Y')
+        # date_value = datetime.datetime.strptime(str(row_data[0]), '%Y-%m-%d %H:%M:%S')
 
         
         next_day = date_value + datetime.timedelta(days=1)
@@ -61,7 +61,7 @@ def purchase():
         if d!=date_value:
             d= date_value
             
-        vertical = "Consumer" if subv in ["FMCG","White label"] else "Agri Business"
+        vertical = "Consumer Business" if subv in ["Fmcg","White Label"] else "Agri Business"
         p_name = row_data[2]
         if pd.isna(p_name):
             continue
@@ -216,7 +216,7 @@ def purchase():
     df = pd.DataFrame(rows)
     df["Purchase Order Number"] = "HS-PO-AG-"+(df.groupby(["Date", "Customer Name"]).ngroup() + 1).apply(lambda x: f"{x:06d}")
     print(len(rows))                
-    df.to_excel("/home/thrymr/Downloads/february_to_be_deleted.xlsx")
+    df.to_excel("/home/thrymr/Downloads/october.xlsx")
     print("completed")
     
 purchase()

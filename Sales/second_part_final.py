@@ -1,5 +1,5 @@
 import pandas as pd
-df = pd.read_excel("/home/thrymr/Downloads/Cons_April_25_output_to_check.xlsx")
+df = pd.read_excel("/home/thrymr/Downloads/agri_sep_25_output_to_check.xlsx")
 
 df["row_index"] = df.index
 
@@ -39,16 +39,26 @@ final_df["Line Total"] = pd.to_numeric(final_df["Line Total"], errors="coerce")
 final_df["Applied GST"] = pd.to_numeric(final_df["Applied GST"], errors="coerce")
 final_df["Applied GST"] = final_df["Applied GST"].fillna(0)
 
+final_df["MRP"] = pd.to_numeric(final_df["MRP"], errors="coerce")
+final_df["Adjusted Price"] = pd.to_numeric(final_df["Adjusted Price"], errors="coerce")
+final_df["Applied GST"] = pd.to_numeric(final_df["Applied GST"], errors="coerce")
 
+final_df["Disc_percent"] = (final_df["Adjusted Price"] * (1 + final_df["Applied GST"])).round(2)
+final_df["Disc PU"] = ((final_df["MRP"] - final_df["Adjusted Price"]) / final_df["MRP"]).round(2)
 final_df["Currency"] = "INR"
+final_df["Facilitator"] = ""
+
+final_df.loc[final_df["Vertical"] == "Agri Business", "Facilitator"] = "Hesa Agritech Private Limited"
+final_df.loc[final_df["Vertical"] == "Commerce Business", "Facilitator"] = "Hesa Consumer Products Private Limited"
 final_df["igst"] = 0.0
 final_df["cgst"] = (final_df["Line Total"] * final_df["Applied GST"] / 2).round(2)
 final_df["sgst"] = final_df["cgst"] 
 final_df["Total"] = (final_df["Line Total"] + final_df["cgst"] + final_df["sgst"] + final_df["igst"]).round(2)
 
-final_df = final_df.drop(columns=["Taxable_Amount", "GST Rate", "Remaining Amount"], errors="ignore")
 
-# Step 2: Rename columns
+
+final_df = final_df.drop(columns=["Taxable_Amount", "GST Rate", "Remaining Amount", "percentage_of_total", "normalized_percentage"], errors="ignore")
+
 final_df = final_df.rename(columns={
     "Applied GST": "gst_rate",
     "Adjusted Price": "Net Price PU",
@@ -56,5 +66,5 @@ final_df = final_df.rename(columns={
     "Line Total": "Taxable Value"
 })
 
-final_df.to_excel("/home/thrymr/Downloads/Final_Cons_April_25_output_to_check.xlsx", index=False)
+final_df.to_excel("/home/thrymr/Downloads/Final_agri_sep_25_output_to_check.xlsx", index=False)
 print("Done. Output written with correct order and numeric types.")
