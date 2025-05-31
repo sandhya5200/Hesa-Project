@@ -1,8 +1,38 @@
 import pandas as pd
-import random
+import numpy as np
+import unicodedata
 
-# --- 1. Input Setup ---
-target_month = "April'25"
+# Robust clean function to handle hidden characters and normalize
+def clean(text):
+    if pd.isna(text):
+        return ''
+    text = str(text)
+    text = unicodedata.normalize("NFKD", text)  # Normalize unicode characters
+    text = text.strip().lower()                # Remove leading/trailing spaces + lowercase
+    text = text.replace('\u200b', '')          # Remove zero-width space
+    text = ' '.join(text.split())              # Remove duplicate internal spaces
+    return text
+
+print("🔄 Loading input files...")
+sales_df1 = pd.read_excel("/home/thrymr/Desktop/sales 25-26/Final_Agri_April_25_output_to_check.xlsx")
+sales_df2 = pd.read_excel("/home/thrymr/Desktop/sales 25-26/Final_Cons_April_25_output_to_check.xlsx")
+hesaathi_df = pd.read_excel("/home/thrymr/Important/new_hessathi_with_additional_people_details.xlsx")
+print("✅ Files loaded successfully.")
+
+print("🧩 Combining and shuffling sales data...")
+sales_df = pd.concat([sales_df1, sales_df2], ignore_index=True)
+sales_df = sales_df.sample(frac=1, random_state=42).reset_index(drop=True)
+print(f"🧾 Total sales rows: {len(sales_df)}")
+
+print("🧼 Cleaning state and district fields...")
+sales_df['state_clean'] = sales_df['State'].apply(clean)
+sales_df['district_clean'] = sales_df['District'].apply(clean)
+
+hesaathi_df['state_clean'] = hesaathi_df['State'].apply(clean)
+hesaathi_df['district_clean'] = hesaathi_df['District'].apply(clean)
+
+print("📅 Filtering Hesaathi data by onboarding month...")
+selected_month = "April'25"
 month_order = [
     "April'20", "May'20", "Jun'20", "Jul'20", "Aug'20", "Sep'20", "Oct'20", "Nov'20", "Dec'20",
     "Jan'21", "Feb'21", "Mar'21", "April'21", "May'21", "Jun'21", "Jul'21", "Aug'21", "Sep'21", "Dec'21",
@@ -12,77 +42,78 @@ month_order = [
     "Jan'25", "Feb'25", "Mar'25", "April'25", "May'25", "Jun'25", "Jul'25", "Aug'25", "Sep'25", "Oct'25", "Nov'25", "Dec'25",
     "Jan'26", "Feb'26", "Mar'26"
 ]
+valid_months = month_order[:month_order.index(selected_month)]
+filtered_hesaathi = hesaathi_df[hesaathi_df['Onboarding Month'].isin(valid_months)].copy()
+print(f"✅ Filtered Hesaathis: {len(filtered_hesaathi)}")
 
-# --- 2. Read and shuffle sales data ---
-sales1 = pd.read_excel("/home/thrymr/Desktop/sales 25-26/Final_Agri_April_25_output_to_check.xlsx")
-sales2 = pd.read_excel("/home/thrymr/Desktop/sales 25-26/Final_Cons_April_25_output_to_check.xlsx")
-sales_df = pd.concat([sales1, sales2], ignore_index=True)
-sales_df = sales_df.sample(frac=1, random_state=42).reset_index(drop=True)
+print("🔗 Creating merge keys and merging datasets...")
+sales_df['merge_key'] = sales_df['state_clean'] + '_' + sales_df['district_clean']
+filtered_hesaathi['merge_key'] = filtered_hesaathi['state_clean'] + '_' + filtered_hesaathi['district_clean']
 
-# --- 3. Load hesaathi data ---
-hesaathi_df = pd.read_excel("/home/thrymr/Important/new_hessathi_with_additional_people_details.xlsx")
+print("🎯 Creating mapping of merge_key to Hesaathi Codes...")
+hesaathi_map = (
+    filtered_hesaathi
+    .groupby('merge_key')['Hesaathi Code']
+    .apply(list)
+    .to_dict()
+)
 
-# --- 4. Filter relevant months ---
-target_index = month_order.index(target_month)
-relevant_months = month_order[:target_index + 1]
+# Debug print: find keys in sales_df that are missing in Hesaathi mapping
+missing_keys = set(sales_df['merge_key']) - set(hesaathi_map.keys())
+if missing_keys:
+    print("❌ The following merge_keys were not matched to Hesaathis:")
+    for key in sorted(missing_keys):
+        print("  ➤", key)
+    raise ValueError("Fix state/district mismatches! Some keys not found in Hesaathi data.")
 
-# --- 5. Assign hesaathis month-wise with preference to exclude non-performers ---
-all_hesaathis = {}
+from collections import defaultdict
+import random
 
-for month in relevant_months:
-    month_df = hesaathi_df[hesaathi_df['Onboarding Month'] == month]
-    month_hesaathis = month_df['Hesaathi Code'].tolist()
-    random.shuffle(month_hesaathis)
+print("🎲 Repeating Hesaathis 2–10 times per region and assigning...")
 
-    keep_pct = random.uniform(0.85, 0.90)
-    keep_count = int(len(month_hesaathis) * keep_pct)
+# Step 1: Create a new expanded Hesaathi pool with repeats
+expanded_hesaathi_map = defaultdict(list)
 
-    # Prioritize non-performers in drop list
-    non_perf = month_df[month_df['Performance'] == 'Non Performer']['Hesaathi Code'].tolist()
-    medium_perf = month_df[month_df['Performance'] == 'Medium Performer']['Hesaathi Code'].tolist()
-    high_perf = month_df[month_df['Performance'] == 'High Performer']['Hesaathi Code'].tolist()
+for key, codes in hesaathi_map.items():
+    repeated_pool = []
+    for code in codes:
+        repeat_count = random.randint(2, 10)
+        repeated_pool.extend([code] * repeat_count)
+    random.shuffle(repeated_pool)
+    expanded_hesaathi_map[key] = repeated_pool
 
-    drop_candidates = non_perf + medium_perf + high_perf
-    drop_candidates = [h for h in drop_candidates if h in month_hesaathis]
+# Step 2: Assign Hesaathis from pool
+assigned_codes = []
 
-    drop_count = len(month_hesaathis) - keep_count
-    drop_list = drop_candidates[:drop_count]  # drop more non-performers naturally
-    keep = [h for h in month_hesaathis if h not in drop_list]
+key_counters = defaultdict(int)
 
-    all_hesaathis[month] = keep
+for key in sales_df['merge_key']:
+    pool = expanded_hesaathi_map[key]
+    idx = key_counters[key] % len(pool)
+    assigned_codes.append(pool[idx])
+    key_counters[key] += 1
 
-# --- 6. Final Hesaathi pool ---
-final_hesaathi_pool = [h for m in relevant_months for h in all_hesaathis[m]]
+sales_df['Assigned Hesaathi Code'] = assigned_codes
 
-# --- 7. Assign Hesaathi codes with up to 10 reps per date ---
-grouped = sales_df.groupby('Date')
-hesaathi_assignments = []
-max_repeat_per_day = 10
 
-for date, group in grouped:
-    num_rows = len(group)
-    assigned_codes = []
-    hesaathi_counts = {}
+# Get onboarding month for each assigned code
+hesaathi_month_map = filtered_hesaathi.set_index('Hesaathi Code')['Onboarding Month'].to_dict()
+sales_df['Assigned Hesaathi Onboarding Month'] = sales_df['Assigned Hesaathi Code'].map(hesaathi_month_map)
 
-    while len(assigned_codes) < num_rows:
-        hesaathi = random.choice(final_hesaathi_pool)
-        count = hesaathi_counts.get(hesaathi, 0)
-        if count >= max_repeat_per_day:
-            continue
-        repeat_times = random.randint(1, min(max_repeat_per_day - count, num_rows - len(assigned_codes)))
-        assigned_codes.extend([hesaathi] * repeat_times)
-        hesaathi_counts[hesaathi] = count + repeat_times
+sales_df.drop(columns=['state_clean', 'district_clean', 'merge_key', '_row_id'], inplace=True, errors='ignore')
 
-    random.shuffle(assigned_codes)
-    hesaathi_assignments.extend(assigned_codes)
-
-sales_df['Hesaathi Code'] = hesaathi_assignments[:len(sales_df)]
-sales_df['Onboarding Month'] = sales_df['Hesaathi Code'].map(hesaathi_df.set_index('Hesaathi Code')['Onboarding Month'])
-
-# --- 8. Final Export ---
+print("📅 Sorting by date and splitting into two files...")
+sales_df['Date'] = pd.to_datetime(sales_df['Date'])
 sales_df = sales_df.sort_values(by='Date').reset_index(drop=True)
-max_rows = 727595
 
-sales_df.iloc[:max_rows].to_excel("/home/thrymr/Desktop/sales 25-26/sales_with_hesaathis_part1.xlsx", index=False)
-if len(sales_df) > max_rows:
-    sales_df.iloc[max_rows:].to_excel("/home/thrymr/Desktop/sales 25-26/sales_with_hesaathis_part2+.xlsx", index=False)
+half = len(sales_df) // 2
+first_half = sales_df.iloc[:half]
+second_half = sales_df.iloc[half:]
+
+first_half.to_excel("/home/thrymr/Downloads/part1.xlsx", index=False)
+second_half.to_excel("/home/thrymr/Downloads/part2.xlsx", index=False)
+
+print("✅ Output saved successfully:")
+print("  ➤ /home/thrymr/Downloads/part1.xlsx")
+print("  ➤ /home/thrymr/Downloads/part2.xlsx")
+
