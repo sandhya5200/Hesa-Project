@@ -21,8 +21,8 @@ business_dict = {
 # @app.post("/purchases")
 def purchase():
     print("before")
-    product_quantity = pd.read_excel("/home/thrymr/Downloads/oct_qty.xlsx")
-    product_gross = pd.read_excel("/home/thrymr/Downloads/oct-gross.xlsx")
+    product_quantity = pd.read_excel("/home/thrymr/Downloads/nov_qty.xlsx")
+    product_gross = pd.read_excel("/home/thrymr/Downloads/nov-gross.xlsx")
     zone_df = pd.read_excel("/home/thrymr/Downloads/zone_user_category (5) 1.xlsx",sheet_name="Data")
     products_data = pd.read_excel("/home/thrymr/Downloads/Copy of telangana_logics_new (1)(1).xlsx",sheet_name="Products")
     #vendor = pd.read_excel("/home/thrymr/Downloads/Vendor data 1 1.xlsx",sheet_name="10-15 vendors from this data")

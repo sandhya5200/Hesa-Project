@@ -115,11 +115,11 @@
 import pandas as pd
 import random
 
-input_file = "/home/thrymr/Downloads/january.xlsx"
+input_file = "/home/thrymr/Downloads/Puchase_Jan_24-25.xlsx"
 
 
 zone_file = "/home/thrymr/Downloads/zone_user_category_modified.xlsx"
-output_file = "/home/thrymr/Downloads/Puchase_Jan_24-25.xlsx"
+output_file = "/home/thrymr/Downloads/purchase_january(24-25).xlsx"
 
 # Load data
 input_df = pd.read_excel(input_file)
@@ -150,7 +150,13 @@ po_counter = 1
 # Function to generate a PO number
 def generate_po_number(row):
     global po_counter
-    prefix = "CG" if row["Sub Vertical"] == "FMCG" else "AG" if row["Sub Vertical"] == "Agri inputs" else "Market Linkages"
+    if row["Sub Vertical"] in ["Fmcg", "White Label"]:
+        prefix = "CG"
+    elif row["Sub Vertical"] in ["Agri inputs", "Market Linkages", "Value Intervention"]:
+        prefix = "AG"
+    else:
+        prefix = " "
+
     key = (row["Date"], row["Sub Vertical"], row["District"], row["Vendor ID"])
     
     if key not in po_tracker:
