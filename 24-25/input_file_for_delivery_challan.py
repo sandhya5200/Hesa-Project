@@ -34,7 +34,7 @@ async def process_excel(file: UploadFile = File(...)):
             'Invoice no': 'Invoice no',                #to get even invoicenumber for generating invoices
             'Customer Name': 'Customer Name',
             'MCP' : 'MCP',
-            'Customer Address': 'Customer Address',
+            'Customer Address': 'Customer Address',   #left input sheet 
             'Customer Mobile': 'Customer Mobile',
 
             'Customer ID':'Customer ID',
