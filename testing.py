@@ -1,13 +1,23 @@
 import pandas as pd
 
-# 1. Load LibreOffice .ods file
-df = pd.read_excel("/home/thrymr/Downloads/Oct Sales Pivot Updated.xlsx")  # Replace with your actual file path
+# --- Step 1: Load the two Excel files ---
+file1 = r"c:\Users\ksand\Downloads\sales_with_hesaathis_part111.xlsx"  # Replace with your actual path
+file2 = r"c:\Users\ksand\Downloads\sales_with_hesaathis_part222.xlsx"
 
-# 2. Convert 'Date' column (replace 'Date' with your actual column name)
-df['Date'] = pd.to_datetime(df['Date'], dayfirst=True)
+df1 = pd.read_excel(file1)
+df2 = pd.read_excel(file2)
 
-# 3. Reformat to MM/DD/YYYY
-df['Date'] = df['Date'].dt.strftime('%m/%d/%Y')
+# --- Step 2: Group by Hesaathi Code and calculate sum of Taxable Value ---
+grouped_df1 = df1.groupby("Hesaathi Code", as_index=False)["Taxable Value"].sum()
+grouped_df1.rename(columns={"Taxable Value": "Taxable Value (File 1)"}, inplace=True)
 
-# 4. Save back if needed (as Excel or CSV)
-df.to_excel("/home/thrymr/Downloads/Oct_qty.xlsx", index=False)  # Optional
+grouped_df2 = df2.groupby("Hesaathi Code", as_index=False)["Taxable Value"].sum()
+grouped_df2.rename(columns={"Taxable Value": "Taxable Value (File 2)"}, inplace=True)
+
+# --- Step 3: Merge both summaries on Hesaathi Code (Optional) ---
+merged_df = pd.merge(grouped_df1, grouped_df2, on="Hesaathi Code", how="outer")
+
+# --- Step 4: Save to Excel ---
+merged_df.to_excel(r"c:\Users\ksand\Downloads\hesaathi_taxable_summary.xlsx", index=False)
+
+print("✅ Output saved as 'hesaathi_taxable_summary.xlsx'")

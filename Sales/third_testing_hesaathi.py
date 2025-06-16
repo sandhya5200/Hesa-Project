@@ -1,13 +1,13 @@
 import pandas as pd
 
 # # Load both September parts
-sep1 = pd.read_excel("/home/thrymr/Downloads/part1.xlsx")
-sep2 = pd.read_excel("/home/thrymr/Downloads/part2.xlsx")
+sep1 = pd.read_excel(r"c:\Users\ksand\OneDrive\Desktop\hesa files\sales 25-26\sales_with_hesaathis_part1.xlsx")
+sep2 = pd.read_excel(r"c:\Users\ksand\OneDrive\Desktop\hesa files\sales 25-26\sales_with_hesaathis_part2.xlsx")
 full_september = pd.concat([sep1, sep2], ignore_index=True)
 # full_september = pd.read_excel("/home/thrymr/Desktop/sales 25-26/sales_with_hesaathis_part2_DUMMY.xlsx")
 
 # Load master file
-master = pd.read_excel("/home/thrymr/Important/new_hessathi_with_additional_people_details.xlsx")
+master = pd.read_excel(r"c:\Users\ksand\OneDrive\Desktop\hesa files\new_hessathi_with_additional_people_details.xlsx")
 
 # full_september = full_september.drop(columns=["Onboarding Month"])
 
@@ -91,6 +91,6 @@ summary['Onboarding Month'] = pd.Categorical(summary['Onboarding Month'], catego
 df_sorted = summary.sort_values('Onboarding Month')
 
 # Save or display
-df_sorted.to_excel("/home/thrymr/Downloads/analyzed_report_DUMMY.xlsx", index=False)
+df_sorted.to_excel(r"c:\Users\ksand\OneDrive\Desktop\hesa files\checking file.xlsx", index=False)
 print(df_sorted)
 

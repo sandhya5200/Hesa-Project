@@ -1,23 +1,33 @@
+
+# sales_df1 = pd.read_excel(r"c:\Users\ksand\OneDrive\Desktop\hesa files\sales 25-26\Final_Agri_April_25_output_to_check.xlsx")
+# sales_df2 = pd.read_excel(r"c:\Users\ksand\OneDrive\Desktop\hesa files\sales 25-26\Final_Cons_April_25_output_to_check.xlsx")
+# hesaathi_df = pd.read_excel(r"c:\Users\ksand\OneDrive\Desktop\hesa files\new_hessathi_with_additional_people_details.xlsx")
+
+# first_half.to_excel(r"c:\Users\ksand\OneDrive\Desktop\hesa files\sales 25-26\sales_with_hesaathis_part1.xlsx", index=False)
+# second_half.to_excel(r"c:\Users\ksand\OneDrive\Desktop\hesa files\sales 25-26\sales_with_hesaathis_part2.xlsx", index=False)
+
 import pandas as pd
 import numpy as np
 import unicodedata
+import random
+from collections import defaultdict
 
-# Robust clean function to handle hidden characters and normalize
+# Clean function
 def clean(text):
     if pd.isna(text):
         return ''
     text = str(text)
-    text = unicodedata.normalize("NFKD", text)  # Normalize unicode characters
-    text = text.strip().lower()                # Remove leading/trailing spaces + lowercase
-    text = text.replace('\u200b', '')          # Remove zero-width space
-    text = ' '.join(text.split())              # Remove duplicate internal spaces
+    text = unicodedata.normalize("NFKD", text)
+    text = text.strip().lower()
+    text = text.replace('\u200b', '')
+    text = ' '.join(text.split())
     return text
 
 print("🔄 Loading input files...")
-sales_df1 = pd.read_excel("/home/thrymr/Desktop/sales 25-26/Final_Agri_April_25_output_to_check.xlsx")
-sales_df2 = pd.read_excel("/home/thrymr/Desktop/sales 25-26/Final_Cons_April_25_output_to_check.xlsx")
-hesaathi_df = pd.read_excel("/home/thrymr/Important/new_hessathi_with_additional_people_details.xlsx")
-print("✅ Files loaded successfully.")
+sales_df1 = pd.read_excel(r"c:\Users\ksand\OneDrive\Desktop\hesa files\sales 25-26\Final_Agri_April_25_output_to_check.xlsx")
+sales_df2 = pd.read_excel(r"c:\Users\ksand\OneDrive\Desktop\hesa files\sales 25-26\Final_Cons_April_25_output_to_check.xlsx")
+hesaathi_df = pd.read_excel(r"c:\Users\ksand\OneDrive\Desktop\hesa files\new_hessathi_with_additional_people_details.xlsx")
+
 
 print("🧩 Combining and shuffling sales data...")
 sales_df = pd.concat([sales_df1, sales_df2], ignore_index=True)
@@ -42,9 +52,47 @@ month_order = [
     "Jan'25", "Feb'25", "Mar'25", "April'25", "May'25", "Jun'25", "Jul'25", "Aug'25", "Sep'25", "Oct'25", "Nov'25", "Dec'25",
     "Jan'26", "Feb'26", "Mar'26"
 ]
-valid_months = month_order[:month_order.index(selected_month)]
-filtered_hesaathi = hesaathi_df[hesaathi_df['Onboarding Month'].isin(valid_months)].copy()
-print(f"✅ Filtered Hesaathis: {len(filtered_hesaathi)}")
+valid_months = month_order[:month_order.index(selected_month) + 1]
+filtered_hesaathi_all = hesaathi_df[hesaathi_df['Onboarding Month'].isin(valid_months)].copy()
+
+# Step: Remove 8–10% per month prioritizing Non Performers
+print("✂️ Removing 8–10% of Hesaathis per month, prioritizing Non Performers...")
+used_hesaathi_list = []
+neglected_hesaathi_list = []
+
+for month in valid_months:
+    month_data = filtered_hesaathi_all[filtered_hesaathi_all['Onboarding Month'] == month]
+    total = len(month_data)
+    if total == 0:
+        continue
+    remove_pct = random.uniform(0.08, 0.10)
+    remove_count = int(total * remove_pct)
+
+    # Step 1: Try removing Non Performers
+    non_perf = month_data[month_data['Performance'].str.lower() == 'non performer']
+    remove_non_perf = non_perf.sample(min(len(non_perf), remove_count), random_state=42)
+    
+    remaining_remove = remove_count - len(remove_non_perf)
+
+    # Step 2: Remove random from the rest if needed
+    rest = month_data.drop(remove_non_perf.index)
+    remove_extra = rest.sample(n=remaining_remove, random_state=42) if remaining_remove > 0 else pd.DataFrame()
+
+    # Combine neglected and used
+    neglected = pd.concat([remove_non_perf, remove_extra])
+    used = month_data.drop(neglected.index)
+
+    neglected_hesaathi_list.append(neglected)
+    used_hesaathi_list.append(used)
+
+filtered_hesaathi = pd.concat(used_hesaathi_list, ignore_index=True)
+neglected_hesaathis = pd.concat(neglected_hesaathi_list, ignore_index=True)
+
+print(f"✅ Selected {len(filtered_hesaathi)} Hesaathis for assignment.")
+print(f"🚫 Neglected {len(neglected_hesaathis)} Hesaathis.")
+
+# Save neglected list
+# neglected_hesaathis.to_excel("/home/thrymr/Downloads/neglected_hesaathis.xlsx", index=False)
 
 print("🔗 Creating merge keys and merging datasets...")
 sales_df['merge_key'] = sales_df['state_clean'] + '_' + sales_df['district_clean']
@@ -58,7 +106,7 @@ hesaathi_map = (
     .to_dict()
 )
 
-# Debug print: find keys in sales_df that are missing in Hesaathi mapping
+# Check for missing keys
 missing_keys = set(sales_df['merge_key']) - set(hesaathi_map.keys())
 if missing_keys:
     print("❌ The following merge_keys were not matched to Hesaathis:")
@@ -66,12 +114,7 @@ if missing_keys:
         print("  ➤", key)
     raise ValueError("Fix state/district mismatches! Some keys not found in Hesaathi data.")
 
-from collections import defaultdict
-import random
-
 print("🎲 Repeating Hesaathis 2–10 times per region and assigning...")
-
-# Step 1: Create a new expanded Hesaathi pool with repeats
 expanded_hesaathi_map = defaultdict(list)
 
 for key, codes in hesaathi_map.items():
@@ -82,9 +125,7 @@ for key, codes in hesaathi_map.items():
     random.shuffle(repeated_pool)
     expanded_hesaathi_map[key] = repeated_pool
 
-# Step 2: Assign Hesaathis from pool
 assigned_codes = []
-
 key_counters = defaultdict(int)
 
 for key in sales_df['merge_key']:
@@ -95,8 +136,7 @@ for key in sales_df['merge_key']:
 
 sales_df['Assigned Hesaathi Code'] = assigned_codes
 
-
-# Get onboarding month for each assigned code
+# Map onboarding month
 hesaathi_month_map = filtered_hesaathi.set_index('Hesaathi Code')['Onboarding Month'].to_dict()
 sales_df['Assigned Hesaathi Onboarding Month'] = sales_df['Assigned Hesaathi Code'].map(hesaathi_month_map)
 
@@ -110,10 +150,13 @@ half = len(sales_df) // 2
 first_half = sales_df.iloc[:half]
 second_half = sales_df.iloc[half:]
 
-first_half.to_excel("/home/thrymr/Downloads/part1.xlsx", index=False)
-second_half.to_excel("/home/thrymr/Downloads/part2.xlsx", index=False)
+
+
+first_half.to_excel(r"c:\Users\ksand\OneDrive\Desktop\hesa files\sales 25-26\sales_with_hesaathis_part1.xlsx", index=False)
+second_half.to_excel(r"c:\Users\ksand\OneDrive\Desktop\hesa files\sales 25-26\sales_with_hesaathis_part2.xlsx", index=False)
+
 
 print("✅ Output saved successfully:")
 print("  ➤ /home/thrymr/Downloads/part1.xlsx")
 print("  ➤ /home/thrymr/Downloads/part2.xlsx")
-
+print("  ➤ /home/thrymr/Downloads/neglected_hesaathis.xlsx")
