@@ -118,8 +118,8 @@ import random
 input_file = "/home/thrymr/Downloads/Puchase_Jan_24-25.xlsx"
 
 
-zone_file = "/home/thrymr/Downloads/zone_user_category_modified.xlsx"
-output_file = "/home/thrymr/Downloads/purchase_january(24-25).xlsx"
+zone_file = "/home/thrymr/Important/zone_user_category_modified.xlsx"
+output_file = "/home/thrymr/Downloads/sandhya.xlsx"
 
 # Load data
 input_df = pd.read_excel(input_file)

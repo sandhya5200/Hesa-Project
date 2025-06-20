@@ -21,10 +21,10 @@ business_dict = {
 # @app.post("/purchases")
 def purchase():
     print("before")
-    product_quantity = pd.read_excel("/home/thrymr/Downloads/nov_qty.xlsx")
-    product_gross = pd.read_excel("/home/thrymr/Downloads/nov-gross.xlsx")
-    zone_df = pd.read_excel("/home/thrymr/Downloads/zone_user_category (5) 1.xlsx",sheet_name="Data")
-    products_data = pd.read_excel("/home/thrymr/Downloads/Copy of telangana_logics_new (1)(1).xlsx",sheet_name="Products")
+    product_quantity = pd.read_excel("/home/thrymr/Downloads/Fianl Pivot of Mar 25.xlsx",sheet_name = "Product Qty")
+    product_gross = pd.read_excel("/home/thrymr/Downloads/Fianl Pivot of Mar 25.xlsx", sheet_name="Taxable Value")
+    zone_df = pd.read_excel("/home/thrymr/Important/zone_user_category (5) 1.xlsx",sheet_name="Data")
+    products_data = pd.read_excel("/home/thrymr/Important/Copy of telangana_logics_new (1)(1).xlsx",sheet_name="Products")
     #vendor = pd.read_excel("/home/thrymr/Downloads/Vendor data 1 1.xlsx",sheet_name="10-15 vendors from this data")
     col = product_gross.columns
     track = {}
@@ -48,8 +48,8 @@ def purchase():
 
         print(row_data[0])
 
-        date_value = datetime.datetime.strptime(row_data[0], '%d-%m-%Y')
-        # date_value = datetime.datetime.strptime(str(row_data[0]), '%Y-%m-%d %H:%M:%S')
+        # date_value = datetime.datetime.strptime(row_data[0], '%d-%m-%Y')
+        date_value = datetime.datetime.strptime(str(row_data[0]), '%Y-%m-%d %H:%M:%S')
 
         
         next_day = date_value + datetime.timedelta(days=1)
@@ -216,7 +216,7 @@ def purchase():
     df = pd.DataFrame(rows)
     df["Purchase Order Number"] = "HS-PO-AG-"+(df.groupby(["Date", "Customer Name"]).ngroup() + 1).apply(lambda x: f"{x:06d}")
     print(len(rows))                
-    df.to_excel("/home/thrymr/Downloads/october.xlsx")
+    df.to_excel("/home/thrymr/Downloads/March.xlsx")
     print("completed")
     
 purchase()
