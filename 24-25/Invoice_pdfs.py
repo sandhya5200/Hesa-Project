@@ -430,33 +430,74 @@ logo_file_path = "/home/thrymr/Downloads/hesa_logo.png"
 signature_path = "/home/thrymr/Downloads/sir_signature-removebg-preview.png"
 hesathi_data = pd.read_excel('/home/thrymr/Downloads/Copy of zone_user_24_25 latest one with new additions..xlsx')  
 
-# List of Excel files to process
-excel_file_paths = [
+# # List of Excel files to process
+# excel_file_paths = [
 
-    '/home/thrymr/Desktop/input Files(24-25)/processed_agri_sales_Sep_24.xlsx',
+#     '/home/thrymr/Desktop/input Files(24-25)/processed_agri_sales_Sep_24.xlsx',
     
 
+# ]
+
+# # Create a PDF for each Excel file
+# for excel_file_path in excel_file_paths:
+#     # Read both sheets from the Excel file
+#     sheet_names = pd.ExcelFile(excel_file_path).sheet_names
+#     df_list = [pd.read_excel(excel_file_path, sheet_name=sheet) for sheet in sheet_names]
+    
+#     # Merge both sheets into one DataFrame
+#     data = pd.concat(df_list, ignore_index=True)
+
+#     hesathi_mapping = pd.Series(
+#         hesathi_data[['Full Name', 'Village', 'Sub District', 'District', 'State']].values.tolist(), 
+#         index=hesathi_data['CODE']
+#     ).to_dict()
+
+#     # Generate a unique name for the PDF based on the Excel filename
+#     pdf_file_name = f"{excel_file_path.split('/')[-1].replace('.xlsx', '')}.pdf"
+#     final_pdf_path = f"/home/thrymr/Desktop/Invoices(2024-25)/invoice_{pdf_file_name}"
+
+#     # Create the PDF with all invoices
+#     create_pdf_with_borders(final_pdf_path, logo_file_path, signature_path, data)
+
+#     print(f"Merged PDF created: {final_pdf_path}")
+
+import pandas as pd
+import os
+
+# Folder containing Excel files for a single month
+monthly_folder = "/home/thrymr/Desktop/input Files(24-25)/Sept"  # update this to actual folder path
+
+# Get all Excel files in the folder
+excel_file_paths = [
+    os.path.join(monthly_folder, f)
+    for f in os.listdir(monthly_folder)
+    if f.endswith(".xlsx")
 ]
 
-# Create a PDF for each Excel file
+# List to hold all data from all files (all sheets)
+all_month_data = []
+
+# Read all sheets from all files and combine
 for excel_file_path in excel_file_paths:
-    # Read both sheets from the Excel file
     sheet_names = pd.ExcelFile(excel_file_path).sheet_names
     df_list = [pd.read_excel(excel_file_path, sheet_name=sheet) for sheet in sheet_names]
-    
-    # Merge both sheets into one DataFrame
-    data = pd.concat(df_list, ignore_index=True)
+    merged_data = pd.concat(df_list, ignore_index=True)
+    all_month_data.append(merged_data)
 
-    hesathi_mapping = pd.Series(
-        hesathi_data[['Full Name', 'Village', 'Sub District', 'District', 'State']].values.tolist(), 
-        index=hesathi_data['CODE']
-    ).to_dict()
+# Combine all data into a single DataFrame
+final_month_df = pd.concat(all_month_data, ignore_index=True)
 
-    # Generate a unique name for the PDF based on the Excel filename
-    pdf_file_name = f"{excel_file_path.split('/')[-1].replace('.xlsx', '')}.pdf"
-    final_pdf_path = f"/home/thrymr/Desktop/Invoices(2024-25)/invoice_{pdf_file_name}"
+# Prepare hesaathi mapping (assumed already loaded somewhere above this block)
+hesathi_mapping = pd.Series(
+    hesathi_data[['Full Name', 'Village', 'Sub District', 'District', 'State']].values.tolist(),
+    index=hesathi_data['CODE']
+).to_dict()
 
-    # Create the PDF with all invoices
-    create_pdf_with_borders(final_pdf_path, logo_file_path, signature_path, data)
+# Create one final PDF for the whole month
+pdf_file_name = "invoice_Sept_24_combined.pdf"
+final_pdf_path = f"/home/thrymr/Desktop/Invoices(2024-25)/{pdf_file_name}"
 
-    print(f"Merged PDF created: {final_pdf_path}")
+# Call your custom function to generate PDF
+create_pdf_with_borders(final_pdf_path, logo_file_path, signature_path, final_month_df)
+
+print(f"✅ Merged PDF created for full month: {final_pdf_path}")

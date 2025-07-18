@@ -1,108 +1,105 @@
+# import pandas as pd
+
+# # === Step 1: Load Files ===
+# new_file_path = "/path/to/new_products_file.xlsx"
+# old_file_path = "/path/to/old_products_file.xlsx"
+# output_file_path = "/path/to/output_missing_products.xlsx"
+
+# df_new = pd.read_excel(new_file_path)
+# df_old = pd.read_excel(old_file_path)
+
+# # === Step 2: Normalize Product Name Columns for Comparison ===
+# df_new['Corrected Product Name'] = df_new['Corrected Product Name'].astype(str).str.strip().str.lower()
+# df_old['Product Name'] = df_old['Product Name'].astype(str).str.strip().str.lower()
+
+# # === Step 3: Get Set of Product Names from Old File ===
+# old_product_names = set(df_old['Product Name'])
+
+# # === Step 4: Filter Products NOT Present in Old File ===
+# df_missing = df_new[~df_new['Corrected Product Name'].isin(old_product_names)]
+
+# # === Step 5: Export Result ===
+# df_missing.to_excel(output_file_path, index=False)
+# print(f"✅ Output saved to: {output_file_path}")
 import pandas as pd
-import random
 
-# Load the Excel file
-df = pd.read_excel("/home/thrymr/Downloads/March_with_states.xlsx")
+# Load your files
+old_df = pd.read_excel("/home/thrymr/Important/my_products_file_after_hsn_code_updatation.xlsx")
+new_df = pd.read_excel("/home/thrymr/Downloads/Corrected New HSN CODES.xlsx")
 
-# Clean and format
-df["District"] = df["District"].str.strip().str.upper()
-df["Sub Vertical"] = df["Sub Vertical"].str.strip().str.upper()
-df["__row_id__"] = df.index  # ✅ Unique ID for fast assignment
+# # Normalize product names
+# old_df["prod_clean"] = old_df["Product Name"].astype(str).str.strip().str.lower()
+# new_df["prod_clean"] = new_df["Corrected Product Name"].astype(str).str.strip().str.lower()
 
-# Constants
-MIN_VENDOR_IDS = 25
-MAX_VENDOR_IDS = 30
-MAX_TAXABLE = 700000
+# # Convert 'Corrected GST Rate' like '12%' to 0.12
+# def convert_percent_to_decimal(x):
+#     if isinstance(x, str) and "%" in x:
+#         try:
+#             return float(x.strip().replace("%", "")) / 100
+#         except:
+#             return None
+#     elif isinstance(x, (int, float)):
+#         return float(x)
+#     else:
+#         return None
 
-# Step 1: Add Vendor ID column to DataFrame
-df["Vendor ID"] = None
-unassigned_rows = []
-vendor_ids = []
+# new_df["Corrected GST Rate"] = new_df["Corrected GST Rate"].apply(convert_percent_to_decimal)
 
-# Step 2: Assign rows group-wise
-grouped = df.groupby(["District", "Sub Vertical"])
-for (district, sub_vertical), group_df in grouped:
-    print(f"\n🚀 Processing group: {district}, {sub_vertical}")
+# # Create mapping
+# gst_rate_map = dict(zip(new_df["prod_clean"], new_df["Corrected GST Rate"]))
 
-    group_rows = df.loc[group_df.index].sample(frac=1, random_state=42).to_dict("records")
+# # Add flag column
+# old_df["gst_updated"] = False
 
-    # Create fixed 25–30 vendor IDs
-    vendor_count = random.randint(MIN_VENDOR_IDS, MAX_VENDOR_IDS)
-    pool = []
-    for i in range(1, vendor_count + 1):
-        vendor = {
-            "Vendor ID": f"HS-VED-{district}-{sub_vertical}-{i:04d}",
-            "District": district,
-            "Sub Vertical": sub_vertical,
-            "Total Taxable": 0,
-            "Rows": [],
-        }
-        vendor_ids.append(vendor)
-        pool.append(vendor)
+# # Update function
+# def update_gst(row):
+#     prod = row["prod_clean"]
+#     if prod in gst_rate_map:
+#         new_rate = gst_rate_map[prod]
+#         if pd.notna(new_rate) and row["gst_rate"] != new_rate:
+#             row["gst_rate"] = new_rate
+#             row["gst_updated"] = True
+#     return row
 
-    # Assign rows randomly to vendors while respecting the ₹7L limit
-    for row in group_rows:
-        row_taxable = row["Taxable Value"]
-        random.shuffle(pool)  # Ensure randomness in assignment order
+# # Apply updates
+# old_df = old_df.apply(update_gst, axis=1)
 
-        assigned = False
-        for vendor in pool:
-            if vendor["Total Taxable"] + row_taxable <= MAX_TAXABLE:
-                vendor["Rows"].append({**row})
-                vendor["Total Taxable"] += row_taxable
-                assigned = True
-                break
+# # Cleanup
+# old_df.drop(columns=["prod_clean"], inplace=True)
 
-        if not assigned:
-    # Dynamically create a new vendor ID
-            new_vendor_num = len([v for v in vendor_ids if v["District"] == district and v["Sub Vertical"] == sub_vertical]) + 1
-            new_vendor_id = f"HS-VED-{district}-{sub_vertical}-{new_vendor_num:04d}"
-            new_vendor = {
-                "Vendor ID": new_vendor_id,
-                "District": district,
-                "Sub Vertical": sub_vertical,
-                "Total Taxable": row_taxable,
-                "Rows": [{**row}],
-            }
-            vendor_ids.append(new_vendor)
-            pool.append(new_vendor)  # So future rows can use it
-            print(f"➕ Created new vendor: {new_vendor_id} for ₹{row_taxable:.2f}")
+# # Save to file
+# old_df.to_excel("/home/thrymr/Downloads/old_products_with_updated_gst.xlsx", index=False)
+# print("✅ GST rates updated with proper conversion. File saved.")
 
+# --- Step 1: Reuse the cleaned version of new_df and old_df ---
 
-    print(f"✅ All rows distributed among {vendor_count} vendors.")
+# Ensure product names are clean again
+new_df["prod_clean"] = new_df["Corrected Product Name"].astype(str).str.strip().str.lower()
+old_product_names = old_df["Product Name"].astype(str).str.strip().str.lower()
 
-# Step 3: Assign back to original DataFrame
-print("\n📝 Fast assignment of Vendor IDs to DataFrame using __row_id__...")
+# Convert GST rate to decimal again (if starting fresh)
+def convert_percent_to_decimal(x):
+    if isinstance(x, str) and "%" in x:
+        try:
+            return float(x.strip().replace("%", "")) / 100
+        except:
+            return None
+    elif isinstance(x, (int, float)):
+        return float(x)
+    else:
+        return None
 
-total_assigned = 0
-for idx, vendor in enumerate(vendor_ids, start=1):
-    for row in vendor["Rows"]:
-        df.at[row["__row_id__"], "Vendor ID"] = vendor["Vendor ID"]
-        total_assigned += 1
-    print(f"✅ Vendor {idx}: {vendor['Vendor ID']} → {len(vendor['Rows'])} rows, ₹{vendor['Total Taxable']:.2f}")
+new_df["Corrected GST Rate"] = new_df["Corrected GST Rate"].apply(convert_percent_to_decimal)
 
-print(f"\n🎯 Total rows assigned Vendor IDs: {total_assigned}")
+# --- Step 2: Filter new products to only those with GST 0 or 0.05 ---
+filtered_new = new_df[
+    new_df["Corrected GST Rate"].isin([0.0, 0.05])
+]
 
-# Step 4: Save output
-df.drop(columns="__row_id__", inplace=True)
-df.to_excel("/home/thrymr/Downloads/March_output_with_vendor_ids.xlsx", index=False)
-print("✅ Output file saved: March_output_with_vendor_ids.xlsx")
+# --- Step 3: Exclude products already present in the old file ---
+unmatched_rows = filtered_new[~filtered_new["prod_clean"].isin(old_product_names)]
 
-# Step 5: Save summary
-summary = pd.DataFrame([{
-    "Vendor ID": v["Vendor ID"],
-    "District": v["District"],
-    "Sub Vertical": v["Sub Vertical"],
-    "Assigned Rows": len(v["Rows"]),
-    "Total Taxable Value": v["Total Taxable"]
-} for v in vendor_ids])
-
-summary.to_excel("/home/thrymr/Downloads/March_vendor_summary.xlsx", index=False)
-print("✅ Summary file saved: March_vendor_summary.xlsx")
-
-# Step 6: Save unassigned rows if any
-if unassigned_rows:
-    pd.DataFrame(unassigned_rows).to_excel("/home/thrymr/Downloads/March_unassigned_rows.xlsx", index=False)
-    print(f"⚠️ Unassigned rows saved: {len(unassigned_rows)} rows in March_unassigned_rows.xlsx")
-else:
-    print("🎉 All rows successfully assigned to vendor IDs.")
+# --- Step 4: Save result ---
+output_path = "/home/thrymr/Downloads/unmatched_low_gst_new_products.xlsx"
+unmatched_rows.to_excel(output_path, index=False)
+print(f"✅ Unmatched new products with 0% or 5% GST saved to:\n{output_path}")

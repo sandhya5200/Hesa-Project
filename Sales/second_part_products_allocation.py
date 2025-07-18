@@ -297,7 +297,7 @@ import random
 
 # File paths
 sales_path = "/home/thrymr/Downloads/output_cons_Nov.xlsx"
-products_path = "/home/thrymr/Important/my_products_file.xlsx"
+products_path = "/home/thrymr/Important/my_products_file_after_hsn_code_updatation.xlsx"
 # output_matched = "/home/thrymr/Downloads/agri_oct_25_output_to_check.xlsx"
 # output_unmatched = "/home/thrymr/Downloads/unmatched_sales.xlsx"
 

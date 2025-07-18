@@ -3,9 +3,6 @@ from fastapi import APIRouter
 import random
 import pandas as pd
 
-app = APIRouter(tags=["/purchases-24"])
-
-
 month_map = [
     "April'24","May'24", "Jun'24", "Jul'24", "Aug'24","Sep'24", 
     "Oct'24", "Nov'24", "Dec'24","Jan'25", "Feb'25", "Mar'25"
@@ -18,11 +15,12 @@ business_dict = {
     "White Label": [24.48, 24.50, 24.52, 24.39, 24.44, 24.45, 24.44, 24.45, 24.45, 24.47, 24.47, 24.48]
 }
 
-# @app.post("/purchases")
 def purchase():
     print("before")
-    product_quantity = pd.read_excel("/home/thrymr/Downloads/Fianl Pivot of Mar 25.xlsx",sheet_name = "Product Qty")
-    product_gross = pd.read_excel("/home/thrymr/Downloads/Fianl Pivot of Mar 25.xlsx", sheet_name="Taxable Value")
+    product_quantity = pd.read_excel("/home/thrymr/Downloads/Oct'24 Sales Pivot data.xlsx", sheet_name="PQT")
+   
+    product_gross = pd.read_excel("/home/thrymr/Downloads/Oct'24 Sales Pivot data.xlsx", sheet_name="TVT")
+    
     zone_df = pd.read_excel("/home/thrymr/Important/zone_user_category (5) 1.xlsx",sheet_name="Data")
     products_data = pd.read_excel("/home/thrymr/Important/Copy of telangana_logics_new (1)(1).xlsx",sheet_name="Products")
     #vendor = pd.read_excel("/home/thrymr/Downloads/Vendor data 1 1.xlsx",sheet_name="10-15 vendors from this data")
@@ -188,14 +186,7 @@ def purchase():
                     gst_am = gst*ind_taxable
                     row = {
                         "Date": date_value.strftime('%d/%m/%Y'),
-                        "Purchase Order Number": None,
-                        "Cohort Month": hs.iloc[6],
-                        "Hesaathi Code": hs_code,
-                        "Customer Name": cs_name,
-                        "Customer Number": "",
                         "District": dist,
-                        "Customer State": "",
-                        "Customer Location":  "",
                         "Vertical": vertical,
                         "Sub Vertical": subv,
                         "Category": category,
@@ -214,9 +205,8 @@ def purchase():
                     init_q -= rnd
                 missed_quantity+=init_q
     df = pd.DataFrame(rows)
-    df["Purchase Order Number"] = "HS-PO-AG-"+(df.groupby(["Date", "Customer Name"]).ngroup() + 1).apply(lambda x: f"{x:06d}")
     print(len(rows))                
-    df.to_excel("/home/thrymr/Downloads/March.xlsx")
+    df.to_excel("/home/thrymr/Downloads/November.xlsx")
     print("completed")
     
 purchase()

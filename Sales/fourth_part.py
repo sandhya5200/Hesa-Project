@@ -5,8 +5,8 @@ from random import randint, sample
 print("📥 Reading input Excel files...")
 
 # Step 1: Read and combine the Excel files
-file1 = r"c:\Users\ksand\OneDrive\Desktop\hesa files\sales 25-26\sales_with_hesaathis_part1.xlsx"
-file2 = r"c:\Users\ksand\OneDrive\Desktop\hesa files\sales 25-26\sales_with_hesaathis_part2.xlsx"
+file1 = "/home/thrymr/Desktop/sales 25-26/april_sales_with_hesaathis_part1.xlsx"
+file2 = "/home/thrymr/Desktop/sales 25-26/april_sales_with_hesaathis_part2.xlsx"
 
 df1 = pd.read_excel(file1)
 df2 = pd.read_excel(file2)
@@ -78,7 +78,7 @@ df2_out = df.iloc[mid_index:].reset_index(drop=True)
 
 # Step 6: Save to two output Excel files
 print("💾 Saving output files...")
-df1_out.to_excel(r"c:\Users\ksand\OneDrive\Desktop\hesa files\sales 25-26\sales_with_hesaathis_part111.xlsx", index=False)
-df2_out.to_excel(r"c:\Users\ksand\OneDrive\Desktop\hesa files\sales 25-26\sales_with_hesaathis_part222.xlsx", index=False)
+df1_out.to_excel("/home/thrymr/Desktop/sales 25-26/sales_with_hesaathis_part1.xlsx", index=False)
+df2_out.to_excel("/home/thrymr/Desktop/sales 25-26/sales_with_hesaathis_part2.xlsx", index=False)
 
 print("✅ Processing complete. Files saved successfully.")

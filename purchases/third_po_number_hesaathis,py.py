@@ -115,11 +115,11 @@
 import pandas as pd
 import random
 
-input_file = "/home/thrymr/Downloads/Puchase_Jan_24-25.xlsx"
+input_file = "/home/thrymr/Downloads/purchase_October(24-25).xlsx"
 
 
 zone_file = "/home/thrymr/Important/zone_user_category_modified.xlsx"
-output_file = "/home/thrymr/Downloads/sandhya.xlsx"
+output_file = "/home/thrymr/Downloads/purchase_October(24-25).xlsx"
 
 # Load data
 input_df = pd.read_excel(input_file)
@@ -134,14 +134,14 @@ zone_df["District"] = zone_df["District"].str.strip().str.lower()
 input_df["District"] = input_df["District"].str.strip().str.lower()
 
 # Function to replace middle data with Sub Vertical
-def update_customer_name(row):
-    parts = row["Customer Name"].split("-")
-    if len(parts) > 3:
-        parts[3] = row["Sub Vertical"]
-    return "-".join(parts)
+# def update_customer_name(row):
+#     parts = row["Customer Name"].split("-")
+#     if len(parts) > 3:
+#         parts[3] = row["Sub Vertical"]
+#     return "-".join(parts)
 
 # Apply function
-input_df["Vendor ID"] = input_df.apply(update_customer_name, axis=1)
+input_df["Vendor ID"] = input_df["Vendor ID"]
 
 # Dictionary to store unique PO numbers for each combination
 po_tracker = {}
@@ -150,9 +150,9 @@ po_counter = 1
 # Function to generate a PO number
 def generate_po_number(row):
     global po_counter
-    if row["Sub Vertical"] in ["Fmcg", "White Label"]:
+    if row["Sub Vertical"] in ["FMCG", "WHITE LABEL"]:
         prefix = "CG"
-    elif row["Sub Vertical"] in ["Agri inputs", "Market Linkages", "Value Intervention"]:
+    elif row["Sub Vertical"] in ["AGRI INPUTS", "MARKET LINKAGES", "VALUE INTERVENTION"]:
         prefix = "AG"
     else:
         prefix = " "

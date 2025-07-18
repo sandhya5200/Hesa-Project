@@ -1,243 +1,109 @@
-# import pandas as pd
-# import os
-
-# # File paths
-# output_folder = "/home/thrymr/Desktop/vendors/sandhya/updated_state_files_after_assignig_to_additional_database"
-# master_output_file = "/home/thrymr/Downloads/Master_Assigned_Persons.xlsx"
-# no_zone_codes_file = "/home/thrymr/Downloads/No_Zone_Codes.xlsx"
-
-# # Ensure output folder exists
-# os.makedirs(output_folder, exist_ok=True)
-
-# # Load data
-# unmatched_df = pd.read_excel('/home/thrymr/Downloads/important.xlsx')
-# zone_df = pd.read_excel('/home/thrymr/Downloads/Copy of zone_user_24_25 latest one with new additions..xlsx')
-
-# # Convert columns to uppercase for matching
-# unmatched_df["Unmatched_codes"] = unmatched_df["Unmatched_codes"].astype(str).str.upper()
-# zone_df["CODE"] = zone_df["CODE"].astype(str).str.upper()
-
-# # Define paths for each state
-# state_files = {
-#     'TELANGANA': '/home/thrymr/Desktop/vendors/sandhya/after creating 40k people used to make additional customerdatabase/cleaned_Telangana.xlsx',
-#     'BIHAR': '/home/thrymr/Desktop/vendors/sandhya/after creating 40k people used to make additional customerdatabase/cleaned_Bihar_mod.xlsx',
-#     'ANDHRA PRADESH': '/home/thrymr/Desktop/vendors/sandhya/after creating 40k people used to make additional customerdatabase/cleaned_AP.xlsx',
-#     'TAMIL NADU': '/home/thrymr/Desktop/vendors/sandhya/after creating 40k people used to make additional customerdatabase/cleaned_Tamilnadu_mod.xlsx',
-#     'ODISHA': '/home/thrymr/Desktop/vendors/sandhya/after creating 40k people used to make additional customerdatabase/cleaned_Odisha.xlsx',
-#     'HARYANA': "/home/thrymr/Desktop/vendors/sandhya/after creating 40k people used to make additional customerdatabase/cleaned_Haryana_mod.xlsx",
-#     'MAHARASHTRA': '/home/thrymr/Desktop/vendors/sandhya/after creating 40k people used to make additional customerdatabase/cleaned_Maharashtra.xlsx',
-#     'KARNATAKA': '/home/thrymr/Desktop/vendors/sandhya/after creating 40k people used to make additional customerdatabase/cleaned_Karnataka.xlsx'
-# }
-
-# # Dictionary to store state data
-# state_data = {}
-# for state, file_path in state_files.items():
-#     try:
-#         df = pd.read_excel(file_path)
-#         df["District"] = df["District"].astype(str).str.upper()
-#         state_data[state] = df
-#     except Exception as e:
-#         print(f"Error loading {file_path}: {e}")
-#         state_data[state] = pd.DataFrame()  # Empty DataFrame if loading fails
-
-# # List to store master output records
-# assigned_records = []
-
-# # Track unmatched codes
-# no_zone_codes_set = []
-
-# # Process each unmatched code (keeping duplicates)
-# for _, row in unmatched_df.iterrows():
-#     code = row["Unmatched_codes"]
-#     state_row = zone_df[zone_df["CODE"] == code]
-
-#     if state_row.empty:
-#         print(f"Code {code} not found in zone file.")
-#         no_zone_codes_set.append(code)
-#         continue
-
-#     # Handle NaN cases safely
-#     state_name = state_row["State"].values[0] if pd.notna(state_row["State"].values[0]) else "UNKNOWN"
-#     district_name = state_row["District"].values[0] if pd.notna(state_row["District"].values[0]) else "UNKNOWN"
-
-#     state_name = str(state_name).strip().upper()
-#     district_name = str(district_name).strip().upper()
-
-#     if state_name == "UNKNOWN":
-#         print(f"State not found for code {code}. Skipping...")
-#         no_zone_codes_set.append(code)
-#         continue
-
-#     if state_name not in state_data:
-#         print(f"State {state_name} not found in state files.")
-#         continue
-
-#     state_df = state_data[state_name]
-
-#     # Filter available persons in the same district
-#     available_persons = state_df[state_df["District"] == district_name]
-
-#     # If no match in the same district, get data from any district
-#     if available_persons.empty:
-#         available_persons = state_df
-
-#     if available_persons.empty:
-#         print(f"No available persons found for code {code} in {state_name}.")
-#         no_zone_codes_set.append(code)
-#         continue
-
-#     # Select a random person (even if they were used before)
-#     selected_row = available_persons.sample(n=1)
-#     person_id = selected_row.index[0]
-
-#     # Append assigned person details to the master output
-#     assigned_person = selected_row.iloc[0].to_dict()
-#     assigned_person["HESATHIS_Code"] = code
-#     assigned_person["Assigned_State"] = state_name
-#     assigned_person["Assigned_District"] = district_name
-#     assigned_records.append(assigned_person)
-
-#     # Drop assigned person from state data to avoid reusing too often
-#     state_data[state_name].drop(index=person_id, inplace=True)
-
-# # Save master assigned persons file
-# if assigned_records:
-#     master_df = pd.DataFrame(assigned_records)
-#     master_df.to_excel(master_output_file, index=False)
-#     print(f"Master output saved at: {master_output_file}")
-# else:
-#     print("No assignments were made.")
-
-# # Save unmatched codes
-# if no_zone_codes_set:
-#     no_zone_codes_df = pd.DataFrame({"Unmatched_Code": list(no_zone_codes_set)})
-#     no_zone_codes_df.to_excel(no_zone_codes_file, index=False)
-#     print(f"Unmatched codes saved at: {no_zone_codes_file}")
-# else:
-#     print("No unmatched codes found.")
-
-# # Save updated state files
-# for state_name, df in state_data.items():
-#     updated_file_path = os.path.join(output_folder, f"cleaned_{state_name}.xlsx")
-#     df.to_excel(updated_file_path, index=False)
-
-# print("Processing complete. Updated state files saved in:", output_folder)
-
 import pandas as pd
 import os
 
 # File paths
-output_folder = "/home/thrymr/Desktop/vendors/sandhya/updated_state_files_after_assignig_to_additional_database"
-master_output_file = "/home/thrymr/Downloads/Master_Assigned_Persons.xlsx"
-no_zone_codes_file = "/home/thrymr/Downloads/No_Zone_Codes.xlsx"
+unmatched_codes_path = "/home/thrymr/Downloads/deduplicated_with_hesaathi.xlsx"
+zone_file_path = "/home/thrymr/Important/new_hessathi_with_additional_people_details.xlsx"
 
-# Ensure output folder exists
+# Output folder
+output_folder = "/home/thrymr/Desktop/vendors/sandhya/second_time_updated_state_files_after_assignig_to_second_additional_database"
 os.makedirs(output_folder, exist_ok=True)
 
-# Load data
-unmatched_df = pd.read_excel('/home/thrymr/Downloads/important.xlsx')
-zone_df = pd.read_excel('/home/thrymr/Downloads/Copy of zone_user_24_25 latest one with new additions..xlsx')
-
-# Convert columns to uppercase for matching
-unmatched_df["Unmatched_codes"] = unmatched_df["Unmatched_codes"].astype(str).str.upper()
-zone_df["CODE"] = zone_df["CODE"].astype(str).str.upper()
-
-# Define paths for each state
-state_files = {
-    'TELANGANA': '/home/thrymr/Desktop/vendors/sandhya/after creating 40k people used to make additional customerdatabase/cleaned_Telangana.xlsx',
-    'BIHAR': '/home/thrymr/Desktop/vendors/sandhya/after creating 40k people used to make additional customerdatabase/cleaned_Bihar_mod.xlsx',
-    'ANDHRA PRADESH': '/home/thrymr/Desktop/vendors/sandhya/after creating 40k people used to make additional customerdatabase/cleaned_AP.xlsx',
-    'TAMIL NADU': '/home/thrymr/Desktop/vendors/sandhya/after creating 40k people used to make additional customerdatabase/cleaned_Tamilnadu_mod.xlsx',
-    'ODISHA': '/home/thrymr/Desktop/vendors/sandhya/after creating 40k people used to make additional customerdatabase/cleaned_Odisha.xlsx',
-    'HARYANA': "/home/thrymr/Desktop/vendors/sandhya/after creating 40k people used to make additional customerdatabase/cleaned_Haryana_mod.xlsx",
-    'MAHARASHTRA': '/home/thrymr/Desktop/vendors/sandhya/after creating 40k people used to make additional customerdatabase/cleaned_Maharashtra.xlsx',
-    'KARNATAKA': '/home/thrymr/Desktop/vendors/sandhya/after creating 40k people used to make additional customerdatabase/cleaned_Karnataka.xlsx'
+# State file paths (with original keys)
+state_files_raw = {
+    'TELANGANA': '/home/thrymr/Desktop/vendors/sandhya/updated_state_files_after_assignig_to_additional_database/cleaned_TELANGANA.xlsx',
+    'BIHAR': '/home/thrymr/Desktop/vendors/sandhya/updated_state_files_after_assignig_to_additional_database/cleaned_BIHAR.xlsx',
+    'ANDHRA PRADESH': '/home/thrymr/Desktop/vendors/sandhya/updated_state_files_after_assignig_to_additional_database/cleaned_ANDHRA PRADESH.xlsx',
+    'TAMIL NADU': '/home/thrymr/Desktop/vendors/sandhya/updated_state_files_after_assignig_to_additional_database/cleaned_TAMILNADU.xlsx',
+    'ODISHA': '/home/thrymr/Desktop/vendors/sandhya/updated_state_files_after_assignig_to_additional_database/cleaned_ODISHA.xlsx',
+    'HARYANA': '/home/thrymr/Desktop/vendors/sandhya/updated_state_files_after_assignig_to_additional_database/cleaned_HARYANA.xlsx',
+    'MAHARASHTRA': '/home/thrymr/Desktop/vendors/sandhya/updated_state_files_after_assignig_to_additional_database/cleaned_MP.xlsx',
+    'KARNATAKA': '/home/thrymr/Desktop/vendors/sandhya/updated_state_files_after_assignig_to_additional_database/cleaned_KARNATAKA.xlsx',
+    "MADHYA PRADESH": "/home/thrymr/Desktop/vendors/sandhya/updated_state_files_after_assignig_to_additional_database/cleaned_MAHARASHTRA.xlsx"
 }
 
-# Dictionary to store state data
-state_data = {}
-for state, file_path in state_files.items():
-    try:
-        df = pd.read_excel(file_path)
-        df["District"] = df["District"].astype(str).str.upper()
-        state_data[state] = df
-    except Exception as e:
-        print(f"Error loading {file_path}: {e}")
-        state_data[state] = pd.DataFrame()  # Empty DataFrame if loading fails
+# Normalize state keys
+def normalize_state_name(name):
+    return name.strip().upper().replace(" ", "")
 
-# List to store master output records
-assigned_records = []
+state_files = {normalize_state_name(k): v for k, v in state_files_raw.items()}
 
-# Track unmatched codes
-no_zone_codes_set = []
+# Load data
+input_df = pd.read_excel(unmatched_codes_path, engine='openpyxl')
+zone_df = pd.read_excel(zone_file_path, engine='openpyxl')
+state_dfs = {normalize_state_name(state): pd.read_excel(path, engine='openpyxl') for state, path in state_files.items()}
 
-# Process each unmatched code and keep all rows from unmatched_df
-for _, row in unmatched_df.iterrows():
-    code = row["Unmatched_codes"]
-    state_row = zone_df[zone_df["CODE"] == code]
+# Output records
+output_rows = []
+failed_rows = []
 
-    if state_row.empty:
-        print(f"Code {code} not found in zone file.")
-        no_zone_codes_set.append(code)
-        state_name = "UNKNOWN"
-        district_name = "UNKNOWN"
+for _, row in input_df.iterrows():
+    customer_id = row['Unmatched_codes']
+    hs_code = row['CODE']
+
+    zone_match = zone_df[zone_df['CODE'].astype(str).str.strip().str.upper() == str(hs_code).strip().upper()]
+    if zone_match.empty:
+        print(f"⚠️ Zone match not found for: {hs_code}")
+        failed_rows.append({'CustomerID': customer_id, 'HSCode': hs_code, 'Reason': 'HSCode not found in zone'})
+        continue
+
+    state = zone_match.iloc[0]['State']
+    district = zone_match.iloc[0]['District']
+
+    normalized_state = normalize_state_name(state)
+    print(f"🔍 Matching HSCode: {hs_code} | State: {state} | District: {district} → Normalized: {normalized_state}")
+
+    state_df = state_dfs.get(normalized_state)
+    if state_df is None:
+        print(f"❌ State file not found: {state}")
+        failed_rows.append({'CustomerID': customer_id, 'HSCode': hs_code, 'Reason': f"State '{state}' not found in files"})
+        continue
+
+    # Normalize for district comparison
+    state_df['District_cleaned'] = state_df['District'].astype(str).str.strip().str.lower()
+    district_cleaned = str(district).strip().lower()
+
+    district_match = state_df[state_df['District_cleaned'] == district_cleaned]
+
+    if not district_match.empty:
+        selected_row = district_match.iloc[0]
+        print(f"✅ Found exact district match for {district}")
     else:
-        state_name = state_row["State"].values[0] if pd.notna(state_row["State"].values[0]) else "UNKNOWN"
-        district_name = state_row["District"].values[0] if pd.notna(state_row["District"].values[0]) else "UNKNOWN"
+        print(f"⚠️ No exact match for '{district}', using fallback row.")
+        if state_df.empty:
+            failed_rows.append({'CustomerID': customer_id, 'HSCode': hs_code, 'Reason': 'No data in state file'})
+            continue
+        selected_row = state_df.iloc[0]
 
-    state_name = str(state_name).strip().upper()
-    district_name = str(district_name).strip().upper()
+    # Prepare output row
+    output_rows.append({
+    'CustomerID': customer_id,
+    'Mobile': selected_row.get('Mobile', ''),
+    'Name': selected_row.get('Name', ''),
+    'Pincode': selected_row.get('Pincode', ''),  # fallback if Pincode missing
+    'HSCode': hs_code,
+    'State': state,
+    'District': selected_row.get('District', '')
+})
 
-    if state_name != "UNKNOWN" and state_name in state_data:
-        state_df = state_data[state_name]
+    # Drop used row
+    state_dfs[normalized_state] = state_df.drop(selected_row.name).drop(columns=['District_cleaned'], errors='ignore')
 
-        # Filter available persons in the same district
-        available_persons = state_df[state_df["District"] == district_name]
-
-        # If no match in the same district, get data from any district
-        if available_persons.empty:
-            available_persons = state_df
-
-        if available_persons.empty:
-            print(f"No available persons found for code {code} in {state_name}.")
-            selected_person = {"Assigned_Person": "NO_PERSON_FOUND"}
-        else:
-            # Select a random person (even if they were used before)
-            selected_row = available_persons.sample(n=1)
-            person_id = selected_row.index[0]
-            selected_person = selected_row.iloc[0].to_dict()
-
-            # Drop assigned person from state data to avoid reusing too often
-            state_data[state_name].drop(index=person_id, inplace=True)
-    else:
-        selected_person = {"Assigned_Person": "NO_STATE_FOUND"}
-
-    # Merge original row with selected person
-    merged_record = row.to_dict()
-    merged_record.update(selected_person)
-    merged_record["HESATHIS_Code"] = code
-    merged_record["Assigned_State"] = state_name
-    merged_record["Assigned_District"] = district_name
-
-    assigned_records.append(merged_record)
-
-# Save master assigned persons file
-master_df = pd.DataFrame(assigned_records)
-master_df.to_excel(master_output_file, index=False)
-print(f"Master output saved at: {master_output_file}")
-
-# Save unmatched codes
-if no_zone_codes_set:
-    no_zone_codes_df = pd.DataFrame({"Unmatched_Code": list(no_zone_codes_set)})
-    no_zone_codes_df.to_excel(no_zone_codes_file, index=False)
-    print(f"Unmatched codes saved at: {no_zone_codes_file}")
-else:
-    print("No unmatched codes found.")
+# Save final output
+output_df = pd.DataFrame(output_rows)
+output_df.to_excel("/home/thrymr/Downloads/final_output.xlsx", index=False, engine='openpyxl')
+print(f"\n✅ Final output saved: {len(output_df)} rows")
 
 # Save updated state files
-for state_name, df in state_data.items():
-    updated_file_path = os.path.join(output_folder, f"cleaned_{state_name}.xlsx")
-    df.to_excel(updated_file_path, index=False)
+for state_key, df in state_dfs.items():
+    # Get original file path from normalized key
+    original_filename = os.path.basename(state_files[state_key])
+    new_path = os.path.join(output_folder, original_filename)
+    df.to_excel(new_path, index=False, engine='openpyxl')
+    print(f"📝 Updated state file written: {state_key}")
 
-print("Processing complete. Updated state files saved in:", output_folder)
-
+# Save failed assignments
+if failed_rows:
+    failed_df = pd.DataFrame(failed_rows)
+    failed_df.to_excel("/home/thrymr/Downloads/failed_assignments.xlsx", index=False, engine='openpyxl')
+    print(f"\n❌ Failed to assign {len(failed_df)} codes. File saved.")

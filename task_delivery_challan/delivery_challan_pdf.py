@@ -5,6 +5,7 @@ from reportlab.lib.units import cm , inch
 from reportlab.lib import colors
 from reportlab.lib.utils import ImageReader
 from reportlab.platypus import Table, TableStyle
+import os
 
 # Constants for row limits
 FIRST_PAGE_ROWS = 20
@@ -211,28 +212,6 @@ def create_challan_pdf(data, items, c):
  
     c.drawString(margin_left, margin_bottom, "Verifier Signature ____________________")
  
-def generate_challans_from_excel(excel_file, output_pdf):
- 
-    df = pd.read_excel(excel_file)
- 
-    grouped = df.groupby('Delivery Challan')
- 
-    c = canvas.Canvas(output_pdf, pagesize=A4)
- 
-    for delivery_challan, group in grouped:
-        first_row = group.iloc[0]
-        last_row = group.iloc[-1]
- 
-        items = group[['Product Name', 'MCP', 'HSN/SAC', 'Quantity']].to_dict('records')
-
-        data = last_row.to_dict()
-        create_challan_pdf(data, items, c)
-        c.showPage()
- 
-    c.save()
- 
-    print(f"PDF generated as {output_pdf}")
-
 
 
 # excel_file = '/home/thrymr/Downloads/sales 23-24/ready_Final_Sales_Apr_23 (2).xlsx'
@@ -243,29 +222,42 @@ def generate_challans_from_excel(excel_file, output_pdf):
  
 # generate_challans_from_excel(excel_file, output_pdf)
 
-import os
+# ✅ Updated function: accepts DataFrame, not file path
+def generate_challans_from_dataframe(df, output_pdf):
+    grouped = df.groupby('Delivery Challan')
+    c = canvas.Canvas(output_pdf, pagesize=A4)
 
-excel_files = [
-            '/home/thrymr/Downloads/sales 23-24/ready_Final_Sales_Apr_23 (2).xlsx',
-            '/home/thrymr/Downloads/sales 23-24/ready_Final_Sales_May_23 (2).xlsx',
-            '/home/thrymr/Downloads/sales 23-24/ready_Final_Sales_june_23 (1).xlsx',
-            '/home/thrymr/Downloads/sales 23-24/ready_Final_Sales_july_23.xlsx',
-            '/home/thrymr/Downloads/sales 23-24/ready_Final_Sales_August_23 (1).xlsx',
-            '/home/thrymr/Downloads/sales 23-24/ready_Final_Sales_September_23 (1).xlsx',
-            '/home/thrymr/Downloads/sales 23-24/ready_Final_Sales_october_23 (1).xlsx',
-            '/home/thrymr/Downloads/sales 23-24/ready_Final_Sales_Nov_23.xlsx',
-            '/home/thrymr/Downloads/sales 23-24/ready_Final_Sales_dec_23.xlsx',
-            '/home/thrymr/Downloads/sales 23-24/ready_Final_Sales_jan_24 (1).xlsx',
-            '/home/thrymr/Downloads/sales 23-24/ready_Final_Sales_feb_24 (1).xlsx',
-            '/home/thrymr/Downloads/sales 23-24/ready_Final_Sales_Mar_24 (1).xlsx'
-    # Add all 12 files here
-]
+    for delivery_challan, group in grouped:
+        items = group[['Product Name', 'MCP', 'HSN/SAC', 'Quantity']].to_dict('records')
+        data = group.iloc[-1].to_dict()  # Use last row for header info
+        create_challan_pdf(data, items, c)
+        c.showPage()
 
-output_dir = '/home/thrymr/Downloads/sales 23-24/'
+    c.save()
+    print(f"PDF generated as {output_pdf}")
 
-for excel_file in excel_files:
-    file_name = os.path.basename(excel_file).replace('.xlsx', '.pdf')
-    output_pdf = os.path.join(output_dir, f'DC_{file_name}')
-    
-    generate_challans_from_excel(excel_file, output_pdf)
-    print(f"Generated: {output_pdf}")
+# 📁 Dictionary with months and list of Excel files
+monthly_excel_files = {
+    'oct': [
+        '/home/thrymr/Downloads/Oct/processed_Sheet1_part1.xlsx',
+        '/home/thrymr/Downloads/Oct/processed_Sheet1_part2.xlsx'
+    ],
+    'nov': [
+        '/home/thrymr/Downloads/Nov/processed_Sheet1_part1.xlsx',
+        '/home/thrymr/Downloads/Nov/processed_Sheet1_part2.xlsx'
+    ]
+    # Add more months and files as needed
+}
+
+output_dir = '/home/thrymr/Downloads/delivery_challans_24-25(oct-mar)/'
+os.makedirs(output_dir, exist_ok=True)
+
+# 🔁 Process each month
+for month, file_list in monthly_excel_files.items():
+    df_list = [pd.read_excel(file) for file in file_list]
+    combined_df = pd.concat(df_list, ignore_index=True)
+
+    output_pdf = os.path.join(output_dir, f'DC_{month.lower()}.pdf')
+
+    # ✅ Use correct function for DataFrame input
+    generate_challans_from_dataframe(combined_df, output_pdf)
