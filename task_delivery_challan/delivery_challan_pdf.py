@@ -239,12 +239,30 @@ def generate_challans_from_dataframe(df, output_pdf):
 # 📁 Dictionary with months and list of Excel files
 monthly_excel_files = {
     'oct': [
-        '/home/thrymr/Downloads/Oct/processed_Sheet1_part1.xlsx',
-        '/home/thrymr/Downloads/Oct/processed_Sheet1_part2.xlsx'
+        '/home/thrymr/Downloads/oct/processed_Sheet1_part1.xlsx',
+        '/home/thrymr/Downloads/oct/processed_Sheet1_part2.xlsx'
     ],
-    'nov': [
+    'Nov': [
         '/home/thrymr/Downloads/Nov/processed_Sheet1_part1.xlsx',
         '/home/thrymr/Downloads/Nov/processed_Sheet1_part2.xlsx'
+    ],
+     'Dec': [
+        '/home/thrymr/Downloads/Dec/processed_Sheet1_part1.xlsx',
+        '/home/thrymr/Downloads/Dec/processed_Sheet1_part2.xlsx',
+        '/home/thrymr/Downloads/Dec/processed_Sheet1_part3.xlsx'
+    ],
+    'Jan': [
+        '/home/thrymr/Downloads/Jan/processed_Sheet1_part1.xlsx'
+    ],
+     'Feb': [
+        '/home/thrymr/Downloads/Feb/processed_Sheet1_part1.xlsx',
+        '/home/thrymr/Downloads/Feb/processed_Sheet1_part2.xlsx',
+        '/home/thrymr/Downloads/Feb/processed_Sheet1_part3.xlsx'
+    ],
+    'Mar': [
+        '/home/thrymr/Downloads/Mar/processed_Sheet1_part1.xlsx',
+        '/home/thrymr/Downloads/Mar/processed_Sheet1_part2.xlsx',
+        '/home/thrymr/Downloads/Mar/processed_Sheet1_part3.xlsx'
     ]
     # Add more months and files as needed
 }

@@ -5,6 +5,7 @@ from fastapi.responses import StreamingResponse
 import pandas as pd
 from io import BytesIO
 from num2words import num2words
+import re
  
 app = FastAPI()
  
@@ -73,66 +74,154 @@ async def process_excel(file: UploadFile = File(...)):
     input_df['Facilitator'] = input_df['Facilitator'].fillna('').astype(str).str.strip()
     input_df['Customer State'] = input_df['Customer State'].fillna('').astype(str).str.strip()
 
-# Normalize mapping keys to lowercase and strip spaces
+    def normalize_text(text):
+        return re.sub(r'\s+', ' ', str(text)).strip().casefold()
+
+# # Normalize mapping keys to lowercase and strip spaces
+#     normalized_mapping = {
+#         (key[0].strip().lower(), key[1].strip().lower()): value
+#         for key, value in {
+#             ("Hesa enterprises Private Limited", "Andhra Pradesh"): ("39-11-45, Bank Street, Muralinagar, Visakhapatnam, Andhra Pradesh, 530007", "37AAFCR8177F1ZZ"),
+#             ("Hesa enterprises Private Limited", "Bihar"): ("B/124, Kankarbagh, Kankar Bagh Road, Patna, Bihar, 800020", "10AAFCR8177F1ZF"),
+#             ("Hesa enterprises Private Limited", "Telangana"): ("Plot No 136, 1-4-158/136, Kapra, Saipuricolony, Hyderabad, Telangana, 500094", "36AAFCR8177F1Z1"),
+#             ("Hesa enterprises Private Limited", "Karnataka"): ("H. No 2-90B/68/57, Sedam Road, Near Gurkul Vidya Mandir, Om Nagar, Kalaburagi, Kalaburagi, Karnataka, 585105", "29AAFCR8177F1ZW"),
+#             ("Hesa enterprises Private Limited", "Odisha"): ("747/1170, PARAGON, Belagacchia, Khordha, Odisha, 754005", "21AAFCR8177F1ZC"),
+#             ("Hesa enterprises Private Limited", "Jharkhand"): ("flat No-C, First Floor, Harmu Housing Colony, Ranchi Doranda, J harkhand, 834002", "Unregistered"),
+#             ("Hesa enterprises Private Limited", "Tamil Nadu"): ("F28, AV HI FIELD APARTMENT, Visuvasapuram, Coimbatore, 641035", "Unregistered"),
+#             ("Hesa enterprises Private Limited", "Haryana"): ("0, ADRASH NAGAR, Narnaul, Mahendragarh, Haryana, 123001", "06AAFCH9926E1ZH"),
+#             ("Hesa enterprises Private Limited", "Maharashtra"): ("FIRST FLOOR, 101, SH 77, Near Latur Urban Bank, Latur, Latur, Maharashtra, 413512", "27AAFCH9722G1ZF"),
+
+#             ("Hesa Enterprises Private Limited", "Andhra Pradesh"): ("39-11-45, Bank Street, Muralinagar, Visakhapatnam, Andhra Pradesh, 530007", "37AAFCR8177F1ZZ"),
+#             ("Hesa Enterprises Private Limited", "Bihar"): ("B/124, Kankarbagh, Kankar Bagh Road, Patna, Bihar, 800020", "10AAFCR8177F1ZF"),
+#             ("Hesa Enterprises Private Limited", "Telangana"): ("Plot No 136, 1-4-158/136, Kapra, Saipuricolony, Hyderabad, Telangana, 500094", "36AAFCR8177F1Z1"),
+#             ("Hesa Enterprises Private Limited", "Karnataka"): ("H. No 2-90B/68/57, Sedam Road, Near Gurkul Vidya Mandir, Om Nagar, Kalaburagi, Kalaburagi, Karnataka, 585105", "29AAFCR8177F1ZW"),
+#             ("Hesa Enterprises Private Limited", "Odisha"): ("747/1170, PARAGON, Belagacchia, Khordha, Odisha, 754005", "21AAFCR8177F1ZC"),
+#             ("Hesa Enterprises Private Limited", "Jharkhand"): ("flat No-C, First Floor, Harmu Housing Colony, Ranchi Doranda, Jharkhand, 834002", "Unregistered"),
+#             ("Hesa Enterprises Private Limited", "Tamil Nadu"): ("F28, AV HI FIELD APARTMENT, Visuvasapuram, Coimbatore, 641035", "Unregistered"),
+#             ("Hesa Enterprises Private Limited", "Haryana"): ("0, ADRASH NAGAR, Narnaul, Mahendragarh, Haryana, 123001", "06AAFCH9926E1ZH"),
+#             ("Hesa Enterprises Private Limited", "Maharashtra"): ("FIRST FLOOR, 101, SH 77, Near Latur Urban Bank, Latur, Latur, Maharashtra, 413512", "27AAFCH9722G1ZF"),
+            
+
+#             ("Hesa Agritech Private Limited", "haryana"): ("0, Adarsh Nagar, Narnaul, Mahendragarh, Haryana, 123001", "06AAFCH9722G1ZJ"),
+#             ("Hesa Agritech Private Limited", "andhra pradesh"): ("39-11-45, Bank Street, Muralinagar, Visakhapatnam, Andhra Pradesh, 530007", "37AAFCH9722G1ZE"),
+#             ("Hesa Agritech Private Limited", "maharashtra"): ("FIRST FLOOR, 101, SH 77, Near Latur Urban Bank, Latur, Latur, Maharashtra, 413512", "27AAFCH9722G1ZF"),
+#             ("Hesa Agritech Private Limited", "Tamil Nadu"): ("H.No 2/361, Maryiyamman Kovil Street, Minnur, Tirupathur, Tamil Nadu, 635807", "33AAFCH9722G1ZM"),
+#             ("Hesa Agritech Private Limited", "Odisha"): ("747/1170, PARAGON, Belagacchia, Khordha, Odisha, 754005", "21AAFCH9722G1ZR"),
+#             ("Hesa Agritech Private Limited", "telangana"): ("Plot No 136, 1-4-158/136, Kapra, Saipuricolony, Hyderabad, Telangana, 500094", "36AAFCH9722G1ZG"),
+#             ("Hesa Agritech Private Limited", "jharkhand"): ("flat No-C, First Floor, Harmu Housing Colony, Ranchi Doranda, Jharkhand, 834002", "Unregistered"),
+#             ("Hesa Agritech Private Limited", "bihar"): ("B/124, Kankarbagh, Kankar Bagh Road, Patna, Bihar, 800020", "10AAFCR8177F1ZF"),
+#             ("Hesa Agritech Private Limited", "karnataka"): ("#318, Komarla Brigade Vista, Gowdanpalya Main Road, 3rd floor, Uttarahalli, Bengaluru, Karnataka, 560061", "Unregistered"),
+            
+            
+            
+#             ("Hesa Consumer Products Private Limited", "Odisha"): ("747/1170, PARAGON, Belagacchia, Khordha, Odisha, 754005", "21AAFCH9926E1ZP"),
+#             ("Hesa Consumer Products Private Limited", "andhra pradesh"): ("39-11-45, bank street, Muralinagar, Visakhapatnam, Visakhapatnam, Andhra Pradesh, 530007", "37AAFCH9926E1ZC"),
+#             ("Hesa Consumer Products Private Limited", "telangana"): ("1-4-158/136, Saipuri Colony, Kapra,Sainikpuri, Sainikpuri, Hyderabad, Telangana, 500094", "36AAFCH9926E1ZE"),
+#             ("Hesa Consumer Products Private Limited", "jharkhand"): ("flat No-C, First Floor, Harmu Housing Colony, Ranchi Doranda, Jharkhand, 834002", "Unregistered"),
+#             ("Hesa Consumer Products Private Limited", "Tamil Nadu"): ("H. No 2/361, Mariyammam Kovil Street, Ambur Taluk, Minnur, Tirupathur, Tamil Nadu, 635807", "33AAFCH9926E1ZK"),
+#             ("Hesa Consumer Products Private Limited", "maharashtra"): ("4TH, R-2/2418/7A, SURVEY NO 259, Latur Industrial Area Additional, Latur, Maharashtra, 413531", "27AAFCH9926E1ZD"),
+#             ("Hesa Consumer Products Private Limited", "Haryana"): ("0, ADRASH NAGAR, Narnaul, Mahendragarh, Haryana, 123001", "06AAFCH9926E1ZH"),
+#             ("Hesa Consumer Products Private Limited", "bihar"): ("Ground floor, vijaya rajit singh Bhavan, Bampali, Bhojpur, Bihar, 802312", "10AAFCH9926E1ZS"),
+#             ("Hesa Consumer Products Private Limited", "karnataka"): ("A3, Gangotri apartments, 3rd A Block, Gokulam, Mysore, Karnataka", "Unregistered")
+
+#         }.items()
+
+#     }
+
     normalized_mapping = {
-        (key[0].strip().lower(), key[1].strip().lower()): value
-        for key, value in {
-            ("Hesa enterprises Private Limited", "Andhra Pradesh"): ("39-11-45, Bank Street, Muralinagar, Visakhapatnam, Andhra Pradesh, 530007", "37AAFCR8177F1ZZ"),
-            ("Hesa enterprises Private Limited", "Bihar"): ("B/124, Kankarbagh, Kankar Bagh Road, Patna, Bihar, 800020", "10AAFCR8177F1ZF"),
-            ("Hesa enterprises Private Limited", "Telangana"): ("Plot No 136, 1-4-158/136, Kapra, Saipuricolony, Hyderabad, Telangana, 500094", "36AAFCR8177F1Z1"),
-            ("Hesa enterprises Private Limited", "Karnataka"): ("H. No 2-90B/68/57, Sedam Road, Near Gurkul Vidya Mandir, Om Nagar, Kalaburagi, Kalaburagi, Karnataka, 585105", "29AAFCR8177F1ZW"),
-            ("Hesa enterprises Private Limited", "Odisha"): ("747/1170, PARAGON, Belagacchia, Khordha, Odisha, 754005", "21AAFCR8177F1ZC"),
-            ("Hesa enterprises Private Limited", "Jharkhand"): ("flat No-C, First Floor, Harmu Housing Colony, Ranchi Doranda, J harkhand, 834002", "Unregistered"),
-            ("Hesa enterprises Private Limited", "Tamil Nadu"): ("F28, AV HI FIELD APARTMENT, Visuvasapuram, Coimbatore, 641035", "Unregistered"),
-            ("Hesa enterprises Private Limited", "Haryana"): ("0, ADRASH NAGAR, Narnaul, Mahendragarh, Haryana, 123001", "06AAFCH9926E1ZH"),
-            ("Hesa enterprises Private Limited", "Maharashtra"): ("FIRST FLOOR, 101, SH 77, Near Latur Urban Bank, Latur, Latur, Maharashtra, 413512", "27AAFCH9722G1ZF"),
+        ("hesa agritech private limited", "haryana"): (
+            "0, Adarsh Nagar, Narnaul, Mahendragarh, Haryana, 123001",
+            "06AAFCH9722G1ZJ"
+        ),
+        ("hesa agritech private limited", "andhra pradesh"): (
+            "39-11-45, Bank Street, Muralinagar, Visakhapatnam, Andhra Pradesh, 530007",
+            "37AAFCH9722G1ZE"
+        ),
+        ("hesa agritech private limited", "maharashtra"): (
+            "FIRST FLOOR, 101, SH 77, Near Latur Urban Bank, Latur, Latur, Maharashtra, 413512",
+            "27AAFCH9722G1ZF"
+        ),
+        ("hesa agritech private limited", "tamil nadu"): (
+            "H.No 2/361, Maryiyamman Kovil Street, Minnur, Tirupathur, Tamil Nadu, 635807",
+            "33AAFCH9722G1ZM"
+        ),
+        ("hesa agritech private limited", "odisha"): (
+            "747/1170, PARAGON, Belagacchia, Khordha, Odisha, 754005",
+            "21AAFCH9722G1ZR"
+        ),
+        ("hesa agritech private limited", "telangana"): (
+            "Plot No 136, 1-4-158/136, Kapra, Saipuricolony, Hyderabad, Telangana, 500094",
+            "36AAFCH9722G1ZG"
+        ),
+        ("hesa agritech private limited", "jharkhand"): (
+            "flat No-C, First Floor, Harmu Housing Colony, Ranchi Doranda, Jharkhand, 834002",
+            "Unregistered"
+        ),
+        ("hesa agritech private limited", "bihar"): (
+            "B/124, Kankarbagh, Kankar Bagh Road, Patna, Bihar, 800020",
+            "10AAFCR8177F1ZF"
+        ),
+        ("hesa agritech private limited", "karnataka"): (
+            "#318, Komarla Brigade Vista, Gowdanpalya Main Road, 3rd floor, Uttarahalli, Bengaluru, Karnataka, 560061",
+            "Unregistered"
+        ),
 
-            ("Hesa Enterprises Private Limited", "Andhra Pradesh"): ("39-11-45, Bank Street, Muralinagar, Visakhapatnam, Andhra Pradesh, 530007", "37AAFCR8177F1ZZ"),
-            ("Hesa Enterprises Private Limited", "Bihar"): ("B/124, Kankarbagh, Kankar Bagh Road, Patna, Bihar, 800020", "10AAFCR8177F1ZF"),
-            ("Hesa Enterprises Private Limited", "Telangana"): ("Plot No 136, 1-4-158/136, Kapra, Saipuricolony, Hyderabad, Telangana, 500094", "36AAFCR8177F1Z1"),
-            ("Hesa Enterprises Private Limited", "Karnataka"): ("H. No 2-90B/68/57, Sedam Road, Near Gurkul Vidya Mandir, Om Nagar, Kalaburagi, Kalaburagi, Karnataka, 585105", "29AAFCR8177F1ZW"),
-            ("Hesa Enterprises Private Limited", "Odisha"): ("747/1170, PARAGON, Belagacchia, Khordha, Odisha, 754005", "21AAFCR8177F1ZC"),
-            ("Hesa Enterprises Private Limited", "Jharkhand"): ("flat No-C, First Floor, Harmu Housing Colony, Ranchi Doranda, Jharkhand, 834002", "Unregistered"),
-            ("Hesa Enterprises Private Limited", "Tamil Nadu"): ("F28, AV HI FIELD APARTMENT, Visuvasapuram, Coimbatore, 641035", "Unregistered"),
-            ("Hesa Enterprises Private Limited", "Haryana"): ("0, ADRASH NAGAR, Narnaul, Mahendragarh, Haryana, 123001", "06AAFCH9926E1ZH"),
-            ("Hesa Enterprises Private Limited", "Maharashtra"): ("FIRST FLOOR, 101, SH 77, Near Latur Urban Bank, Latur, Latur, Maharashtra, 413512", "27AAFCH9722G1ZF"),
-            
-
-            ("Hesa Agritech Private Limited", "haryana"): ("0, Adarsh Nagar, Narnaul, Mahendragarh, Haryana, 123001", "06AAFCH9722G1ZJ"),
-            ("Hesa Agritech Private Limited", "andhra pradesh"): ("39-11-45, Bank Street, Muralinagar, Visakhapatnam, Andhra Pradesh, 530007", "37AAFCH9722G1ZE"),
-            ("Hesa Agritech Private Limited", "maharashtra"): ("FIRST FLOOR, 101, SH 77, Near Latur Urban Bank, Latur, Latur, Maharashtra, 413512", "27AAFCH9722G1ZF"),
-            ("Hesa Agritech Private Limited", "Tamil Nadu"): ("H.No 2/361, Maryiyamman Kovil Street, Minnur, Tirupathur, Tamil Nadu, 635807", "33AAFCH9722G1ZM"),
-            ("Hesa Agritech Private Limited", "Odisha"): ("747/1170, PARAGON, Belagacchia, Khordha, Odisha, 754005", "21AAFCH9722G1ZR"),
-            ("Hesa Agritech Private Limited", "telangana"): ("Plot No 136, 1-4-158/136, Kapra, Saipuricolony, Hyderabad, Telangana, 500094", "36AAFCH9722G1ZG"),
-            ("Hesa Agritech Private Limited", "jharkhand"): ("flat No-C, First Floor, Harmu Housing Colony, Ranchi Doranda, Jharkhand, 834002", "Unregistered"),
-            ("Hesa Agritech Private Limited", "bihar"): ("B/124, Kankarbagh, Kankar Bagh Road, Patna, Bihar, 800020", "10AAFCR8177F1ZF"),
-            ("Hesa Agritech Private Limited", "karnataka"): ("#318, Komarla Brigade Vista, Gowdanpalya Main Road, 3rd floor, Uttarahalli, Bengaluru, Karnataka, 560061", "Unregistered"),
-            
-            
-            
-            ("Hesa Consumer Products Private Limited", "Odisha"): ("747/1170, PARAGON, Belagacchia, Khordha, Odisha, 754005", "21AAFCH9926E1ZP"),
-            ("Hesa Consumer Products Private Limited", "andhra pradesh"): ("39-11-45, bank street, Muralinagar, Visakhapatnam, Visakhapatnam, Andhra Pradesh, 530007", "37AAFCH9926E1ZC"),
-            ("Hesa Consumer Products Private Limited", "telangana"): ("1-4-158/136, Saipuri Colony, Kapra,Sainikpuri, Sainikpuri, Hyderabad, Telangana, 500094", "36AAFCH9926E1ZE"),
-            ("Hesa Consumer Products Private Limited", "jharkhand"): ("flat No-C, First Floor, Harmu Housing Colony, Ranchi Doranda, Jharkhand, 834002", "Unregistered"),
-            ("Hesa Consumer Products Private Limited", "Tamil Nadu"): ("H. No 2/361, Mariyammam Kovil Street, Ambur Taluk, Minnur, Tirupathur, Tamil Nadu, 635807", "33AAFCH9926E1ZK"),
-            ("Hesa Consumer Products Private Limited", "maharashtra"): ("4TH, R-2/2418/7A, SURVEY NO 259, Latur Industrial Area Additional, Latur, Maharashtra, 413531", "27AAFCH9926E1ZD"),
-            ("Hesa Consumer Products Private Limited", "Haryana"): ("0, ADRASH NAGAR, Narnaul, Mahendragarh, Haryana, 123001", "06AAFCH9926E1ZH"),
-            ("Hesa Consumer Products Private Limited", "bihar"): ("Ground floor, vijaya rajit singh Bhavan, Bampali, Bhojpur, Bihar, 802312", "10AAFCH9926E1ZS"),
-            ("Hesa Consumer Products Private Limited", "karnataka"): ("A3, Gangotri apartments, 3rd A Block, Gokulam, Mysore, Karnataka", "Unregistered")
-
-        }.items()
-
+        ("hesa consumer products private limited", "odisha"): (
+            "747/1170, PARAGON, Belagacchia, Khordha, Odisha, 754005",
+            "21AAFCH9926E1ZP"
+        ),
+        ("hesa consumer products private limited", "andhra pradesh"): (
+            "39-11-45, bank street, Muralinagar, Visakhapatnam, Visakhapatnam, Andhra Pradesh, 530007",
+            "37AAFCH9926E1ZC"
+        ),
+        ("hesa consumer products private limited", "telangana"): (
+            "1-4-158/136, Saipuri Colony, Kapra,Sainikpuri, Sainikpuri, Hyderabad, Telangana, 500094",
+            "36AAFCH9926E1ZE"
+        ),
+        ("hesa consumer products private limited", "jharkhand"): (
+            "flat No-C, First Floor, Harmu Housing Colony, Ranchi Doranda, Jharkhand, 834002",
+            "Unregistered"
+        ),
+        ("hesa consumer products private limited", "tamil nadu"): (
+            "H. No 2/361, Mariyammam Kovil Street, Ambur Taluk, Minnur, Tirupathur, Tamil Nadu, 635807",
+            "33AAFCH9926E1ZK"
+        ),
+        ("hesa consumer products private limited", "maharashtra"): (
+            "4TH, R-2/2418/7A, SURVEY NO 259, Latur Industrial Area Additional, Latur, Maharashtra, 413531",
+            "27AAFCH9926E1ZD"
+        ),
+        ("hesa consumer products private limited", "haryana"): (
+            "0, ADRASH NAGAR, Narnaul, Mahendragarh, Haryana, 123001",
+            "06AAFCH9926E1ZH"
+        ),
+        ("hesa consumer products private limited", "bihar"): (
+            "Ground floor, vijaya rajit singh Bhavan, Bampali, Bhojpur, Bihar, 802312",
+            "10AAFCH9926E1ZS"
+        ),
+        ("hesa consumer products private limited", "karnataka"): (
+            "A3, Gangotri apartments, 3rd A Block, Gokulam, Mysore, Karnataka",
+            "Unregistered"
+        )
     }
-        
-   
+
+
     input_df['Company Address'] = input_df.apply(
-        lambda row: normalized_mapping.get((row['Facilitator'].strip().lower(), row['Customer State'].strip().lower()), ("", ""))[0],
+        lambda row: normalized_mapping.get(
+            (normalize_text(row['Facilitator']), normalize_text(row['Customer State'])),
+            ("", "")
+        )[0],
         axis=1
     )
+
     input_df['GSTIN'] = input_df.apply(
-        lambda row: normalized_mapping.get((row['Facilitator'].strip().lower(), row['Customer State'].strip().lower()), ("", ""))[1],
+        lambda row: normalized_mapping.get(
+            (normalize_text(row['Facilitator']), normalize_text(row['Customer State'])),
+            ("", "")
+        )[1],
         axis=1
     )
+
+
 
     # Add 'Challan Type' column with 'Sales'
     input_df['Challan Type'] = 'Sales'

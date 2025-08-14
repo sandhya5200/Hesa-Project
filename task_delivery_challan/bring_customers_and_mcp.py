@@ -116,10 +116,8 @@ pincode_dict = dict(zip(customer_data['CustomerID'], customer_data['Pincode']))
 # Sales files list
 sales_files = [
 
-    "/home/thrymr/Downloads/Sheet1.xlsx",
-    "/home/thrymr/Downloads/Sheet2.xlsx",
-    "/home/thrymr/Downloads/Sheet3.xlsx"
-
+    "/home/thrymr/Downloads/Split_Sheets_Oct/Oct Sales 24-25(Final)_Sheet1.xlsx",
+    "/home/thrymr/Downloads/Split_Sheets_Oct/Oct Sales 24-25(Final)_Sheet2.xlsx"
 ]
 
 # MCP calculation function

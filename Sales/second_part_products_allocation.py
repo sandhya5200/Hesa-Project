@@ -296,8 +296,8 @@ import numpy as np
 import random
 
 # File paths
-sales_path = "/home/thrymr/Downloads/output_cons_Nov.xlsx"
-products_path = "/home/thrymr/Important/my_products_file_after_hsn_code_updatation.xlsx"
+sales_path = "/home/thrymr/Downloads/output_cons_sep.xlsx"
+products_path = "/home/thrymr/Important/my_products_file.xlsx"
 # output_matched = "/home/thrymr/Downloads/agri_oct_25_output_to_check.xlsx"
 # output_unmatched = "/home/thrymr/Downloads/unmatched_sales.xlsx"
 
@@ -642,7 +642,7 @@ final_df = final_df.rename(columns={
 CHUNK_SIZE = 800000
 
 # Output file path
-output_path = "/home/thrymr/Downloads/Final_Cons_Nov_25_output_to_check.xlsx"
+output_path = "/home/thrymr/Downloads/products_cons_sep.xlsx"
 
 # Total number of rows
 total_rows = len(final_df)

@@ -1,7 +1,7 @@
 import pandas as pd
 
 # Load input file
-input_df = pd.read_excel("/home/thrymr/Desktop/purchases(2024-25)/Hesa Consumer Products Private Limited/Consumer Purchase May-24.xlsx")  # Change to .csv if needed
+input_df = pd.read_excel("/home/thrymr/Downloads/pur/March 2025 Purchase Data-2 (1).xlsx")  # Change to .csv if needed
 
 input_df['vendor_id_norm'] = input_df['Vendor_Id'].astype(str).str.lower().str.replace(" ", "")
 input_df['vendor_state_norm'] = input_df['Vendor_State'].astype(str).str.lower().str.replace(" ", "")
@@ -15,7 +15,8 @@ state_files = {
     "telangana": pd.read_excel("/home/thrymr/Desktop/vendors/telangana_with_updates_vendors.xlsx"),
     "karnataka": pd.read_excel("/home/thrymr/Desktop/vendors/Karnataka_Vendor_Database.xlsx"),
     "haryana": pd.read_excel("/home/thrymr/Desktop/vendors/Haryana_Vendor_Database.xlsx"),
-    "bihar": pd.read_excel("/home/thrymr/Desktop/vendors/Bihar_Vendor_Database.xlsx")
+    "bihar": pd.read_excel("/home/thrymr/Desktop/vendors/Bihar_Vendor_Database.xlsx"),
+    "madhyapradesh": pd.read_excel("/home/thrymr/Desktop/vendors/mp_with_updates_vendors.xlsx")
 }
 
 
@@ -65,5 +66,5 @@ for idx, row in input_df.iterrows():
 final_df = pd.DataFrame(merged_rows)
 
 # Save to Excel
-final_df.to_excel("/home/thrymr/Desktop/Purchase_order_PDFs(2024-25)/PO_input_files_Consumer(24-25)_apr-sep/with_vendordata_Consumer Purchase May-24.xlsx", index=False)
+final_df.to_excel("/home/thrymr/Downloads/MAR_with_vendors.xlsx", index=False)
 print("✅ Merged output saved!")
