@@ -97,12 +97,12 @@ import math
 
 # Load and merge all customer databases
 customer_files = [
-    "/home/thrymr/Desktop/Customer_data/customer_database_part1.xlsx",
-    "/home/thrymr/Desktop/Customer_data/Customer_database_part2a.xlsx",
-    "/home/thrymr/Desktop/Customer_data/Customer_database_part2b.xlsx",
-    "/home/thrymr/Desktop/Customer_data/Customer_database_part2c.xlsx",
-    "/home/thrymr/Desktop/Customer_data/additional_database1.xlsx",
-    "/home/thrymr/Desktop/Customer_data/additional_database_2.xlsx"
+    r"c:\Users\ksand\Downloads\sorted_customers_part_1.xlsx",
+    r"c:\Users\ksand\Downloads\sorted_customers_part_2.xlsx",
+    # "/home/thrymr/Desktop/Customer_data/Customer_database_part2b.xlsx",
+    # "/home/thrymr/Desktop/Customer_data/Customer_database_part2c.xlsx",
+    # "/home/thrymr/Desktop/Customer_data/additional_database1.xlsx",
+    # "/home/thrymr/Desktop/Customer_data/additional_database_2.xlsx"
 ]
 customer_data = pd.concat([pd.read_excel(file) for file in customer_files])
 
@@ -116,8 +116,8 @@ pincode_dict = dict(zip(customer_data['CustomerID'], customer_data['Pincode']))
 # Sales files list
 sales_files = [
 
-    "/home/thrymr/Downloads/Split_Sheets_Oct/Oct Sales 24-25(Final)_Sheet1.xlsx",
-    "/home/thrymr/Downloads/Split_Sheets_Oct/Oct Sales 24-25(Final)_Sheet2.xlsx"
+    r"c:\Users\ksand\Downloads\mar_2020_sales.xlsx"
+    
 ]
 
 # MCP calculation function
@@ -182,6 +182,6 @@ for file_path in sales_files:
         start = i * MAX_ROWS
         end = min((i + 1) * MAX_ROWS, total_rows)
         part = df_sales.iloc[start:end].copy()
-        output_file = f"/home/thrymr/Downloads/{base_filename}_Part{i+1}.xlsx"
+        output_file = r"c:\Users\ksand\Downloads\mar_sales_with_customers.xlsx"
         part.to_excel(output_file, index=False)
         print(f"✅ Saved: {output_file} ({len(part)} rows)")

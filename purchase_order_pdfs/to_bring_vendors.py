@@ -1,29 +1,29 @@
 import pandas as pd
 
 # Load input file
-input_df = pd.read_excel("/home/thrymr/Downloads/pur/March 2025 Purchase Data-2 (1).xlsx")  # Change to .csv if needed
+input_df = pd.read_excel(r"c:\Users\ksand\Downloads\purchase_mar_2020.xlsx")  # Change to .csv if needed
 
-input_df['vendor_id_norm'] = input_df['Vendor_Id'].astype(str).str.lower().str.replace(" ", "")
-input_df['vendor_state_norm'] = input_df['Vendor_State'].astype(str).str.lower().str.replace(" ", "")
+input_df['vendor_id_norm'] = input_df['Vendor ID'].astype(str).str.lower().str.replace(" ", "")
+input_df['vendor_state_norm'] = input_df['State'].astype(str).str.lower().str.replace(" ", "")
 
 # State files mapping
 state_files = {
-    "andhrapradesh": pd.read_excel("/home/thrymr/Desktop/vendors/Andrapradesh_with_updates_vendors.xlsx"),
-    "maharashtra": pd.read_excel("/home/thrymr/Desktop/vendors/Maharashtra_with_updates_vendors.xlsx"),
-    "odisha": pd.read_excel("/home/thrymr/Desktop/vendors/odissa_with_updates_vendors.xlsx"),
-    "tamilnadu": pd.read_excel("/home/thrymr/Desktop/vendors/TAMILNADU_Vendor_Database.xlsx"),
-    "telangana": pd.read_excel("/home/thrymr/Desktop/vendors/telangana_with_updates_vendors.xlsx"),
-    "karnataka": pd.read_excel("/home/thrymr/Desktop/vendors/Karnataka_Vendor_Database.xlsx"),
-    "haryana": pd.read_excel("/home/thrymr/Desktop/vendors/Haryana_Vendor_Database.xlsx"),
-    "bihar": pd.read_excel("/home/thrymr/Desktop/vendors/Bihar_Vendor_Database.xlsx"),
-    "madhyapradesh": pd.read_excel("/home/thrymr/Desktop/vendors/mp_with_updates_vendors.xlsx")
+    # "andhrapradesh": pd.read_excel("/home/thrymr/Desktop/vendors/Andrapradesh_with_updates_vendors.xlsx"),
+    # "maharashtra": pd.read_excel("/home/thrymr/Desktop/vendors/Maharashtra_with_updates_vendors.xlsx"),
+    # "odisha": pd.read_excel("/home/thrymr/Desktop/vendors/odissa_with_updates_vendors.xlsx"),
+    # "tamilnadu": pd.read_excel("/home/thrymr/Desktop/vendors/TAMILNADU_Vendor_Database.xlsx"),
+    "telangana": pd.read_excel(r"c:\Users\ksand\Downloads\telangana_150_Vendors.xlsx"),
+    # "karnataka": pd.read_excel("/home/thrymr/Desktop/vendors/Karnataka_Vendor_Database.xlsx"),
+    # "haryana": pd.read_excel("/home/thrymr/Desktop/vendors/Haryana_Vendor_Database.xlsx"),
+    # "bihar": pd.read_excel("/home/thrymr/Desktop/vendors/Bihar_Vendor_Database.xlsx"),
+    # "madhyapradesh": pd.read_excel("/home/thrymr/Desktop/vendors/mp_with_updates_vendors.xlsx")
 }
 
 
 # Normalize columns in state files
 for state_key, df in state_files.items():
     df.columns = df.columns.str.strip()
-    df['vendor_id_norm'] = df['Vendor_Id'].astype(str).str.lower().str.replace(" ", "")
+    df['vendor_id_norm'] = df['Vendor ID'].astype(str).str.lower().str.replace(" ", "")
     state_files[state_key] = df
 
 # Prepare result list
@@ -53,18 +53,18 @@ for idx, row in input_df.iterrows():
                 'Sub Vertical': details_row.get('Sub Vertical'),
                 'Address': details_row.get('Address'),
                 'Pincode': details_row.get('Pincode'),
-                # 'Vendor_id': details_row.get('Vendor_Id')
+                # 'Vendor ID': details_row.get('Vendor ID')
             })
 
             merged_rows.append(enriched_row)
         else:
             print("ok")
     else:
-        print(f"Vendor_State {row['Vendor_State']} not recognized")
+        print(f"Vendor_State {row['State']} not recognized")
 
 # Convert result to DataFrame
 final_df = pd.DataFrame(merged_rows)
 
 # Save to Excel
-final_df.to_excel("/home/thrymr/Downloads/MAR_with_vendors.xlsx", index=False)
+final_df.to_excel(r"c:\Users\ksand\Downloads\mar_with_vendors.xlsx", index=False)
 print("✅ Merged output saved!")

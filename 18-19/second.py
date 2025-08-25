@@ -3,8 +3,8 @@ import numpy as np
 import random
 
 # File paths
-sales_path = "/home/thrymr/Downloads/mar_2019_taxable.xlsx"
-products_path = "/home/thrymr/Downloads/myyyy.xlsx"
+sales_path = r"c:\Users\ksand\Downloads\mar_2020_taxable.xlsx"
+products_path = r"c:\Users\ksand\Downloads\myyy.xlsx"
 
 # Load data
 sales_df = pd.read_excel(sales_path)
@@ -366,7 +366,7 @@ all_matched_rows = matched_rows + fmcg_matched_rows
 # Save unmatched sales if any
 if unmatched_sales:
     unmatched_df = pd.DataFrame(unmatched_sales)
-    unmatched_path = "/home/thrymr/Downloads/unmatched_sales_sep.xlsx"
+    unmatched_path = r"c:\Users\ksand\Downloads\unmatched.xlsx"
     unmatched_df.to_excel(unmatched_path, index=False)
     print(f"Unmatched sales saved to {unmatched_path}")
 else:
@@ -447,7 +447,7 @@ final_df = final_df.rename(columns={
 })
 
 # Save output
-output_path = "/home/thrymr/Downloads/products_cons_mar.xlsx"
+output_path = r"c:\Users\ksand\Downloads\mar_2020_products.xlsx"
 final_df.to_excel(output_path, index=False)
 
 # Print summary

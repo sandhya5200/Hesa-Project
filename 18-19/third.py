@@ -18,10 +18,10 @@ def clean(text):
 print("🔄 Loading input files...")
 # sales_df1 = pd.read_excel("/home/thrymr/Desktop/sales 25-26/products_agri_sep.xlsx")
 # sales_df2 = pd.read_excel("/home/thrymr/Desktop/sales 25-26/products_cons_sep.xlsx")
-hesaathi_df = pd.read_excel("/home/thrymr/Important/new_hessathi_with_additional_people_details (copy).xlsx")
+hesaathi_df = pd.read_excel(r"c:\Users\ksand\Downloads\Important 2\Important\new_hessathi_with_additional_people_details (copy).xlsx")
 
 print("🧩 Combining and shuffling sales data...")
-sales_df = pd.read_excel("/home/thrymr/Downloads/products_cons_mar.xlsx")
+sales_df = pd.read_excel(r"c:\Users\ksand\Downloads\mar_2020_products.xlsx")
 sales_df = sales_df.sample(frac=1, random_state=42).reset_index(drop=True)
 print(f"🧾 Total sales rows: {len(sales_df)}")
 
@@ -33,7 +33,7 @@ hesaathi_df['state_clean'] = hesaathi_df['State'].apply(clean)
 hesaathi_df['district_clean'] = hesaathi_df['District'].apply(clean)
 
 print("📅 Filtering Hesaathi data by onboarding month...")
-selected_month = "Aug'21"            ###################################################################----CHANGE-----#################################################################################
+selected_month = "Sep'21"            ###################################################################----CHANGE-----#################################################################################
 month_order = [
     "April'20", "May'20", "Jun'20", "Jul'20", "Aug'20", "Sep'20", "Oct'20", "Nov'20", "Dec'20",
     "Jan'21", "Feb'21", "Mar'21", "April'21", "May'21", "Jun'21", "Jul'21", "Aug'21", "Sep'21", "Dec'21",
@@ -200,6 +200,6 @@ for (merge_key, hesaathi_code, vertical), total_value in hesaathi_vertical_alloc
 
 # Save full file (no splitting into halves)
 print("\n📂 Saving final sales file...")
-sales_df.to_excel("/home/thrymr/Downloads/mar_sales_with_hesaathis.xlsx", index=False)
+sales_df.to_excel(r"c:\Users\ksand\Downloads\mar_after_hesaathis.xlsx", index=False)
 
 print("✅ Processing complete! File saved successfully.")

@@ -7,7 +7,7 @@ print("📥 Reading input Excel files...")
 print("🔗 Concatenating and sorting data...")
 
 # Combine and sort
-df = pd.read_excel("/home/thrymr/Downloads/mar_sales_with_hesaathis.xlsx")
+df = pd.read_excel(r"c:\Users\ksand\Downloads\mar_after_hesaathis.xlsx")
 df['Date'] = pd.to_datetime(df['Date'])  # Ensure datetime format
 df.sort_values(by='Date', inplace=True)
 
@@ -69,11 +69,11 @@ def generate_invoice_numbers(df):
         # --- Invoice No (AG / CG) ---
         if "Commerce Business" in vertical:
             prefix = "CG"
-            invoice_id = f"HS-INV-{prefix}-{month_str}-{year_str}-{cg_counter:08d}"
+            invoice_id = f"2019-20/RY/{month_str}/{cg_counter:04d}"
             cg_counter += 1
         else:
             prefix = "AG"
-            invoice_id = f"HS-INV-{prefix}-{month_str}-{year_str}-{ag_counter:08d}"
+            invoice_id = f"2019-20/RY/{month_str}/{cg_counter:04d}"
             ag_counter += 1
         
         # --- Order ID (integer) ---
@@ -88,70 +88,14 @@ def generate_invoice_numbers(df):
     return df
 
 
-
-def generate_dummy_invoices(df):
-    """
-    Generate Dummy Invoice:
-    HS-INV-[AG/CG]-[STATE CODE]-[MM]-[YY]-000001
-    """
-    print("🧾 Generating Dummy Invoices...")
-    df["Dummy Invoice"] = None
-    
-    # State codes mapping
-    state_codes = {
-        "Telangana": "TG",
-        "Maharashtra": "MH",
-        "Odisha": "OD",
-        "Karnataka": "KA",
-        "Tamil Nadu": "TN",
-        "Madhya Pradesh": "MP",
-        "Andhra Pradesh": "AP"
-    }
-    
-    # Dictionary to hold counters for Dummy Invoice (per prefix + state + month/year)
-    dummy_counters = {}
-    
-    for (date, cid, vertical, state), group in df.groupby(["Date", "Customer ID", "Vertical", "State"]):
-        
-        # Determine AG or CG
-        if "Commerce Business" in vertical:
-            prefix = "CG"
-        else:
-            prefix = "AG"
-        
-        # Get state code
-        state_code = state_codes.get(state, "XX")  # Default to 'XX' if not found
-        
-        # Extract month/year from Date
-        month_str = f"{date.month:02d}"
-        year_str = str(date.year)[-2:]
-        
-        # Key for counter
-        dummy_key = f"{prefix}-{state_code}-{month_str}-{year_str}"
-        
-        # Initialize counter if not exists
-        if dummy_key not in dummy_counters:
-            dummy_counters[dummy_key] = 1
-        
-        dummy_counter = dummy_counters[dummy_key]
-        dummy_invoice = f"HS-INV-{prefix}-{state_code}-{month_str}-{year_str}-{dummy_counter:06d}"
-        
-        # Assign values
-        df.loc[group.index, "Dummy Invoice"] = dummy_invoice
-        
-        # Increment for next
-        dummy_counters[dummy_key] += 1
-    
-    return df
-
 # Apply functions
 df = generate_customer_ids(df)
 df = generate_invoice_numbers(df)    
-df = generate_dummy_invoices(df)
+
 
 # Save as one file (no split)
 print("💾 Saving output file...")
-df.to_excel("/home/thrymr/Downloads/mar_final_2019.xlsx", index=False)
+df.to_excel(r"c:\Users\ksand\Downloads\mar_2020_sales.xlsx", index=False)
 
 print("✅ Processing complete. File saved successfully.")
 
