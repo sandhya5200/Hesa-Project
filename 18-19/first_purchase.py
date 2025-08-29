@@ -17,12 +17,12 @@ business_dict = {
 
 def purchase():
     print("before")
-    product_quantity = pd.read_excel(r"c:\Users\ksand\Downloads\mar_pivot.xlsx", sheet_name="Quantity")
+    product_quantity = pd.read_excel("/home/thrymr/Downloads/pivot.xlsx", sheet_name="Quantity")
    
-    product_gross = pd.read_excel(r"c:\Users\ksand\Downloads\mar_pivot.xlsx", sheet_name="Taxable value")
+    product_gross = pd.read_excel("/home/thrymr/Downloads/pivot.xlsx", sheet_name="Taxable value")
     
-    zone_df = pd.read_excel(r"c:\Users\ksand\Downloads\Important 2\Important\new_hessathi_with_additional_people_details (copy).xlsx")
-    products_data = pd.read_excel(r"c:\Users\ksand\Downloads\Important 2\Important\my_products_file.xlsx")
+    zone_df = pd.read_excel("/home/thrymr/Important/new_hessathi_with_additional_people_details (copy).xlsx")
+    products_data = pd.read_excel("/home/thrymr/Important/my_products_file.xlsx")
     #vendor = pd.read_excel("/home/thrymr/Downloads/Vendor data 1 1.xlsx",sheet_name="10-15 vendors from this data")
     col = product_gross.columns
     track = {}
@@ -199,7 +199,7 @@ def purchase():
                 missed_quantity+=init_q
     df = pd.DataFrame(rows)
     print(len(rows))                
-    df.to_excel(r"c:\Users\ksand\Downloads\mar.xlsx")
+    df.to_excel("/home/thrymr/Downloads/mar.xlsx")
     print("completed")
     
 purchase()

@@ -1,11 +1,11 @@
 import pandas as pd
 import random
 
-input_file = r"c:\Users\ksand\Downloads\mar.xlsx"
+input_file = "/home/thrymr/Downloads/mar_2.xlsx"
 
 
-zone_file = r"c:\Users\ksand\Downloads\Important 2\Important\new_hessathi_with_additional_people_details (copy).xlsx"
-output_file = r"c:\Users\ksand\Downloads\purchase_mar_2020.xlsx"
+zone_file = "/home/thrymr/Important/new_hessathi_with_additional_people_details (copy).xlsx"
+output_file = "/home/thrymr/Downloads/mar_3.xlsx"
 
 # Load data
 input_df = pd.read_excel(input_file)
@@ -46,7 +46,7 @@ def generate_po_number(row):
     key = (row["Date"], row["Sub Vertical"], row["District"], row["Vendor ID"])
     
     if key not in po_tracker:
-        po_tracker[key] = f"2019-20/RY/PO/{po_counter:06d}"
+        po_tracker[key] = f"2018-19/RY/PO/{po_counter:06d}"
         po_counter += 1
     
     return po_tracker[key]

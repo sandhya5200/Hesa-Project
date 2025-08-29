@@ -66,7 +66,7 @@
 import pandas as pd
 
 def calculate_difference_for_all(input_file, output_file):
-    input_df = pd.read_excel(input_file)
+    input_df = pd.read_excel(input_file, sheet_name='Taxable value')
     output_df = pd.read_excel(output_file)
 
     # Normalize 'Sub Vertical' and 'District' in both DataFrames
@@ -75,7 +75,7 @@ def calculate_difference_for_all(input_file, output_file):
     output_df["District"] = output_df["District"].astype(str).str.strip().str.lower()
 
     # Also use lowercase sub_verticals list for matching
-    sub_verticals = ["agri inputs", "market linkages", "value intervention", "fmcg", "white label"]
+    sub_verticals = ["agri inputs", "market linkages trading", "fmcg"]
     districts = input_df.columns[8:]
 
     results = []
@@ -96,11 +96,17 @@ def calculate_difference_for_all(input_file, output_file):
                 (output_df['District'] == district_normalized)
             ]
 
-            if 'Product Qty' not in output_filtered.columns:
+            # if 'Product Qty' not in output_filtered.columns:
+            #     print(f"Error: 'Product Qty' column not found in the output file for {district}.")
+            #     continue
+
+            # y = output_filtered['Product Qty'].sum()
+
+            if 'Taxable Value' not in output_filtered.columns:
                 print(f"Error: 'Product Qty' column not found in the output file for {district}.")
                 continue
 
-            y = output_filtered['Product Qty'].sum()
+            y = output_filtered['Taxable Value'].sum()
 
             # Calculate the quantity difference
             if x == 0:
@@ -122,10 +128,8 @@ def calculate_difference_for_all(input_file, output_file):
     results_df = pd.DataFrame(results)
     return results_df
 
-input_file = "/home/thrymr/Desktop/purchase_oct-mar(24-25)/PIVOTS USED TO MAKE PURCHASES/FEB -Quantity.xlsx"
-output_file = "/home/thrymr/Desktop/purchase_oct-mar(24-25)/Puchase_Agri_Feb_24-25.xlsx"
+input_file = "/home/thrymr/Downloads/pivot.xlsx"
+output_file = "/home/thrymr/Downloads/aug_3.xlsx"
 
 results_df = calculate_difference_for_all(input_file, output_file)
-results_df.to_excel("/home/thrymr/Downloads/QTY_feb_testing.xlsx", index=False)
-
-print("Results saved to 'QTY_oct_testing.xlsx'")
+results_df.to_excel("/home/thrymr/Downloads/TV_testing.xlsx", index=False)

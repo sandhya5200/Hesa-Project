@@ -2,7 +2,7 @@ import pandas as pd
 import random
 
 # Load the Excel file
-df = pd.read_excel(r"c:\Users\ksand\Downloads\mar.xlsx")
+df = pd.read_excel("/home/thrymr/Downloads/mar.xlsx")
 
 # Clean and format
 df["District"] = df["District"].str.strip().str.upper()
@@ -91,4 +91,4 @@ print(f"\n🎯 Total rows assigned Vendor IDs: {total_assigned}")
 
 # Step 4: Save output
 df.drop(columns="__row_id__", inplace=True)
-df.to_excel(r"c:\Users\ksand\Downloads\mar.xlsx", index=False)
+df.to_excel("/home/thrymr/Downloads/mar_2.xlsx", index=False)

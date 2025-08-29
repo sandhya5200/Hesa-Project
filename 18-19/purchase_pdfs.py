@@ -6,6 +6,7 @@ from reportlab.lib import colors
 from reportlab.lib.utils import ImageReader
 from reportlab.platypus import Table, TableStyle
 import math
+import os
 
 FIRST_PAGE_ROWS = 15
 SUBSEQUENT_PAGE_ROWS = 35
@@ -112,7 +113,7 @@ def create_challan_pdf(data, items, c):
     margin_left = 2 * cm
     margin_bottom = 1.5 * cm
 
-    logo_path = r"c:\Users\ksand\OneDrive\Pictures\Screenshots\Screenshot 2025-08-23 134435.png"
+    logo_path = "/home/thrymr/Downloads/rural_yellow_logo.png"
    
     try:
         logo = ImageReader(logo_path)
@@ -211,27 +212,40 @@ def create_challan_pdf(data, items, c):
     c.drawString(margin_left, margin_bottom + 0.5 * cm, "4. Invoice should carry the same rate, quantity and SKUs as per PO")
     c.drawString(margin_left, margin_bottom , "5. Payment terms as per the agreement")
  
+
 def generate_challans_from_excel(excel_file, output_pdf):
     df = pd.read_excel(excel_file)
     grouped = df.groupby('PO Number')
+
     c = canvas.Canvas(output_pdf, pagesize=A4)
- 
+
     for delivery_challan, group in grouped:
         first_row = group.iloc[0]
         last_row = group.iloc[-1]
- 
-        items = group[['Product Name', 'HSN Code','Product Qty', "Taxable Value", 'GST Rate', 'GST Amount', 'Gross Total']].to_dict('records')
- 
+
+        items = group[['Product Name', 'HSN Code','Product Qty', 
+                       "Taxable Value", 'GST Rate', 'GST Amount', 
+                       'Gross Total']].to_dict('records')
+
         data = last_row.to_dict()
-        create_challan_pdf(data, items, c)
+        create_challan_pdf(data, items, c)   # <-- your existing function
+
         c.showPage()
- 
+
     c.save()
- 
-    print(f"PDF generated as {output_pdf}")
+    print(f"✅ PDF generated: {output_pdf}")
 
 
-excel_file = r"c:\Users\ksand\Downloads\purchases 19-20\mar_with_vendors.xlsx"
-output_pdf = r"c:\Users\ksand\Downloads\purchases 19-20\mar_purchase_pdf_2019-20.pdf"
-generate_challans_from_excel(excel_file, output_pdf)
+# ✅ List of Excel files
+excel_files = [
+"/home/thrymr/Downloads/jan_with_vendors.xlsx",
+
+
+]
+
+# ✅ Loop over files
+for excel_file in excel_files:
+    file_name = os.path.splitext(os.path.basename(excel_file))[0]   # e.g. "aug_with_vendors_updated"
+    output_pdf = os.path.join(os.path.dirname(excel_file), f"{file_name}_POs.pdf")
+    generate_challans_from_excel(excel_file, output_pdf)
 
