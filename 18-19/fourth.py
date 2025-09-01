@@ -7,7 +7,7 @@ print("📥 Reading input Excel files...")
 print("🔗 Concatenating and sorting data...")
 
 # Combine and sort
-df = pd.read_excel(r"c:\Users\ksand\Downloads\mar_after_hesaathis.xlsx")
+df = pd.read_excel(r"c:\Users\ksand\Downloads\may_after_hesaathis.xlsx")
 df['Date'] = pd.to_datetime(df['Date'])  # Ensure datetime format
 df.sort_values(by='Date', inplace=True)
 
@@ -69,11 +69,11 @@ def generate_invoice_numbers(df):
         # --- Invoice No (AG / CG) ---
         if "Commerce Business" in vertical:
             prefix = "CG"
-            invoice_id = f"2019-20/RY/{month_str}/{cg_counter:04d}"
+            invoice_id = f"2020-21/RY/{month_str}/{cg_counter:04d}"
             cg_counter += 1
         else:
             prefix = "AG"
-            invoice_id = f"2019-20/RY/{month_str}/{cg_counter:04d}"
+            invoice_id = f"2020-21/RY/{month_str}/{cg_counter:04d}"
             ag_counter += 1
         
         # --- Order ID (integer) ---
@@ -95,7 +95,7 @@ df = generate_invoice_numbers(df)
 
 # Save as one file (no split)
 print("💾 Saving output file...")
-df.to_excel(r"c:\Users\ksand\Downloads\mar_2020_sales.xlsx", index=False)
+df.to_excel(r"c:\Users\ksand\Downloads\may_2020_sales.xlsx", index=False)
 
 print("✅ Processing complete. File saved successfully.")
 

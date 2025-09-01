@@ -116,7 +116,7 @@ pincode_dict = dict(zip(customer_data['CustomerID'], customer_data['Pincode']))
 # Sales files list
 sales_files = [
 
-    r"c:\Users\ksand\Downloads\mar_2020_sales.xlsx"
+    r"c:\Users\ksand\Downloads\may_2020_sales.xlsx"
     
 ]
 
@@ -182,6 +182,6 @@ for file_path in sales_files:
         start = i * MAX_ROWS
         end = min((i + 1) * MAX_ROWS, total_rows)
         part = df_sales.iloc[start:end].copy()
-        output_file = r"c:\Users\ksand\Downloads\mar_sales_with_customers.xlsx"
+        output_file = r"c:\Users\ksand\Downloads\may_sales_with_customers.xlsx"
         part.to_excel(output_file, index=False)
         print(f"✅ Saved: {output_file} ({len(part)} rows)")

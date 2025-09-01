@@ -2,7 +2,7 @@ import pandas as pd
 import random
 
 # Load the Excel file
-df = pd.read_excel("/home/thrymr/Downloads/mar.xlsx")
+df = pd.read_excel(r"c:\Users\ksand\Downloads\apr.xlsx")
 
 # Clean and format
 df["District"] = df["District"].str.strip().str.upper()
@@ -10,10 +10,10 @@ df["Sub Vertical"] = df["Sub Vertical"].str.strip().str.upper()
 df["__row_id__"] = df.index  # ✅ Unique ID for fast assignment
 
 # Constants
-MIN_VENDOR_IDS = 4
-MAX_VENDOR_IDS = 5
-MIN_TAXABLE = 50000
-MAX_TAXABLE = 85000
+MIN_VENDOR_IDS = 10
+MAX_VENDOR_IDS = 15
+MIN_TAXABLE = 85000
+MAX_TAXABLE = 150000
 
 # Step 1: Add Vendor ID column to DataFrame
 df["Vendor ID"] = None
@@ -91,4 +91,4 @@ print(f"\n🎯 Total rows assigned Vendor IDs: {total_assigned}")
 
 # Step 4: Save output
 df.drop(columns="__row_id__", inplace=True)
-df.to_excel("/home/thrymr/Downloads/mar_2.xlsx", index=False)
+df.to_excel(r"c:\Users\ksand\Downloads\apr.xlsx", index=False)

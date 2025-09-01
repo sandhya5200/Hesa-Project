@@ -296,14 +296,14 @@ import numpy as np
 import random
 
 # File paths
-sales_path = "/home/thrymr/Downloads/output_cons_sep.xlsx"
-products_path = "/home/thrymr/Important/my_products_file.xlsx"
+sales_path = r"c:\Users\ksand\Downloads\june_2020_taxable.xlsx"
+products_path = r"c:\Users\ksand\Downloads\myyy.xlsx"
 # output_matched = "/home/thrymr/Downloads/agri_oct_25_output_to_check.xlsx"
 # output_unmatched = "/home/thrymr/Downloads/unmatched_sales.xlsx"
 
 # Load data
 sales_df = pd.read_excel(sales_path)
-products_df = pd.read_excel(products_path)
+products_df = pd.read_excel(products_path, sheet_name="sheet0and5and18")
 
 PRICE_ADJUSTMENT = 0.02
 DECIMAL_UOM = ["kg", "ltr", "gm"]

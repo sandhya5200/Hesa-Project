@@ -3,12 +3,12 @@ import numpy as np
 import random
 
 # File paths
-sales_path = r"c:\Users\ksand\Downloads\mar_2020_taxable.xlsx"
+sales_path = r"c:\Users\ksand\Downloads\june_2020_taxable.xlsx"
 products_path = r"c:\Users\ksand\Downloads\myyy.xlsx"
 
 # Load data
 sales_df = pd.read_excel(sales_path)
-products_df = pd.read_excel(products_path)
+products_df = pd.read_excel(products_path, sheet_name="sheet0and5and18")
 
 PRICE_ADJUSTMENT = 0.02
 DECIMAL_UOM = ["kg", "ltr", "gm"]
@@ -447,7 +447,7 @@ final_df = final_df.rename(columns={
 })
 
 # Save output
-output_path = r"c:\Users\ksand\Downloads\mar_2020_products.xlsx"
+output_path = r"c:\Users\ksand\Downloads\june_2020_products.xlsx"
 final_df.to_excel(output_path, index=False)
 
 # Print summary
@@ -466,3 +466,4 @@ if 'Source' in final_df.columns:
         print(f"  {source}: {count} records")
 
 print("Done!")
+

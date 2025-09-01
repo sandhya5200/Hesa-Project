@@ -220,8 +220,8 @@ def create_combined_file(input_file_path, output_file_path):
 # Example usage with your specific file paths:
 if __name__ == "__main__":
     # Your specific file paths
-    input_file = "/home/thrymr/Downloads/mar_sales_with_customers.xlsx"
-    output_file = "/home/thrymr/Downloads/pivot.xlsx"
+    input_file = r"c:\Users\ksand\Downloads\sales(20-21)\apr_sales_with_customers.xlsx"
+    output_file = r"c:\Users\ksand\Downloads\pivot.xlsx"
     
     try:
         # Create pivot tables and save to your specified output file
@@ -247,7 +247,7 @@ def read_created_pivots():
     """
     Function to read the pivot data you just created
     """
-    output_file = "/home/thrymr/Downloads/pivot.xlsx"
+    output_file = r"c:\Users\ksand\Downloads\pivot.xlsx"
     
     # Read both sheets
     product_quantity = pd.read_excel(output_file, sheet_name="Quantity")
@@ -257,3 +257,5 @@ def read_created_pivots():
     print(f"Taxable value sheet shape: {product_gross.shape}")
     
     return product_quantity, product_gross
+
+

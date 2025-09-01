@@ -4,8 +4,8 @@ import random
 import pandas as pd
 
 month_map = [
-    "April'19", "May'19", "Jun'19", "Jul'19", "Aug'19", "Sep'19", 
-    "Oct'19", "Nov'19", "Dec'19", "Jan'20", "Feb'20", "Mar'20"
+    "April'20", "May'20", "Jun'20", "Jul'20", "Aug'20", "Sep'20", 
+    "Oct'20", "Nov'20", "Dec'20", "Jan'21", "Feb'21", "Mar'21"
 ]
 
 business_dict = {
@@ -17,12 +17,12 @@ business_dict = {
 
 def purchase():
     print("before")
-    product_quantity = pd.read_excel("/home/thrymr/Downloads/pivot.xlsx", sheet_name="Quantity")
+    product_quantity = pd.read_excel(r"c:\Users\ksand\Downloads\pivot.xlsx", sheet_name="Quantity")
    
-    product_gross = pd.read_excel("/home/thrymr/Downloads/pivot.xlsx", sheet_name="Taxable value")
+    product_gross = pd.read_excel(r"c:\Users\ksand\Downloads\pivot.xlsx", sheet_name="Taxable value")
     
-    zone_df = pd.read_excel("/home/thrymr/Important/new_hessathi_with_additional_people_details (copy).xlsx")
-    products_data = pd.read_excel("/home/thrymr/Important/my_products_file.xlsx")
+    zone_df = pd.read_excel(r"c:\Users\ksand\Downloads\Important 2\Important\new_hessathi_with_additional_people_details (copy).xlsx")
+    products_data = pd.read_excel(r"c:\Users\ksand\Downloads\myyy.xlsx")
     #vendor = pd.read_excel("/home/thrymr/Downloads/Vendor data 1 1.xlsx",sheet_name="10-15 vendors from this data")
     col = product_gross.columns
     track = {}
@@ -199,7 +199,7 @@ def purchase():
                 missed_quantity+=init_q
     df = pd.DataFrame(rows)
     print(len(rows))                
-    df.to_excel("/home/thrymr/Downloads/mar.xlsx")
+    df.to_excel(r"c:\Users\ksand\Downloads\apr.xlsx")
     print("completed")
     
 purchase()

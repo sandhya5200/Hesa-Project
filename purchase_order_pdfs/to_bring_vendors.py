@@ -1,7 +1,7 @@
 import pandas as pd
 
 # Load input file
-input_df = pd.read_excel("/home/thrymr/Downloads/mar_3.xlsx")  # Change to .csv if needed
+input_df = pd.read_excel(r"c:\Users\ksand\Downloads\april_final.xlsx")  # Change to .csv if needed
 
 input_df['vendor_id_norm'] = input_df['Vendor ID'].astype(str).str.lower().str.replace(" ", "")
 input_df['vendor_state_norm'] = input_df['State'].astype(str).str.lower().str.replace(" ", "")
@@ -11,7 +11,7 @@ state_files = {
     # "maharashtra": pd.read_excel("/home/thrymr/Desktop/vendors/Maharashtra_with_updates_vendors.xlsx"),
     # "odisha": pd.read_excel("/home/thrymr/Desktop/vendors/odissa_with_updates_vendors.xlsx"),
     # "tamilnadu": pd.read_excel("/home/thrymr/Desktop/vendors/TAMILNADU_Vendor_Database.xlsx"),
-    "telangana": pd.read_excel("/home/thrymr/Desktop/new_vendor_databases/telangana_150_Vendors.xlsx"),
+    "telangana": pd.read_excel(r"c:\Users\ksand\Downloads\telangana_150_Vendors (1).xlsx"),
     # "karnataka": pd.read_excel("/home/thrymr/Desktop/vendors/Karnataka_Vendor_Database.xlsx"),
     # "haryana": pd.read_excel("/home/thrymr/Desktop/vendors/Haryana_Vendor_Database.xlsx"),
     # "bihar": pd.read_excel("/home/thrymr/Desktop/vendors/Bihar_Vendor_Database.xlsx"),
@@ -82,5 +82,5 @@ for idx, row in input_df.iterrows():
 final_df = pd.DataFrame(merged_rows)
 
 # Save to Excel
-final_df.to_excel("/home/thrymr/Downloads/mar_with_vendors.xlsx", index=False)
+final_df.to_excel(r"c:\Users\ksand\Downloads\purchases(20-21)\apr_purchase_with_vendors.xlsx", index=False)
 print("✅ Merged output saved! (all rows preserved)")
