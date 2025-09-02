@@ -75,6 +75,10 @@ def purchase():
         else:
             pr= pr.sample(n=1).iloc[0]
             gst = row_data[7] 
+            # Convert GST rate from percentage to decimal (e.g., 18 -> 0.18)
+            if gst >= 1:
+                gst = gst / 100
+  
             # print(p_name)
             hsn_code = row_data[3]
         uom = row_data[4]

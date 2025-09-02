@@ -113,7 +113,7 @@ def create_challan_pdf(data, items, c):
     margin_left = 2 * cm
     margin_bottom = 1.5 * cm
 
-    logo_path = "/home/thrymr/Downloads/rural_yellow_logo.png"
+    logo_path = "/home/thrymr/hesa_logo.jpg"
    
     try:
         logo = ImageReader(logo_path)
@@ -125,13 +125,13 @@ def create_challan_pdf(data, items, c):
     # Company Information - SIMPLIFIED
     c.setFont("Helvetica-Bold", 10)
     company_info_y = height - 5 * cm
-    c.drawString(margin_left, company_info_y, "RURAL YELLOW TIMES PVT.LTD")
+    c.drawString(margin_left, company_info_y, "Hesa Enterprises Private Limited")
     
     c.setFont("Helvetica", 9)
     # Company address lines
-    c.drawString(margin_left, company_info_y - 12, "315, Block I, RV Manyatha Apartments,")
-    c.drawString(margin_left, company_info_y - 24, "PJR Enclave Road, Chanda Nagar,")
-    c.drawString(margin_left, company_info_y - 36, "Hyderabad - 500 050, Telangana, India.")
+    c.drawString(margin_left, company_info_y - 12, "1-4-158/136, Plot No. 136, Saipuri Colony,")
+    c.drawString(margin_left, company_info_y - 24, "Kapra, Sainikpuri,")
+    c.drawString(margin_left, company_info_y - 36, "Hyderabad - 500094, Telangana, India.")
     c.drawString(margin_left, company_info_y - 48, "Pan No: AAFCR8177F")
     c.drawString(margin_left, company_info_y - 60, "GS Tax No: 36AAFCR8177F1Z1")
     
@@ -238,7 +238,17 @@ def generate_challans_from_excel(excel_file, output_pdf):
 
 # ✅ List of Excel files
 excel_files = [
-"/home/thrymr/Downloads/jan_with_vendors.xlsx",
+# "/home/thrymr/Downloads/purchase(20-21)/August_purchase_with_vendors.xlsx", 
+# "/home/thrymr/Downloads/purchase(20-21)/December_purchase_with_vendors.xlsx",
+# "/home/thrymr/Downloads/purchase(20-21)/july_purchase_with_vendors.xlsx", 
+# "/home/thrymr/Downloads/purchase(20-21)/june_purchase_with_vendors.xlsx", 
+# "/home/thrymr/Downloads/purchase(20-21)/May_purchase_with_vendors.xlsx", 
+# "/home/thrymr/Downloads/purchase(20-21)/November_purchase_with_vendors.xlsx", 
+# "/home/thrymr/Downloads/purchase(20-21)/October_purchase_with_vendors.xlsx", 
+# "/home/thrymr/Downloads/purchase(20-21)/September_purchase_with_vendors.xlsx"
+
+"/home/thrymr/Downloads/purchase(20-21)/April_purchase_with_vendors.xlsx", 
+
 
 
 ]

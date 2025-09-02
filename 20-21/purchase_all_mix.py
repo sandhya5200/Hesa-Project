@@ -220,8 +220,8 @@ def create_combined_file(input_file_path, output_file_path):
 # Example usage with your specific file paths:
 if __name__ == "__main__":
     # Your specific file paths
-    input_file = r"c:\Users\ksand\Downloads\sales(20-21)\may_sales_with_customers.xlsx"
-    output_file = r"c:\Users\ksand\Downloads\may_pivot.xlsx"
+    input_file = "/home/thrymr/Downloads/sales(20-21)/may_sales_with_customers.xlsx"
+    output_file = "/home/thrymr/Downloads/May_pivot.xlsx"
     
     try:
         # Create pivot tables and save to your specified output file
@@ -232,9 +232,6 @@ if __name__ == "__main__":
         print(f"📁 Output file: {output_file}")
         print(f"📊 Sheets: 'Quantity' and 'Taxable value'")
         
-        # You can now read the created file like this:
-        # product_quantity = pd.read_excel(r"c:\Users\ksand\Downloads\Copy of mar_2019_sales(1).xlsx", sheet_name="Quantity")
-        # product_gross = pd.read_excel(r"c:\Users\ksand\Downloads\Copy of mar_2019_sales(1).xlsx", sheet_name="Taxable value")
         
     except FileNotFoundError:
         print(f"❌ Input file not found: {input_file}")
@@ -247,7 +244,7 @@ def read_created_pivots():
     """
     Function to read the pivot data you just created
     """
-    output_file = r"c:\Users\ksand\Downloads\may_pivot.xlsx"
+    output_file = "/home/thrymr/Downloads/May_pivot.xlsx"
     
     # Read both sheets
     product_quantity = pd.read_excel(output_file, sheet_name="Quantity")
@@ -291,12 +288,12 @@ business_dict = {
 
 def purchase():
     print("before")
-    product_quantity = pd.read_excel(r"c:\Users\ksand\Downloads\may_pivot.xlsx", sheet_name="Quantity")
+    product_quantity = pd.read_excel("/home/thrymr/Downloads/May_pivot.xlsx", sheet_name="Quantity")
    
-    product_gross = pd.read_excel(r"c:\Users\ksand\Downloads\may_pivot.xlsx", sheet_name="Taxable value")
+    product_gross = pd.read_excel("/home/thrymr/Downloads/May_pivot.xlsx", sheet_name="Taxable value")
     
-    zone_df = pd.read_excel(r"c:\Users\ksand\Downloads\Important 2\Important\new_hessathi_with_additional_people_details (copy).xlsx")
-    products_data = pd.read_excel(r"c:\Users\ksand\Downloads\myyy.xlsx")
+    zone_df = pd.read_excel("/home/thrymr/Important/new_hessathi_with_additional_people_details (copy).xlsx")
+    products_data = pd.read_excel("/home/thrymr/Downloads/myyy.xlsx")
     #vendor = pd.read_excel("/home/thrymr/Downloads/Vendor data 1 1.xlsx",sheet_name="10-15 vendors from this data")
     col = product_gross.columns
     track = {}
@@ -349,6 +346,9 @@ def purchase():
         else:
             pr= pr.sample(n=1).iloc[0]
             gst = row_data[7] 
+            # Convert GST rate from percentage to decimal (e.g., 18 -> 0.18)
+            if gst >= 1:
+                gst = gst / 100
             # print(p_name)
             hsn_code = row_data[3]
         uom = row_data[4]
@@ -473,7 +473,7 @@ def purchase():
                 missed_quantity+=init_q
     df = pd.DataFrame(rows)
     print(len(rows))                
-    df.to_excel(r"c:\Users\ksand\Downloads\may.xlsx")
+    df.to_excel("/home/thrymr/Downloads/May.xlsx")
     print("completed")
     
 purchase()
@@ -490,7 +490,7 @@ import pandas as pd
 import random
 
 # Load the Excel file
-df = pd.read_excel(r"c:\Users\ksand\Downloads\may.xlsx")
+df = pd.read_excel("/home/thrymr/Downloads/May.xlsx")
 
 # Clean and format
 df["District"] = df["District"].str.strip().str.upper()
@@ -579,7 +579,7 @@ print(f"\n🎯 Total rows assigned Vendor IDs: {total_assigned}")
 
 # Step 4: Save output
 df.drop(columns="__row_id__", inplace=True)
-df.to_excel(r"c:\Users\ksand\Downloads\may.xlsx", index=False)
+df.to_excel("/home/thrymr/Downloads/May.xlsx", index=False)
 
 
 
@@ -594,11 +594,11 @@ df.to_excel(r"c:\Users\ksand\Downloads\may.xlsx", index=False)
 import pandas as pd
 import random
 
-input_file = r"c:\Users\ksand\Downloads\may.xlsx"
+input_file = "/home/thrymr/Downloads/May.xlsx"
 
 
-zone_file = r"c:\Users\ksand\Downloads\Important 2\Important\new_hessathi_with_additional_people_details (copy).xlsx"
-output_file = r"c:\Users\ksand\Downloads\may_final.xlsx"
+zone_file = "/home/thrymr/Important/new_hessathi_with_additional_people_details (copy).xlsx"
+output_file = "/home/thrymr/Downloads/May_final.xlsx"
 
 # Load data
 input_df = pd.read_excel(input_file)
@@ -639,7 +639,7 @@ def generate_po_number(row):
     key = (row["Date"], row["Sub Vertical"], row["District"], row["Vendor ID"])
     
     if key not in po_tracker:
-        po_tracker[key] = f"2020-21/RY/PO/{po_counter:06d}"
+        po_tracker[key] = f"2020-21/HS/PO/{po_counter:06d}"
         po_counter += 1
     
     return po_tracker[key]
@@ -654,12 +654,12 @@ district_hesaathi_map = zone_df.groupby("District")["Hesaathi Code"].apply(list)
 # Custom district mappings for fallback logic
 district_code_mappings = {
     "vijayawada": ["srikakulam", "kurnool", "guntur", "visakhapatnam"],
-    "wanaparthy": ["medak", "warangal", "adilabad", "nalgonda"],
-    "balasore": ["angul", "balangir", "boudh", "cuttak"],
-    "sangareddy": ["karim nagar", "nizamabad", "rangareddy", "warangal"],
-    "vikarabad": ["medak", "warangal","nizamabad", "rangareddy"],
-    "ujjain": ["dhule", "jalgaon", "buldhana", "amravati"],
-    "dhar": ["dhule", "jalgaon", "buldhana", "amravati"]
+    # "wanaparthy": ["medak", "warangal", "adilabad", "nalgonda"],
+    # "balasore": ["angul", "balangir", "boudh", "cuttak"],
+    # "sangareddy": ["karim nagar", "nizamabad", "rangareddy", "warangal"],
+    # "vikarabad": ["medak", "warangal","nizamabad", "rangareddy"],
+    # "ujjain": ["dhule", "jalgaon", "buldhana", "amravati"],
+    # "dhar": ["dhule", "jalgaon", "buldhana", "amravati"]
 
 }
 
@@ -706,7 +706,7 @@ print(f"Updated file saved as {output_file}")
 import pandas as pd
 
 # Load input file
-input_df = pd.read_excel(r"c:\Users\ksand\Downloads\may_final.xlsx")  # Change to .csv if needed
+input_df = pd.read_excel("/home/thrymr/Downloads/May_final.xlsx")  # Change to .csv if needed
 
 input_df['vendor_id_norm'] = input_df['Vendor ID'].astype(str).str.lower().str.replace(" ", "")
 input_df['vendor_state_norm'] = input_df['State'].astype(str).str.lower().str.replace(" ", "")
@@ -716,7 +716,7 @@ state_files = {
     # "maharashtra": pd.read_excel("/home/thrymr/Desktop/vendors/Maharashtra_with_updates_vendors.xlsx"),
     # "odisha": pd.read_excel("/home/thrymr/Desktop/vendors/odissa_with_updates_vendors.xlsx"),
     # "tamilnadu": pd.read_excel("/home/thrymr/Desktop/vendors/TAMILNADU_Vendor_Database.xlsx"),
-    "telangana": pd.read_excel(r"c:\Users\ksand\Downloads\telangana_150_Vendors (1).xlsx"),
+    "telangana": pd.read_excel("/home/thrymr/Downloads/telangana_150_Vendors (1).xlsx"),
     # "karnataka": pd.read_excel("/home/thrymr/Desktop/vendors/Karnataka_Vendor_Database.xlsx"),
     # "haryana": pd.read_excel("/home/thrymr/Desktop/vendors/Haryana_Vendor_Database.xlsx"),
     # "bihar": pd.read_excel("/home/thrymr/Desktop/vendors/Bihar_Vendor_Database.xlsx"),
@@ -787,5 +787,5 @@ for idx, row in input_df.iterrows():
 final_df = pd.DataFrame(merged_rows)
 
 # Save to Excel
-final_df.to_excel(r"c:\Users\ksand\Downloads\purchases(20-21)\may_purchase_with_vendors.xlsx", index=False)
+final_df.to_excel("/home/thrymr/Downloads/purchase(20-21)/May_purchase_with_vendors.xlsx", index=False)
 print("✅ Merged output saved! (all rows preserved)")
