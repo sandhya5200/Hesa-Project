@@ -39,6 +39,7 @@ df = pd.DataFrame(rows, columns=[
     "Date", "Sub Vertical", "Vertical", "State", "District", "GST Rate", "Taxable_Amount"
 ])
 
+
 # Sort by Date, District, Sub Vertical
 df.sort_values(by=["Date", "District", "Sub Vertical"], inplace=True, ignore_index=True)
 
@@ -79,8 +80,9 @@ print(f"FMCG: {df[df['Sub Vertical'] == 'FMCG']['Taxable_Amount'].sum()}")
 print(f"Total: {df['Taxable_Amount'].sum()}")
 
 # Save Excel
-output_file = r"c:\Users\ksand\Downloads\mar_2020_taxable.xlsx"
+output_file = "/home/thrymr/Downloads/mar_2020_taxable.xlsx"
 df.to_excel(output_file, index=False)
 
 print(f"\nExcel file generated: {output_file}")
 print(f"Total rows: {len(df)}")
+

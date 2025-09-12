@@ -1,26 +1,18 @@
-from reportlab.lib.pagesizes import letter, A4
+from reportlab.lib.pagesizes import A4
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer, Image, PageBreak
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib.units import inch
 from reportlab.lib import colors
-from reportlab.pdfgen import canvas
-from reportlab.lib.enums import TA_LEFT, TA_RIGHT, TA_CENTER
+from reportlab.lib.enums import TA_LEFT, TA_RIGHT
 import pandas as pd
 import os
-from datetime import datetime
 
-def read_excel_data():
-    """Read data from Excel file"""
+# ✅ List of Excel files
+excel_files = [
 
+    "/home/thrymr/Downloads/2020-21 Sales generation (2).xlsx"
 
-    excel_path = r"c:\Users\ksand\Downloads\sales(20-21)\dec_sales_with_customers.xlsx"
-    
-    try:
-        df = pd.read_excel(excel_path)
-        return df
-    except Exception as e:
-        print(f"Error reading Excel file: {str(e)}")
-        return None
+]
 
 def format_date(date_str):
     """Format date string"""
@@ -83,7 +75,12 @@ def create_invoice_page(invoice_data, styles, logo_path):
     
     # Get invoice details from first row
     first_row = invoice_data.iloc[0]
-    invoice_no = str(first_row.get('Invoice No', 'N/A'))
+    value = first_row.get("Invoice No", "N/A")
+    if isinstance(value, float) and value.is_integer():
+        invoice_no = str(int(value))   # 42.0 → "42"
+    else:
+        invoice_no = str(value)        # keep as-is
+
     date = format_date(first_row.get('Date', 'N/A'))
     customer_name = str(first_row.get('Customer Name', 'N/A'))
     inv = str(first_row.get('GSTIN/UIN of Recipient', 'N/A'))
@@ -119,16 +116,15 @@ def create_invoice_page(invoice_data, styles, logo_path):
     
     # Company details and invoice info
     company_info = """
-    <b>RURAL YELLOW TIMES PVT.LTD</b><br/>
-    315, Block I,<br/>
-    RV Manyatha Apartments,<br/>
-    PJR Enclave Road, Chanda Nagar,<br/>
-    Hyderabad - 500 050,<br/>
+    <b>Hesa Enterprises Private Limited</b><br/>
+    1-4-158/136, Plot No. 136, Saipuri Colony,<br/>
+    Kapra, Sainikpuri,<br/>
+    Hyderabad - 500094, Telangana, India.<br/>
     Telangana, India.<br/>
     Pan No: AAFCR8177F<br/>
     GS Tax No: 36AAFCR8177F1Z1
     """
-    
+
     invoice_info = f"""
     <br/><br/><br/>
     TAX INVOICE NO#: {invoice_no}<br/>
@@ -268,7 +264,7 @@ def create_invoice_page(invoice_data, styles, logo_path):
     terms_text = """
     1. Please Remit Payment to<br/>
     &nbsp;&nbsp;&nbsp;&nbsp;Bank Details:<br/>
-    &nbsp;&nbsp;&nbsp;&nbsp;• Account Name: Rural Yellow Times Pvt Ltd<br/>
+    &nbsp;&nbsp;&nbsp;&nbsp;• Account Name: Hesa Enterprises Private Limited<br/>
     &nbsp;&nbsp;&nbsp;&nbsp;• Account No: 23902560000097<br/>
     &nbsp;&nbsp;&nbsp;&nbsp;• Bank Name: HDFC Bank, Madeenaguda Branch, Hyderabad<br/>
     &nbsp;&nbsp;&nbsp;&nbsp;• Bank IFSC Code: HDFC0002390<br/><br/>
@@ -281,18 +277,18 @@ def create_invoice_page(invoice_data, styles, logo_path):
     
     return elements
 
-def create_invoices():
-    # Read Excel data
-    df = read_excel_data()
-    if df is None:
-        print("Failed to read Excel data")
+def create_invoices_for_file(excel_path, logo_path):
+    """Generate invoices PDF for a single Excel file"""
+
+    try:
+        df = pd.read_excel(excel_path)
+    except Exception as e:
+        print(f"❌ Error reading {excel_path}: {e}")
         return
-    
-    # Output path and logo path
-    output_path = r"c:\Users\ksand\Downloads\sales(20-21)\dec_invoices.pdf"
-    logo_path = r"c:\Users\ksand\OneDrive\Pictures\Screenshots\Screenshot 2025-08-23 134435.png"
-    
-    # Create the PDF document
+
+    # Output PDF path (same folder as Excel, but with _invoices.pdf)
+    output_path = os.path.splitext(excel_path)[0] + "_invoices.pdf"
+
     doc = SimpleDocTemplate(
         output_path,
         pagesize=A4,
@@ -301,42 +297,40 @@ def create_invoices():
         topMargin=40,
         bottomMargin=40
     )
-    
-    # Container for all elements
-    all_elements = []
-    
-    # Get styles
+
     styles = getSampleStyleSheet()
-    
-    # Group data by Invoice No
+    all_elements = []
+
+    # Group by invoice no
     invoice_groups = df.groupby('Invoice No')
-    
-    print(f"Found {len(invoice_groups)} unique invoices")
-    
-    # Process each invoice
-    for invoice_no, invoice_data in invoice_groups:
-        print(f"Processing invoice: {invoice_no}")
-        
-        # Create elements for this invoice
+
+    print(f"📂 Processing {excel_path} → {len(invoice_groups)} invoices")
+
+    for i, (invoice_no, invoice_data) in enumerate(invoice_groups):
         invoice_elements = create_invoice_page(invoice_data, styles, logo_path)
-        
-        # Add to all elements
         all_elements.extend(invoice_elements)
-        
-        # Add page break except for the last invoice
-        if invoice_no != list(invoice_groups.groups.keys())[-1]:
+
+        # Add page break except last invoice
+        if i < len(invoice_groups) - 1:
             all_elements.append(PageBreak())
-    
-    # Build PDF
+
     try:
         doc.build(all_elements)
-        print(f"All invoices PDF generated successfully at: {output_path}")
-        print(f"Total pages: {len(invoice_groups)}")
+        print(f"✅ PDF generated: {output_path}")
     except Exception as e:
-        print(f"Error generating PDF: {str(e)}")
+        print(f"❌ Error generating PDF for {excel_path}: {e}")
+
 
 if __name__ == "__main__":
-    create_invoices()
+    logo_path = "/home/thrymr/Downloads/hesa_logo.png"
+
+    for file in excel_files:
+        create_invoices_for_file(file, logo_path)
+
+
+
+
+
 
 # from reportlab.lib.pagesizes import letter, A4
 # from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer, Image, PageBreak
@@ -351,7 +345,7 @@ if __name__ == "__main__":
 
 # def read_excel_data():
 #     """Read data from Excel file"""
-#     excel_path = r"c:\Users\ksand\Downloads\2020-21 Sales generation (2).xlsx"
+#     excel_path = "/home/thrymr/Downloads/2020-21 Sales generation (2).xlsx"
 #     try:
 #         df = pd.read_excel(excel_path, sheet_name="set1")
 #         return df
@@ -420,7 +414,11 @@ if __name__ == "__main__":
     
 #     # Get invoice details from first row
 #     first_row = invoice_data.iloc[0]
-#     invoice_no = str(first_row.get('Invoice No', 'N/A'))
+#     value = first_row.get("Invoice No", "N/A")
+#     if isinstance(value, float) and value.is_integer():
+#         invoice_no = str(int(value))   # 42.0 → "42"
+#     else:
+#         invoice_no = str(value)        # keep as-is
 #     date = format_date(first_row.get('Date', 'N/A'))
 #     customer_name = str(first_row.get('Customer Name', 'N/A'))
 #     inv = str(first_row.get('GSTIN/UIN of Recipient', 'N/A'))
@@ -456,11 +454,10 @@ if __name__ == "__main__":
     
 #     # Company details and invoice info
 #     company_info = """
-#     <b>RURAL YELLOW TIMES PVT.LTD</b><br/>
-#     315, Block I,<br/>
-#     RV Manyatha Apartments,<br/>
-#     PJR Enclave Road, Chanda Nagar,<br/>
-#     Hyderabad - 500 050,<br/>
+#     <b>Hesa Enterprises Private Limited</b><br/>
+#     1-4-158/136, Plot No. 136, Saipuri Colony,<br/>
+#     Kapra, Sainikpuri,<br/>
+#     Hyderabad - 500094, Telangana, India.<br/>
 #     Telangana, India.<br/>
 #     Pan No: AAFCR8177F<br/>
 #     GS Tax No: 36AAFCR8177F1Z1
@@ -606,7 +603,7 @@ if __name__ == "__main__":
 #     terms_text = """
 #     1. Please Remit Payment to<br/>
 #     &nbsp;&nbsp;&nbsp;&nbsp;Bank Details:<br/>
-#     &nbsp;&nbsp;&nbsp;&nbsp;• Account Name: Rural Yellow Times Pvt Ltd<br/>
+#     &nbsp;&nbsp;&nbsp;&nbsp;• Account Name: Hesa Enterprises Private Limited<br/>
 #     &nbsp;&nbsp;&nbsp;&nbsp;• Account No: 23902560000097<br/>
 #     &nbsp;&nbsp;&nbsp;&nbsp;• Bank Name: HDFC Bank, Madeenaguda Branch, Hyderabad<br/>
 #     &nbsp;&nbsp;&nbsp;&nbsp;• Bank IFSC Code: HDFC0002390<br/><br/>
@@ -627,8 +624,8 @@ if __name__ == "__main__":
 #         return
     
 #     # Output path and logo path
-#     output_path = r"c:\Users\ksand\Downloads\sales(20-21)\set_1.pdf"
-#     logo_path = r"c:\Users\ksand\OneDrive\Pictures\Screenshots\Screenshot 2025-08-23 134435.png"
+#     output_path = "/home/thrymr/Downloads/set_1.pdf"
+#     logo_path = "/home/thrymr/Downloads/hesa_logo.png"
     
     
 #     # Create the PDF document

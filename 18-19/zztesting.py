@@ -60,44 +60,112 @@
 # print(output_df)
 
 
-import pandas as pd
+# import pandas as pd
 
-# ✅ List of Excel files
-excel_files = [
-# "/home/thrymr/Downloads/purchase(20-21)/april_purchase_with_vendors.xlsx", 
+# # ✅ List of Excel files
+# excel_files = [
+# # "/home/thrymr/Downloads/purchase(20-21)/april_purchase_with_vendors.xlsx", 
 
 
 
-# "/home/thrymr/Downloads/purchase(20-21)/August_purchase_with_vendors.xlsx", 
-# "/home/thrymr/Downloads/purchase(20-21)/December_purchase_with_vendors.xlsx",
-# "/home/thrymr/Downloads/purchase(20-21)/july_purchase_with_vendors.xlsx", 
-# "/home/thrymr/Downloads/purchase(20-21)/june_purchase_with_vendors.xlsx", 
-"/home/thrymr/Downloads/purchase(20-21)/May_purchase_with_vendors.xlsx", 
-"/home/thrymr/Downloads/purchase(20-21)/November_purchase_with_vendors.xlsx", 
-"/home/thrymr/Downloads/purchase(20-21)/October_purchase_with_vendors.xlsx", 
-"/home/thrymr/Downloads/purchase(20-21)/September_purchase_with_vendors.xlsx"
-]
-for file in excel_files:
-    print(f"\n📂 Processing file: {file}")
+# # "/home/thrymr/Downloads/purchase(20-21)/August_purchase_with_vendors.xlsx", 
+# # "/home/thrymr/Downloads/purchase(20-21)/December_purchase_with_vendors.xlsx",
+# # "/home/thrymr/Downloads/purchase(20-21)/july_purchase_with_vendors.xlsx", 
+# # "/home/thrymr/Downloads/purchase(20-21)/june_purchase_with_vendors.xlsx", 
+# "/home/thrymr/Downloads/purchase(20-21)/May_purchase_with_vendors.xlsx", 
+# "/home/thrymr/Downloads/purchase(20-21)/November_purchase_with_vendors.xlsx", 
+# "/home/thrymr/Downloads/purchase(20-21)/October_purchase_with_vendors.xlsx", 
+# "/home/thrymr/Downloads/purchase(20-21)/September_purchase_with_vendors.xlsx"
+# ]
+# for file in excel_files:
+#     print(f"\n📂 Processing file: {file}")
     
-    # Load Excel file
-    df = pd.read_excel(file)
+#     # Load Excel file
+#     df = pd.read_excel(file)
 
-    if "District" not in df.columns:
-        print("⚠️ Skipped (No 'District' column found)")
-        continue
+#     if "District" not in df.columns:
+#         print("⚠️ Skipped (No 'District' column found)")
+#         continue
 
-    # Count matches ignoring case & spaces
-    mask = df["District"].astype(str).str.lower().str.strip() == "hydarabad"
-    before_count = mask.sum()
+#     # Count matches ignoring case & spaces
+#     mask = df["District"].astype(str).str.lower().str.strip() == "hydarabad"
+#     before_count = mask.sum()
 
-    if before_count > 0:
-        # Replace only matching rows
-        df.loc[mask, "District"] = "Hyderabad"
+#     if before_count > 0:
+#         # Replace only matching rows
+#         df.loc[mask, "District"] = "Hyderabad"
         
-        # Save back
-        df.to_excel(file, index=False)
+#         # Save back
+#         df.to_excel(file, index=False)
 
-        print(f"✅ Replaced {before_count} occurrence(s) of 'Hydarabad' → 'Hyderabad'")
+#         print(f"✅ Replaced {before_count} occurrence(s) of 'Hydarabad' → 'Hyderabad'")
+#     else:
+#         print("ℹ️ No 'Hydarabad' found in this file.")
+
+
+import pandas as pd
+from pathlib import Path
+
+# ✅ Your files
+FILES = [
+    "/home/thrymr/Downloads/sales(20-21)/aug_sales_with_customers.xlsx",
+    "/home/thrymr/Downloads/sales(20-21)/dec_sales_with_customers.xlsx",
+    "/home/thrymr/Downloads/sales(20-21)/july_sales_with_customers.xlsx",
+    "/home/thrymr/Downloads/sales(20-21)/june_sales_with_customers.xlsx",
+    "/home/thrymr/Downloads/sales(20-21)/may_sales_with_customers.xlsx",
+    "/home/thrymr/Downloads/sales(20-21)/nov_sales_with_customers.xlsx",
+    "/home/thrymr/Downloads/sales(20-21)/oct_sales_with_customers.xlsx",
+    "/home/thrymr/Downloads/sales(20-21)/sep_sales_with_customers.xlsx",
+]
+
+FACILITATOR_VALUE = "Hesa Enterprises Private Limited"
+OVERWRITE = False  # 🔁 set to True to overwrite original files
+
+def find_col(cols, target):
+    """Case/space-insensitive exact match with a couple of common variants."""
+    norm = {c: ''.join(str(c).lower().split()) for c in cols}
+    t = ''.join(target.lower().split())
+
+    # direct match first
+    for c, n in norm.items():
+        if n == t:
+            return c
+
+    # fallbacks for common header variants
+    variants = {t}
+    if t == "invoiceno":
+        variants.update({"invoicenumber", "invoice#", "invoiceid"})
+    if t == "facilitator":
+        variants.update({"facilitatorname"})
+
+    for c, n in norm.items():
+        if n in variants:
+            return c
+    return None
+
+for f in FILES:
+    print(f"\nProcessing: {f}")
+    df = pd.read_excel(f)
+
+    fac_col = find_col(df.columns, "Facilitator")
+    inv_col = find_col(df.columns, "Invoice No")
+
+    # 1) Set Facilitator column value for all rows (no deletions)
+    if fac_col is not None:
+        df[fac_col] = FACILITATOR_VALUE
+        print(f"  • Set `{fac_col}` to '{FACILITATOR_VALUE}' for {len(df)} rows.")
     else:
-        print("ℹ️ No 'Hydarabad' found in this file.")
+        print("  ⚠️ 'Facilitator' column not found — skipped.")
+
+    # 2) Replace /RY/ with /HS/ in Invoice No (only for string values)
+    if inv_col is not None:
+        before = sum(1 for v in df[inv_col] if isinstance(v, str) and "/RY/" in v)
+        df[inv_col] = df[inv_col].map(lambda x: x.replace("/RY/", "/HS/") if isinstance(x, str) else x)
+        print(f"  • Replaced '/RY/' → '/HS/' in {before} invoice(s) within `{inv_col}`.")
+    else:
+        print("  ⚠️ 'Invoice No' column not found — skipped.")
+
+    # Save
+    out_path = f if OVERWRITE else str(Path(f).with_name(Path(f).stem + "_edited.xlsx"))
+    df.to_excel(out_path, index=False)
+    print(f"  ✅ Saved: {out_path}")
