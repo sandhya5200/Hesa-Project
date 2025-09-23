@@ -1,0 +1,151 @@
+<div class="header">
+    <div class="name">KONDA VENU</div>
+    <div class="contact-info">
+        Address: Gachibowli, Hyderabad, Telangana<br>
+        Email: kondavenu5613@gmail.com | Mobile: +91-6300114168
+    </div>
+</div>
+
+<div class="section-title">Skills Summary</div>
+
+<div class="subsection">
+    <div class="subsection-title">Civil Engineering Software</div>
+    <div class="details">AutoCAD, STAAD Pro, Revit</div>
+</div>
+
+<div class="subsection">
+    <div class="subsection-title">Core Civil Engineering</div>
+    <div class="details">Concrete Mix Design, Estimation & Costing, Surveying, Concrete Technology, Soil Mechanics, Building Construction and Planning, Civil Engineering Materials</div>
+</div>
+
+<div class="subsection">
+    <div class="subsection-title">Soft Skills</div>
+    <div class="details">Leadership, Growth Mindset, Enthusiastic Learner, Adaptability, Openness to Feedback, Negotiation Skills</div>
+</div>
+
+<div class="section-title">Education</div>
+
+<div class="subsection">
+    <div class="institution">VNR Vignana Jyothi Institute of Engineering and Technology</div>
+    <div class="details">B.Tech - Electronics and Communication Engineering | CGPA: 7.25/10</div>
+    <div class="details">August 2022 – June 2026 | Hyderabad, India</div>
+</div>
+
+<div class="subsection">
+    <div class="institution">Kendriya Vidyalaya Gachibowli</div>
+    <div class="details">Class I - XII (CBSE Board) | CGPA: 7.2/10</div>
+    <div class="details">March 2020 – April 2022 | Hyderabad, India</div>
+</div>
+
+<div class="section-title">Experience</div>
+
+<div class="subsection">
+    <div class="institution">Megha Engineering and Infrastructure Limited</div>
+    <div class="job-title">Civil Engineering Intern | May 2024 – June 2024 | Hyderabad, India</div>
+    <ul>
+        <li>Observed and participated in complete slab casting process</li>
+        <li>Gained hands-on experience in construction site operations and quality control</li>
+        <li>Assisted in project documentation and progress monitoring</li>
+    </ul>
+</div>
+
+<div class="section-title">Projects</div>
+
+<div class="subsection">
+    <div class="project-title">Study on the Flexural Behaviour of GFRP Bars and Modified Plastic Rebars - An Alternate Reinforcement Study</div>
+    <ul>
+        <li>Researched Fiber Reinforced Polymers (FRP) as alternatives to steel reinforcement in concrete structures</li>
+        <li>Studied materials that are corrosion-resistant, have high tensile strength, are lightweight, and electrically neutral</li>
+        <li>Analyzed composite materials with fiber-volume fraction requirements for optimal reinforcing function</li>
+        <li>Focus on creating durable, long-lasting buildings and infrastructure</li>
+    </ul>
+</div>
+
+<div class="subsection">
+    <div class="project-title">Utilization of Waste Plastic in Concrete (Experimental Research Project)</div>
+    <ul>
+        <li>Studied the effects of adding shredded plastic waste as partial replacement in concrete mix</li>
+        <li>Objective: Improve concrete strength while promoting sustainable waste management practices</li>
+        <li>Conducted material testing and performance analysis</li>
+    </ul>
+</div>
+
+<div class="section-title">Achievements & Positions of Responsibility</div>
+
+<div class="subsection">
+    <div class="subsection-title">Class Representative (First Year to Present)</div>
+    <ul>
+        <li>Representing student concerns and facilitating communication between students and faculty</li>
+        <li>Organizing class activities and maintaining academic coordination</li>
+        <li>Leading peer support initiatives and academic discussions</li>
+    </ul>
+</div>
+
+<div class="subsection">
+    <div class="subsection-title">Scintillate Club Member (Active Photography Member)</div>
+    <ul>
+        <li>Official photographer for college events and functions</li>
+        <li>Documenting campus activities and creating visual content for college publications</li>
+        <li>Contributing to event management and creative team activities</li>
+    </ul>
+</div>
+
+<div class="section-title">Hobbies & Co-curricular Activities</div>
+<div class="details">
+    <strong>Stunt Riding:</strong> Skilled in motorcycle stunt riding and adventure sports<br>
+    <strong>Photography:</strong> Passionate about capturing moments and creative photography<br>
+    <strong>Volunteer Work:</strong> Actively participating in community service and social initiatives
+</div>
+
+<div style="text-align: center; margin-top: 30px; font-style: italic; font-size: 10px;">
+    References available upon request
+</div>
+
+<script>
+    function downloadDoc() {
+        // Create a blob with the HTML content formatted for Word
+        const htmlContent = `
+            <html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
+            <head>
+                <meta charset='utf-8'>
+                <title>Konda Venu Resume</title>
+                <!--[if gte mso 9]>
+                <xml>
+                    <w:WordDocument>
+                        <w:View>Print</w:View>
+                        <w:Zoom>90</w:Zoom>
+                        <w:DoNotPromptForConvert/>
+                        <w:DoNotShowRevisions/>
+                        <w:DoNotPrintRevisions/>
+                    </w:WordDocument>
+                </xml>
+                <![endif]-->
+                <style>
+                    body { font-family: 'Times New Roman', serif; font-size: 11pt; line-height: 1.4; }
+                    .header { text-align: center; border-bottom: 2pt solid black; padding-bottom: 15pt; margin-bottom: 20pt; }
+                    .name { font-size: 18pt; font-weight: bold; text-transform: uppercase; letter-spacing: 2pt; margin-bottom: 10pt; }
+                    .section-title { font-size: 12pt; font-weight: bold; text-transform: uppercase; border-bottom: 1pt solid black; margin: 20pt 0 10pt 0; padding-bottom: 2pt; }
+                    .subsection-title { font-weight: bold; font-size: 11pt; margin-bottom: 5pt; }
+                    .institution { font-weight: bold; font-size: 11pt; }
+                    ul { margin: 5pt 0; padding-left: 20pt; }
+                    li { margin: 3pt 0; }
+                </style>
+            </head>
+            <body>${document.body.innerHTML.replace(/<button[^>]*>.*?<\/button>/g, '')}</body>
+            </html>
+        `;
+        
+        const blob = new Blob([htmlContent], {
+            type: 'application/msword;charset=utf-8'
+        });
+        
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'Konda_Venu_Resume.doc';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
+    }
+</script>

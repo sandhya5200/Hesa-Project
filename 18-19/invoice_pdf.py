@@ -10,7 +10,7 @@ import os
 # ✅ List of Excel files
 excel_files = [
 
-    "/home/thrymr/Downloads/2020-21 Sales generation (2).xlsx"
+    r"c:\Users\ksand\Downloads\mar_sales_with_customers.xlsx"
 
 ]
 
@@ -322,7 +322,7 @@ def create_invoices_for_file(excel_path, logo_path):
 
 
 if __name__ == "__main__":
-    logo_path = "/home/thrymr/Downloads/hesa_logo.png"
+    logo_path = r"c:\Users\ksand\OneDrive\Pictures\Screenshots\Screenshot 2024-10-09 231335.png"
 
     for file in excel_files:
         create_invoices_for_file(file, logo_path)
