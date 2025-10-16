@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Purchases Debit Allocation System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            padding: 40px;
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 2em;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 40px;
+            font-size: 0.95em;
+        }
+
+        .upload-section {
+            margin-bottom: 30px;
+            padding: 25px;
+            background: #f8f9fa;
+            border-radius: 12px;
+            border: 2px dashed #dee2e6;
+            transition: all 0.3s;
+        }
+
+        .upload-section:hover {
+            border-color: #667eea;
+            background: #f0f1ff;
+        }
+
+        .upload-section h3 {
+            color: #495057;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+            display: flex;
+            align-items: center;
+        }
+
+        .upload-section h3::before {
+            content: "📁";
+            margin-right: 10px;
+            font-size: 1.3em;
+        }
+
+        .file-input-wrapper {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+            width: 100%;
+        }
+
+        .file-input-wrapper input[type=file] {
+            position: absolute;
+            left: -9999px;
+        }
+
+        .file-input-label {
+            display: block;
+            padding: 15px 20px;
+            background: white;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.3s;
+            color: #495057;
+        }
+
+        .file-input-label:hover {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        .file-list {
+            margin-top: 15px;
+            padding: 10px;
+            background: white;
+            border-radius: 8px;
+            min-height: 40px;
+        }
+
+        .file-item {
+            padding: 8px 12px;
+            background: #e9ecef;
+            border-radius: 6px;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .file-item span {
+            color: #495057;
+            font-size: 0.9em;
+        }
+
+        .file-item small {
+            color: #6c757d;
+        }
+
+        .process-btn {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 20px;
+        }
+
+        .process-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+        }
+
+        .process-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .progress-container {
+            display: none;
+            margin-top: 30px;
+            padding: 25px;
+            background: #f8f9fa;
+            border-radius: 12px;
+        }
+
+        .progress-bar-wrapper {
+            width: 100%;
+            height: 30px;
+            background: #e9ecef;
+            border-radius: 15px;
+            overflow: hidden;
+            margin: 15px 0;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            width: 0%;
+            transition: width 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 0.85em;
+        }
+
+        .status-message {
+            text-align: center;
+            color: #495057;
+            margin-top: 10px;
+            font-size: 0.95em;
+        }
+
+        .results-container {
+            display: none;
+            margin-top: 30px;
+            padding: 25px;
+            background: #d4edda;
+            border-radius: 12px;
+            border: 2px solid #c3e6cb;
+        }
+
+        .results-container h3 {
+            color: #155724;
+            margin-bottom: 20px;
+            font-size: 1.3em;
+        }
+
+        .download-item {
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .download-btn {
+            padding: 10px 25px;
+            background: #28a745;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .download-btn:hover {
+            background: #218838;
+            transform: translateY(-2px);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .stat-box {
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .stat-box .number {
+            font-size: 2em;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .stat-box .label {
+            font-size: 0.85em;
+            color: #6c757d;
+            margin-top: 5px;
+        }
+
+        .error-message {
+            padding: 20px;
+            background: #f8d7da;
+            border: 2px solid #f5c6cb;
+            border-radius: 8px;
+            color: #721c24;
+            margin-top: 20px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>💼 Purchases Debit Allocation System</h1>
+        <p class="subtitle">Upload your Purchases and Debit files to process allocations</p>
+
+        <!-- Purchases Files Upload -->
+        <div class="upload-section">
+            <h3>Purchases Files (1-5 files, max 500MB each)</h3>
+            <div class="file-input-wrapper">
+                <input type="file" id="purchasesFiles" multiple accept=".xlsx,.xls">
+                <label for="purchasesFiles" class="file-input-label">
+                    Click to select Purchases files
+                </label>
+            </div>
+            <div class="file-list" id="purchasesFileList"></div>
+        </div>
+
+        <!-- Agri Debits Upload -->
+        <div class="upload-section">
+            <h3>Agri Debits File</h3>
+            <div class="file-input-wrapper">
+                <input type="file" id="agriDebits" accept=".xlsx,.xls">
+                <label for="agriDebits" class="file-input-label">
+                    Click to select Agri Debits file
+                </label>
+            </div>
+            <div class="file-list" id="agriFileList"></div>
+        </div>
+
+        <!-- Consumer Debits Upload -->
+        <div class="upload-section">
+            <h3>Consumer Debits File</h3>
+            <div class="file-input-wrapper">
+                <input type="file" id="consDebits" accept=".xlsx,.xls">
+                <label for="consDebits" class="file-input-label">
+                    Click to select Consumer Debits file
+                </label>
+            </div>
+            <div class="file-list" id="consFileList"></div>
+        </div>
+
+        <!-- Process Button -->
+        <button class="process-btn" id="processBtn" onclick="processFiles()">
+            🚀 Process Files
+        </button>
+
+        <!-- Progress -->
+        <div class="progress-container" id="progressContainer">
+            <h3 style="color: #495057; margin-bottom: 15px;">Processing...</h3>
+            <div class="progress-bar-wrapper">
+                <div class="progress-bar" id="progressBar">0%</div>
+            </div>
+            <div class="status-message" id="statusMessage">Uploading files...</div>
+        </div>
+
+        <!-- Results -->
+        <div class="results-container" id="resultsContainer">
+            <h3>✅ Processing Complete!</h3>
+            <div class="stats-grid" id="statsGrid"></div>
+            <div style="margin-top: 20px;" id="downloadLinks"></div>
+        </div>
+
+        <!-- Error Message -->
+        <div class="error-message" id="errorMessage"></div>
+    </div>
+
+    <script>
+        const API_URL = 'http://localhost:8000';
+
+        // File display handlers
+        document.getElementById('purchasesFiles').addEventListener('change', function(e) {
+            displayFiles(e.target.files, 'purchasesFileList');
+        });
+
+        document.getElementById('agriDebits').addEventListener('change', function(e) {
+            displayFiles(e.target.files, 'agriFileList');
+        });
+
+        document.getElementById('consDebits').addEventListener('change', function(e) {
+            displayFiles(e.target.files, 'consFileList');
+        });
+
+        function displayFiles(files, containerId) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = '';
+            
+            if (files.length === 0) {
+                container.innerHTML = '<p style="color: #6c757d; text-align: center;">No files selected</p>';
+                return;
+            }
+
+            Array.from(files).forEach(file => {
+                const fileSize = (file.size / (1024 * 1024)).toFixed(2);
+                const div = document.createElement('div');
+                div.className = 'file-item';
+                div.innerHTML = `
+                    <span>${file.name}</span>
+                    <small>${fileSize} MB</small>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        async function processFiles() {
+            const purchasesFiles = document.getElementById('purchasesFiles').files;
+            const agriDebits = document.getElementById('agriDebits').files[0];
+            const consDebits = document.getElementById('consDebits').files[0];
+
+            // Validation
+            if (purchasesFiles.length === 0) {
+                showError('Please select at least one Purchases file');
+                return;
+            }
+
+            if (purchasesFiles.length > 5) {
+                showError('Maximum 5 Purchases files allowed');
+                return;
+            }
+
+            if (!agriDebits) {
+                showError('Please select Agri Debits file');
+                return;
+            }
+
+            if (!consDebits) {
+                showError('Please select Consumer Debits file');
+                return;
+            }
+
+            // Hide error, show progress
+            document.getElementById('errorMessage').style.display = 'none';
+            document.getElementById('resultsContainer').style.display = 'none';
+            document.getElementById('progressContainer').style.display = 'block';
+            document.getElementById('processBtn').disabled = true;
+
+            // Prepare form data
+            const formData = new FormData();
+            
+            Array.from(purchasesFiles).forEach(file => {
+                formData.append('purchases_files', file);
+            });
+            
+            formData.append('agri_debits', agriDebits);
+            formData.append('cons_debits', consDebits);
+
+            try {
+                updateProgress(10, 'Uploading files...');
+
+                const response = await fetch(`${API_URL}/process`, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                updateProgress(90, 'Processing complete...');
+
+                if (!response.ok) {
+                    const error = await response.json();
+                    throw new Error(error.detail || 'Processing failed');
+                }
+
+                const result = await response.json();
+                updateProgress(100, 'Done!');
+
+                // Show results
+                setTimeout(() => {
+                    displayResults(result);
+                }, 500);
+
+            } catch (error) {
+                console.error('Error:', error);
+                showError(error.message);
+                document.getElementById('progressContainer').style.display = 'none';
+                document.getElementById('processBtn').disabled = false;
+            }
+        }
+
+        function updateProgress(percent, message) {
+            const progressBar = document.getElementById('progressBar');
+            const statusMessage = document.getElementById('statusMessage');
+            
+            progressBar.style.width = percent + '%';
+            progressBar.textContent = percent + '%';
+            statusMessage.textContent = message;
+        }
+
+        function displayResults(result) {
+            document.getElementById('progressContainer').style.display = 'none';
+            document.getElementById('resultsContainer').style.display = 'block';
+            document.getElementById('processBtn').disabled = false;
+
+            // Display stats
+            const statsGrid = document.getElementById('statsGrid');
+            statsGrid.innerHTML = `
+                <div class="stat-box">
+                    <div class="number">${result.stats.total_POs}</div>
+                    <div class="label">Total POs</div>
+                </div>
+                <div class="stat-box">
+                    <div class="number">${result.stats.agri_matched}</div>
+                    <div class="label">Agri Matched</div>
+                </div>
+                <div class="stat-box">
+                    <div class="number">${result.stats.cons_matched}</div>
+                    <div class="label">Cons Matched</div>
+                </div>
+            `;
+
+            // Display download links
+            const downloadLinks = document.getElementById('downloadLinks');
+            downloadLinks.innerHTML = `
+                <div class="download-item">
+                    <span>📊 Purchases Summary with Matches</span>
+                    <button class="download-btn" onclick="downloadFile('${result.outputs.purchases_summary}')">
+                        Download
+                    </button>
+                </div>
+                <div class="download-item">
+                    <span>🌾 Agri Debits with POs</span>
+                    <button class="download-btn" onclick="downloadFile('${result.outputs.agri_debits}')">
+                        Download
+                    </button>
+                </div>
+                <div class="download-item">
+                    <span>🛒 Consumer Debits with POs</span>
+                    <button class="download-btn" onclick="downloadFile('${result.outputs.cons_debits}')">
+                        Download
+                    </button>
+                </div>
+            `;
+        }
+
+        function downloadFile(filename) {
+            window.open(`${API_URL}/download/${filename}`, '_blank');
+        }
+
+        function showError(message) {
+            const errorDiv = document.getElementById('errorMessage');
+            errorDiv.textContent = '❌ Error: ' + message;
+            errorDiv.style.display = 'block';
+        }
+    </script>
+</body>
+</html>
