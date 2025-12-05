@@ -17,12 +17,12 @@ business_dict = {
 
 def purchase():
     print("before")
-    product_quantity = pd.read_excel(r"c:\Users\ksand\Downloads\month_wise_files\month_wise_files\August_2021.xlsx", sheet_name="Products")
+    product_quantity = pd.read_excel("/home/thrymr/Downloads/sheets_split/month_wise_files/December_2021.xlsx", sheet_name="Products")
    
-    product_gross = pd.read_excel(r"c:\Users\ksand\Downloads\month_wise_files\month_wise_files\August_2021.xlsx", sheet_name="Taxable")
+    product_gross = pd.read_excel("/home/thrymr/Downloads/sheets_split/month_wise_files/December_2021.xlsx", sheet_name="Taxable")
     
-    zone_df = pd.read_excel(r"c:\Users\ksand\Downloads\Important 2\Important\new_hessathi_with_additional_people_details (copy).xlsx")
-    products_data = pd.read_excel(r"c:\Users\ksand\Downloads\myyy (1).xlsx")
+    zone_df = pd.read_excel("/home/thrymr/Important/new_hessathi_with_additional_people_details (copy).xlsx")
+    products_data = pd.read_excel("/home/thrymr/Downloads/myyy.xlsx")
     col = product_gross.columns
     track = {}
     rows = []
@@ -202,7 +202,7 @@ def purchase():
                 missed_quantity+=init_q
     df = pd.DataFrame(rows)
     print(len(rows))                
-    df.to_excel(r"c:\Users\ksand\Downloads\August.xlsx")
+    df.to_excel("/home/thrymr/Downloads/December.xlsx")
     print("completed")
     
 purchase()
@@ -214,7 +214,7 @@ import pandas as pd
 import random
 
 # Load the Excel file
-df = pd.read_excel(r"c:\Users\ksand\Downloads\August.xlsx")
+df = pd.read_excel("/home/thrymr/Downloads/December.xlsx")
 
 # Clean and format
 df["District"] = df["District"].str.strip().str.upper()
@@ -303,7 +303,7 @@ print(f"\n🎯 Total rows assigned Vendor IDs: {total_assigned}")
 
 # Step 4: Save output
 df.drop(columns="__row_id__", inplace=True)
-df.to_excel(r"c:\Users\ksand\Downloads\August_1.xlsx", index=False)
+df.to_excel("/home/thrymr/Downloads/December_1.xlsx", index=False)
 
 
 
@@ -311,11 +311,11 @@ df.to_excel(r"c:\Users\ksand\Downloads\August_1.xlsx", index=False)
 import pandas as pd
 import random
 
-input_file = r"c:\Users\ksand\Downloads\August_1.xlsx"
+input_file = "/home/thrymr/Downloads/December_1.xlsx"
 
 
-zone_file = r"c:\Users\ksand\Downloads\Important 2\Important\new_hessathi_with_additional_people_details (copy).xlsx"
-output_file = r"c:\Users\ksand\Downloads\August_(2021-22).xlsx"
+zone_file = "/home/thrymr/Important/new_hessathi_with_additional_people_details (copy).xlsx"
+output_file = "/home/thrymr/Downloads/December_(2021-22).xlsx"
 
 # Load data
 input_df = pd.read_excel(input_file)

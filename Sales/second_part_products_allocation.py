@@ -296,14 +296,14 @@ import numpy as np
 import random
 
 # File paths
-sales_path = r"c:\Users\ksand\Downloads\june_2020_taxable.xlsx"
-products_path = r"c:\Users\ksand\Downloads\myyy.xlsx"
+sales_path = "/home/thrymr/Downloads/output_cons_jan.xlsx"
+products_path = "/home/thrymr/Important/my_products_file.xlsx"
 # output_matched = "/home/thrymr/Downloads/agri_oct_25_output_to_check.xlsx"
 # output_unmatched = "/home/thrymr/Downloads/unmatched_sales.xlsx"
 
 # Load data
 sales_df = pd.read_excel(sales_path)
-products_df = pd.read_excel(products_path, sheet_name="sheet0and5and18")
+products_df = pd.read_excel(products_path)
 
 PRICE_ADJUSTMENT = 0.02
 DECIMAL_UOM = ["kg", "ltr", "gm"]
@@ -638,27 +638,26 @@ final_df = final_df.rename(columns={
     "Line Total": "Taxable Value"
 })
 
+CHUNK_SIZE = 1000000
 
-CHUNK_SIZE = 800000
+# Base output folder
+output_folder = "/home/thrymr/Downloads/"
+base_filename = "products_jan_cons"
 
-# Output file path
-output_path = "/home/thrymr/Downloads/products_cons_sep.xlsx"
-
-# Total number of rows
 total_rows = len(final_df)
 
-# Create Excel writer
-with pd.ExcelWriter(output_path, engine='openpyxl') as writer:
-    # Write in chunks
-    for i in range(0, total_rows, CHUNK_SIZE):
-        chunk = final_df.iloc[i:i + CHUNK_SIZE]
-        sheet_name = f"Sheet_{i // CHUNK_SIZE + 1}"
-        chunk.to_excel(writer, sheet_name=sheet_name, index=False)
-        print(f"Written {sheet_name} with rows {i} to {i + len(chunk) - 1}")
+for i in range(0, total_rows, CHUNK_SIZE):
+    chunk = final_df.iloc[i:i + CHUNK_SIZE]
+    
+    # File name for this chunk
+    output_path = f"{output_folder}{base_filename}_part_{i // CHUNK_SIZE + 1}.xlsx"
+    
+    # Write chunk to a separate file
+    chunk.to_excel(output_path, index=False)
+    
+    print(f"Written file: {output_path} with rows {i} to {i + len(chunk) - 1}")
 
-print("Done. Output written in multiple sheets.")
-
-
+print("Done. Output written into multiple files!")
 
 
 

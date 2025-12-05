@@ -433,9 +433,8 @@ hesathi_data = pd.read_excel('/home/thrymr/Important/zone_user_category_modified
 # List of Excel files to process
 excel_file_paths = [
 
-    '/home/thrymr/Downloads/Mar/processed_Sheet1_part1.xlsx',
-    "/home/thrymr/Downloads/Mar/processed_Sheet1_part2.xlsx",
-    "/home/thrymr/Downloads/Mar/processed_Sheet1_part3.xlsx"
+    '/home/thrymr/Downloads/processed_Sheet1_part1.xlsx'
+
     
 
 ]
@@ -456,51 +455,9 @@ for excel_file_path in excel_file_paths:
 
     # Generate a unique name for the PDF based on the Excel filename
     pdf_file_name = f"{excel_file_path.split('/')[-1].replace('.xlsx', '')}.pdf"
-    final_pdf_path = f"/home/thrymr/Downloads/invoices_24-25(oct-mar)/invoice_Mar{pdf_file_name}"
+    final_pdf_path = f"/home/thrymr/Downloads/invoice_{pdf_file_name}"
 
     # Create the PDF with all invoices
     create_pdf_with_borders(final_pdf_path, logo_file_path, signature_path, data)
 
     print(f"Merged PDF created: {final_pdf_path}")
-
-# import pandas as pd
-# import os
-
-# # Folder containing Excel files for a single month
-# monthly_folder = "/home/thrymr/Downloads/Feb"  # update this to actual folder path
-
-# # Get all Excel files in the folder
-# excel_file_paths = [
-#     os.path.join(monthly_folder, f)
-#     for f in os.listdir(monthly_folder)
-#     if f.endswith(".xlsx")
-# ]
-
-# # List to hold all data from all files (all sheets)
-# all_month_data = []
-
-# # Read all sheets from all files and combine
-# for excel_file_path in excel_file_paths:
-#     sheet_names = pd.ExcelFile(excel_file_path).sheet_names
-#     df_list = [pd.read_excel(excel_file_path, sheet_name=sheet) for sheet in sheet_names]
-#     merged_data = pd.concat(df_list, ignore_index=True)
-#     all_month_data.append(merged_data)
-
-# # Combine all data into a single DataFrame
-# final_month_df = pd.concat(all_month_data, ignore_index=True)
-
-# # Prepare hesaathi mapping (assumed already loaded somewhere above this block)
-# hesathi_mapping = pd.Series(
-#     hesathi_data[['Full Name', 'Village', 'Sub District', 'District', 'State']].values.tolist(),
-#     index=hesathi_data['CODE']
-# ).to_dict()
-
-# # Create one final PDF for the whole month
-# pdf_file_name = "invoice_feb_24_combined.pdf"
-# final_pdf_path = f"/home/thrymr/Downloads/invoices_24-25(oct-mar)/{pdf_file_name}"
-
-# # Call your custom function to generate PDF
-# create_pdf_with_borders(final_pdf_path, logo_file_path, signature_path, final_month_df)
-
-# print(f"✅ Merged PDF created for full month: {final_pdf_path}")
-

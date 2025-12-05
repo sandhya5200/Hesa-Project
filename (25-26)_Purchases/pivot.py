@@ -215,11 +215,11 @@ def create_combined_file(input_file_path, output_file_path):
     
     # Save to specified output file
     with pd.ExcelWriter(output_file_path, engine='openpyxl') as writer:
-        quantity_pivot.to_excel(writer, sheet_name='Product Qty', index=False)
+        quantity_pivot.to_excel(writer, sheet_name='Quantity', index=False)
         value_pivot.to_excel(writer, sheet_name='Taxable value', index=False)
         
         # Format both sheets
-        for sheet_name in ['Product Qty', 'Taxable value']:
+        for sheet_name in ['Quantity', 'Taxable value']:
             worksheet = writer.sheets[sheet_name]
             
             # Auto-adjust column widths
@@ -241,11 +241,11 @@ def create_combined_file(input_file_path, output_file_path):
 # Example usage with your specific file paths:
 if __name__ == "__main__":
     input_files = [
-        "/home/thrymr/Desktop/sales 25-26/final sales 25-26 (apr-sep)/apr_sales_with_customers_part1.xlsx",
-        "/home/thrymr/Desktop/sales 25-26/final sales 25-26 (apr-sep)/apr_sales_with_customers_part2.xlsx"
+        "/home/thrymr/Desktop/sales 25-26/final sales 25-26 (apr-sep)/sep_sales_with_customers_part1.xlsx",
+        "/home/thrymr/Desktop/sales 25-26/final sales 25-26 (apr-sep)/sep_sales_with_customers_part2.xlsx"
     ]
 
-    output_file = "/home/thrymr/Desktop/sales 25-26/final sales 25-26 (apr-sep)/apr_PIVOT.xlsx"
+    output_file = "/home/thrymr/Desktop/sales 25-26/final sales 25-26 (apr-sep)/sep_PIVOT.xlsx"
 
     qty_pivot, val_pivot = create_sales_pivot(input_files, output_file)
 
@@ -260,7 +260,7 @@ def read_created_pivots():
     """
     Function to read the pivot data you just created
     """
-    output_file = "/home/thrymr/Desktop/sales 25-26/final sales 25-26 (apr-sep)/apr_PIVOT.xlsx"
+    output_file = "/home/thrymr/Desktop/sales 25-26/final sales 25-26 (apr-sep)/sep_PIVOT.xlsx"
     
     # Read both sheets
     product_quantity = pd.read_excel(output_file, sheet_name="Quantity")

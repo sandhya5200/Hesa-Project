@@ -435,11 +435,8 @@ excel_file_paths = [
             # '/home/thrymr/Downloads/sales 23-24/ready_Final_Sales_August_23 (1).xlsx',
             # '/home/thrymr/Downloads/sales 23-24/ready_Final_Sales_September_23 (1).xlsx',
             # '/home/thrymr/Downloads/sales 23-24/ready_Final_Sales_october_23 (1).xlsx',
-            '/home/thrymr/Downloads/sales 23-24/ready_Final_Sales_Nov_23.xlsx',
-            '/home/thrymr/Downloads/sales 23-24/ready_Final_Sales_dec_23.xlsx',
-            '/home/thrymr/Downloads/sales 23-24/ready_Final_Sales_jan_24 (1).xlsx',
-            '/home/thrymr/Downloads/sales 23-24/ready_Final_Sales_feb_24 (1).xlsx',
-            '/home/thrymr/Downloads/sales 23-24/ready_Final_Sales_Mar_24 (1).xlsx'
+            '/home/thrymr/Downloads/processed_Sheet1_part1.xlsx',
+
 
 
 ]
@@ -455,7 +452,7 @@ for excel_file_path in excel_file_paths:
 
     # Generate a unique name for the PDF based on the Excel filename
     pdf_file_name = f"{excel_file_path.split('/')[-1].replace('.xlsx', '')}.pdf"
-    final_pdf_path = f"/home/thrymr/Downloads/sales 23-24/invoice_{pdf_file_name}"
+    final_pdf_path = f"/home/thrymr/Downloads/invoice_{pdf_file_name}"
 
     # Create the PDF with all invoices
     create_pdf_with_borders(final_pdf_path, logo_file_path, signature_path, data)

@@ -145,11 +145,6 @@
 # first_half.to_excel("/home/thrymr/Downloads/apr_sales_with_hesaathis_part1.xlsx", index=False)
 # second_half.to_excel("/home/thrymr/Downloads/apr_sales_with_hesaathis_part2.xlsx", index=False)
 
-
-# this was abosolutely fine for me but now i want to track per each hesaathi per each Vertical while alloting the Taxable Value should be in the range of 3lakhs to 3.5 
-# if anycombination fails like if something need 8 lakhs but we have 2 hesaathis that is enough for 7 max so the other 1.5 should be allocated as HS-CO in hesaathi code column and onboarding month should be empty 
-# dont do any modifications in the any columns
-
 import pandas as pd
 import numpy as np
 import unicodedata
@@ -168,12 +163,13 @@ def clean(text):
     return text
 
 print("🔄 Loading input files...")
-sales_df1 = pd.read_excel("/home/thrymr/Desktop/sales 25-26/products_agri_sep.xlsx")
-sales_df2 = pd.read_excel("/home/thrymr/Desktop/sales 25-26/products_cons_sep.xlsx")
+sales_df1 = pd.read_excel("/home/thrymr/Downloads/products_jan_agri_part_1.xlsx")
+sales_df2 = pd.read_excel("/home/thrymr/Downloads/products_jan_cons_part_1.xlsx")
+sales_df3 = pd.read_excel("/home/thrymr/Downloads/products_jan_cons_part_2.xlsx")
 hesaathi_df = pd.read_excel("/home/thrymr/Important/new_hessathi_with_additional_people_details (copy).xlsx")
 
 print("🧩 Combining and shuffling sales data...")
-sales_df = pd.concat([sales_df1, sales_df2], ignore_index=True)
+sales_df = pd.concat([sales_df1, sales_df2, sales_df3], ignore_index=True)
 sales_df = sales_df.sample(frac=1, random_state=42).reset_index(drop=True)
 print(f"🧾 Total sales rows: {len(sales_df)}")
 
@@ -185,7 +181,7 @@ hesaathi_df['state_clean'] = hesaathi_df['State'].apply(clean)
 hesaathi_df['district_clean'] = hesaathi_df['District'].apply(clean)
 
 print("📅 Filtering Hesaathi data by onboarding month...")
-selected_month = "Sep'25"            ###################################################################----CHANGE-----#################################################################################
+selected_month = "Jan'26"            ###################################################################----CHANGE-----#################################################################################
 month_order = [
     "April'20", "May'20", "Jun'20", "Jul'20", "Aug'20", "Sep'20", "Oct'20", "Nov'20", "Dec'20",
     "Jan'21", "Feb'21", "Mar'21", "April'21", "May'21", "Jun'21", "Jul'21", "Aug'21", "Sep'21", "Dec'21",
@@ -349,13 +345,21 @@ allocation_summary = defaultdict(lambda: defaultdict(float))
 for (merge_key, hesaathi_code, vertical), total_value in hesaathi_vertical_allocation.items():
     if total_value > 0:
         allocation_summary[hesaathi_code][vertical] = total_value
+print("\n📂 Splitting into multiple files of 100,000 rows each...")
 
-print("\n📅 Splitting into two files...")
-half = len(sales_df) // 2
-first_half = sales_df.iloc[:half]
-second_half = sales_df.iloc[half:]
+chunk_size = 1000000
+total_rows = len(sales_df)
 
-first_half.to_excel("/home/thrymr/Downloads/sep_sales_with_hesaathis_part1.xlsx", index=False)
-second_half.to_excel("/home/thrymr/Downloads/sep_sales_with_hesaathis_part2.xlsx", index=False)
+# Calculate number of required files
+num_files = (total_rows // chunk_size) + (1 if total_rows % chunk_size != 0 else 0)
 
-print("✅ Processing complete! Files saved successfully.")
+for i in range(num_files):
+    start = i * chunk_size
+    end = start + chunk_size
+    chunk_df = sales_df.iloc[start:end]
+
+    file_path = f"/home/thrymr/Downloads/jan_sales_with_hesaathis_part{i+1}.xlsx"
+    chunk_df.to_excel(file_path, index=False)
+    print(f"📄 Saved: {file_path} ({len(chunk_df)} rows)")
+
+print("\n✅ Processing complete! All split files saved successfully.")

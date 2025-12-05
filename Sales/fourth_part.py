@@ -1,21 +1,25 @@
 import pandas as pd
 import numpy as np
 from random import randint, sample
+import math
 
 print("📥 Reading input Excel files...")
 
 # Step 1: Read and combine the Excel files
-file1 = "/home/thrymr/Desktop/sales 25-26/after hesaathis allocation/july_sales_with_hesaathis_part1.xlsx"
-file2 = "/home/thrymr/Desktop/sales 25-26/after hesaathis allocation/july_sales_with_hesaathis_part2.xlsx"
+file1 = "/home/thrymr/Downloads/jan_sales_with_hesaathis_part1.xlsx"
+file2 = "/home/thrymr/Downloads/jan_sales_with_hesaathis_part2.xlsx"
+file3 = "/home/thrymr/Downloads/jan_sales_with_hesaathis_part3.xlsx"
 
 
 df1 = pd.read_excel(file1)
 df2 = pd.read_excel(file2)
+df3 = pd.read_excel(file3)
 
 print("🔗 Concatenating and sorting data...")
 
 # Combine and sort
-df = pd.concat([df1, df2], ignore_index=True)
+df = pd.concat([df1, df2, df3], ignore_index=True)
+# df = pd.concat([df1, df2], ignore_index=True)
 df['Date'] = pd.to_datetime(df['Date'])  # Ensure datetime format
 df.sort_values(by='Date', inplace=True)
 
@@ -157,15 +161,22 @@ df = generate_invoice_numbers(df)
 df = generate_dummy_invoices(df)
 
 
-print("✂️ Splitting DataFrame into two halves...")
+print("✂️ Splitting DataFrame into chunks of 10 lakh rows...")
+# Define chunk size
+chunk_size = 1_000_000
+# Calculate number of output files
+num_files = math.ceil(len(df) / chunk_size)
+print(f"Total rows: {len(df)}, will generate {num_files} files...")
+# Loop and create files with 10 lakh rows each
+for i in range(num_files):
+    start_row = i * chunk_size
+    end_row = start_row + chunk_size
+    df_chunk = df.iloc[start_row:end_row].reset_index(drop=True)
 
-# Step 5: Split the DataFrame into two halves
-mid_index = len(df) // 2
-df1_out = df.iloc[:mid_index].reset_index(drop=True)
-df2_out = df.iloc[mid_index:].reset_index(drop=True)
+    output_path = f"/home/thrymr/Desktop/sales 25-26/final sales 25-26 (apr-sep)/jan_sales_with_customerids_part{i+1}.xlsx"
+    
+    print(f"💾 Saving rows {start_row} to {end_row} into {output_path}...")
+    df_chunk.to_excel(output_path, index=False)
 
-# Step 6: Save to two output Excel files
-print("💾 Saving output files...")
-df1_out.to_excel("/home/thrymr/Downloads/july_sales_with_customers_part1.xlsx", index=False)
-df2_out.to_excel("/home/thrymr/Downloads/july_sales_with_customers_part2.xlsx", index=False)
-print("✅ Processing complete. Files saved successfully.")
+print("✅ Processing complete. All files saved successfully.")
+

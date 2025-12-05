@@ -2,7 +2,7 @@
 # import random
 # from datetime import datetime, timedelta
 
-# input_file = '/home/thrymr/Downloads/karnataka_maharshtra_non_existing_projection_in_sample_september.xlsx'
+# input_file = '/home/thrymr/Downloads/to_know.xlsx'
 # output_file = '/home/thrymr/Downloads/karnataka_maharshtra_separate_output.xlsx'
 
 # # Constants
@@ -36,8 +36,8 @@
 #     return random.choices(gst_candidates, weights=weights, k=1)[0]
 
 # def random_date_in_april_2025():
-#     start_date = datetime(2025, 4, 1)
-#     end_date = datetime(2025, 4, 30)
+#     start_date = datetime(2025, 5, 1)
+#     end_date = datetime(2025, 5, 31)
 #     delta = end_date - start_date
 #     random_days = random.randint(0, delta.days)
 #     return (start_date + timedelta(days=random_days)).date()
@@ -49,7 +49,7 @@
 #     vertical = row['Vertical']
 #     sub_vertical = row['Sub Vertical']
 #     state = row['State']
-#     amount_crore = row["Apr'25"]
+#     amount_crore = row["May'25"]
 #     amount = amount_crore * 1_00_00_000
 
 #     districts = [d.strip() for d in district_data[state].split(',')]
