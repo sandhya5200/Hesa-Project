@@ -1,7 +1,7 @@
 import pandas as pd
 
 # Step 1: Load your Excel file
-df = pd.read_excel("/home/thrymr/Downloads/december.xlsx")  # replace with your actual file path
+df = pd.read_excel("/home/thrymr/Desktop/purchases 25-26(apr-sep)/purchase_april(25-26).xlsx")  # replace with your actual file path
 
 # Step 2: Define state to districts mapping
 state_district_map = {
@@ -24,5 +24,5 @@ for state, districts in state_district_map.items():
 df["State"] = df["District"].str.strip().str.lower().map(district_to_state)
 
 # Step 5 (Optional): Save or display result
-df.to_excel("/home/thrymr/Downloads/dec_with_states.xlsx", index=False)
+df.to_excel("/home/thrymr/Desktop/purchases 25-26(apr-sep)/purchase_april(25-26)_state.xlsx", index=False)
 print(df.head())

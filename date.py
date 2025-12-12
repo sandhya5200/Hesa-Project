@@ -136,36 +136,25 @@
 
 import pandas as pd
 
-# Load the input file
-df = pd.read_excel("/home/thrymr/Downloads/add.xlsx")
+# Load files
+purchase = pd.read_excel("/home/thrymr/Desktop/purchases 25-26(apr-sep)/purchase_april(25-26)_state.xlsx")
+vendor = pd.read_excel("/home/thrymr/Desktop/new_vendor_databases/Vendor_databases_as_per_25-26/telangana_Vendors.xlsx")
 
-# Define the order of Onboarding Months
-onboarding_order = [
-    "Sep'24", "Oct'24", "Nov'24", "Dec'24", 
-    "Jan'25", "Feb'25", "Mar'25", "April'25", "May'25", "Jun'25", "Jul'25", "Aug'25", 
-    "Sep'25", "Oct'25", "Nov'25", "Dec'25", 
-    "Jan'26", "Feb'26", "Mar'26"
-]
+# Create temporary cleaned Vendor ID columns only for matching
+purchase["VendorID_clean"] = purchase["Vendor ID"].astype(str).str.replace(" ", "")
+vendor["VendorID_clean"] = vendor["Vendor ID"].astype(str).str.replace(" ", "")
 
-# Create a dictionary to map Onboarding Month to the sorting index
-month_sort_dict = {month: idx for idx, month in enumerate(onboarding_order)}
+# Merge using the cleaned Vendor ID columns
+output = purchase.merge(
+    vendor,
+    on="VendorID_clean",
+    how="left",
+    suffixes=('', '_vendor')
+)
 
-# Add a new column for sorting based on Onboarding Month
-df['Sort Order'] = df['Onboarding Month'].map(month_sort_dict)
+# Drop the temporary matching column (optional)
+output = output.drop(columns=["VendorID_clean"])
 
-# Sort the dataframe by the new Sort Order column
-df_sorted = df.sort_values(by='Sort Order').reset_index(drop=True)
+# Save final file
+output.to_excel("/home/thrymr/Downloads/purchase_with_vendor_details_tel.xlsx", index=False)
 
-# Add "S no" and "Hesaathi Code" columns
-df_sorted['S no'] = range(1, len(df_sorted) + 1)
-df_sorted['Hesaathi Code'] = ['HS021955' for _ in range(len(df_sorted))]
-
-# Now adjust S no and Hesaathi Code for sequential numbering
-s_no_start = 21954
-hesaathi_code_start = "HS021955"
-
-df_sorted['S no'] = range(s_no_start, s_no_start + len(df_sorted))
-df_sorted['Hesaathi Code'] = [hesaathi_code_start for _ in range(len(df_sorted))]
-
-# Save the updated dataframe to a new file
-df_sorted.to_excel("/home/thrymr/Downloads/updated_file_with_sno_and_code.xlsx", index=False)

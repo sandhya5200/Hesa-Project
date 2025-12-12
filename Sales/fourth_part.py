@@ -6,19 +6,19 @@ import math
 print("📥 Reading input Excel files...")
 
 # Step 1: Read and combine the Excel files
-file1 = "/home/thrymr/Downloads/jan_sales_with_hesaathis_part1.xlsx"
-file2 = "/home/thrymr/Downloads/jan_sales_with_hesaathis_part2.xlsx"
-file3 = "/home/thrymr/Downloads/jan_sales_with_hesaathis_part3.xlsx"
+file1 = "/home/thrymr/Downloads/dec_sales_with_hesaathis_part1.xlsx"
+file2 = "/home/thrymr/Downloads/dec_sales_with_hesaathis_part2.xlsx"
+# file3 = "/home/thrymr/Downloads/jan_sales_with_hesaathis_part3.xlsx"
 
 
 df1 = pd.read_excel(file1)
 df2 = pd.read_excel(file2)
-df3 = pd.read_excel(file3)
+# df3 = pd.read_excel(file3)
 
 print("🔗 Concatenating and sorting data...")
 
 # Combine and sort
-df = pd.concat([df1, df2, df3], ignore_index=True)
+df = pd.concat([df1, df2], ignore_index=True)
 # df = pd.concat([df1, df2], ignore_index=True)
 df['Date'] = pd.to_datetime(df['Date'])  # Ensure datetime format
 df.sort_values(by='Date', inplace=True)
@@ -173,7 +173,7 @@ for i in range(num_files):
     end_row = start_row + chunk_size
     df_chunk = df.iloc[start_row:end_row].reset_index(drop=True)
 
-    output_path = f"/home/thrymr/Desktop/sales 25-26/final sales 25-26 (apr-sep)/jan_sales_with_customerids_part{i+1}.xlsx"
+    output_path = f"/home/thrymr/Desktop/sales 25-26/final sales 25-26 (apr-sep)/dec_sales_with_customerids_part{i+1}.xlsx"
     
     print(f"💾 Saving rows {start_row} to {end_row} into {output_path}...")
     df_chunk.to_excel(output_path, index=False)

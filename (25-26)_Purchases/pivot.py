@@ -238,37 +238,22 @@ def create_combined_file(input_file_path, output_file_path):
     print(f"✅ Combined file saved: {output_file_path}")
     return output_file_path
 
-# Example usage with your specific file paths:
+OUTPUT_PATH = "/home/thrymr/Desktop/sales 25-26/final sales 25-26 (apr-sep)/sep_PIVOT.xlsx"
+
 if __name__ == "__main__":
     input_files = [
-        "/home/thrymr/Desktop/sales 25-26/final sales 25-26 (apr-sep)/sep_sales_with_customers_part1.xlsx",
-        "/home/thrymr/Desktop/sales 25-26/final sales 25-26 (apr-sep)/sep_sales_with_customers_part2.xlsx"
+        "/home/thrymr/Desktop/sales 25-26/25-26(apr-sep)/may_sales_with_customerids_part1.xlsx",
+        "/home/thrymr/Desktop/sales 25-26/25-26(apr-sep)/may_sales_with_customerids_part2.xlsx"
     ]
 
-    output_file = "/home/thrymr/Desktop/sales 25-26/final sales 25-26 (apr-sep)/sep_PIVOT.xlsx"
+    qty_pivot, val_pivot = create_sales_pivot(input_files, OUTPUT_PATH)
 
-    qty_pivot, val_pivot = create_sales_pivot(input_files, output_file)
-
-    print(f"\n✅ File created successfully!")
-    print(f"📁 Output file: {output_file}")
-    print(f"📊 Sheets: 'Product Qty' and 'Taxable value'")
+    print("\n✅ File created successfully!")
+    print("📁 Output file:", OUTPUT_PATH)
+    print("📊 Sheets: 'Product Qty' and 'Taxable value'")
 
 
-
-# Function to read the created pivot data (for your reference)
 def read_created_pivots():
-    """
-    Function to read the pivot data you just created
-    """
-    output_file = "/home/thrymr/Desktop/sales 25-26/final sales 25-26 (apr-sep)/sep_PIVOT.xlsx"
-    
-    # Read both sheets
-    product_quantity = pd.read_excel(output_file, sheet_name="Quantity")
-    product_gross = pd.read_excel(output_file, sheet_name="Taxable value")
-    
-    print(f"Quantity sheet shape: {product_quantity.shape}")
-    print(f"Taxable value sheet shape: {product_gross.shape}")
-    
+    product_quantity = pd.read_excel(OUTPUT_PATH, sheet_name="Quantity")
+    product_gross = pd.read_excel(OUTPUT_PATH, sheet_name="Taxable value")
     return product_quantity, product_gross
-
-

@@ -296,7 +296,7 @@ import numpy as np
 import random
 
 # File paths
-sales_path = "/home/thrymr/Downloads/output_cons_jan.xlsx"
+sales_path = "/home/thrymr/Downloads/output_agri_dec.xlsx"
 products_path = "/home/thrymr/Important/my_products_file.xlsx"
 # output_matched = "/home/thrymr/Downloads/agri_oct_25_output_to_check.xlsx"
 # output_unmatched = "/home/thrymr/Downloads/unmatched_sales.xlsx"
@@ -642,7 +642,7 @@ CHUNK_SIZE = 1000000
 
 # Base output folder
 output_folder = "/home/thrymr/Downloads/"
-base_filename = "products_jan_cons"
+base_filename = "products_agri_dec"
 
 total_rows = len(final_df)
 
