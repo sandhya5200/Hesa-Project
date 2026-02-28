@@ -4,11 +4,21 @@ from random import randint, sample
 # -----------------------------
 # Load your files
 # -----------------------------
-consumer_path = r"c:\Users\ksand\Downloads\agri.xlsx"
-agri_path = r"c:\Users\ksand\Downloads\consumer.xlsx"
+agri_path = "/home/thrymr/Downloads/agri_dec.xlsx"
+consumer_path = "/home/thrymr/Downloads/cons_dec.xlsx"
 
 df_consumer = pd.read_excel(consumer_path)
 df_agri = pd.read_excel(agri_path)
+
+# -----------------------------
+# # DELETE rows where Helper Qty or Helper Value is empty
+# # -----------------------------
+# for df_tmp in [df_consumer, df_agri]:
+#     df_tmp["Helper Qty"] = pd.to_numeric(df_tmp["Helper Qty"], errors="coerce")
+#     df_tmp["Helper Value"] = pd.to_numeric(df_tmp["Helper Value"], errors="coerce")
+
+#     df_tmp.dropna(subset=["Helper Qty", "Helper Value"], inplace=True)
+
 
 # -----------------------------
 # Merge & sort
@@ -20,12 +30,12 @@ df = df.sort_values("Date").reset_index(drop=True)
 # -----------------------------
 # DELETE & RENAME columns
 # -----------------------------
-df = df.drop(columns=["Product Qty", "Taxable Value"], errors="ignore")
+# df = df.drop(columns=["Product Qty", "Taxable Value"], errors="ignore")
 
-df = df.rename(columns={
-    "Helper Qty": "Product Qty",
-    "Helper Value": "Taxable Value"
-})
+# df = df.rename(columns={
+#     "Helper Qty": "Product Qty",
+#     "Helper Value": "Taxable Value"
+# })
 
 # -----------------------------
 # DELETE old discount columns
@@ -54,7 +64,7 @@ df["Disc_percent"] = (df["Disc PU"] / df["MRP"]) * 100
 # -----------------------------
 # Delete old GST columns
 # -----------------------------
-df = df.drop(columns=["igst", "cgst", "sgst", "Total"], errors="ignore")
+df = df.drop(columns=["igst", "Cgst", "Sgst", "Total"], errors="ignore")
 
 # -----------------------------
 # Generate new GST columns
@@ -112,35 +122,7 @@ df.loc[mask_non_ho, "Customer ID"] = df_non_ho["Customer ID"]
 # =========================================================
 #   INVOICE NO ALWAYS GENERATED + NEW ORDER ID GROUP LOGIC
 # =========================================================
-# df["Invoice No"] = None
-# df["Order ID"] = None
-
-# order_counter = 1
-# ag_counter = 1
-# cg_counter = 1
-
-# # ---- INVOICE ALWAYS GENERATED (Zoho ignored for invoice) ----
-# invoice_groups = df.groupby(["Date", "Customer ID", "Vertical"])
-
-# for (date, cid, vertical), group in invoice_groups:
-
-#     month_str = f"{date.month:02d}"
-#     year_str = str(date.year)[-2:]
-
-#     if "Commerce Business" in vertical:
-#         prefix = "CG"
-#         invoice_id = f"HS-INV-{prefix}-{month_str}-{year_str}-{cg_counter:08d}"
-#         cg_counter += 1
-#     else:
-#         prefix = "AG"
-#         invoice_id = f"HS-INV-{prefix}-{month_str}-{year_str}-{ag_counter:08d}"
-#         ag_counter += 1
-
-#     df.loc[group.index, "Invoice No"] = invoice_id
-
-# =========================================================
-#   INVOICE NO ALWAYS GENERATED + NEW ORDER ID GROUP LOGIC
-# =========================================================
+df = df.drop(columns=["Invoice No", "Order ID"], errors="ignore")
 df["Invoice No"] = None
 df["Order ID"] = None
 
@@ -218,7 +200,7 @@ df = df[final_columns]
 # -----------------------------
 # SAVE OUTPUT FILES
 # -----------------------------
-df[df["Vertical"] == "Agri Business"].to_excel(r"c:\Users\ksand\Downloads\april_agri_cleaned_sale.xlsx", index=False)
-df[df["Vertical"] == "Commerce Business"].to_excel(r"c:\Users\ksand\Downloads\april_cons_cleaned_sale.xlsx", index=False)
+df[df["Vertical"] == "Agri Business"].to_excel("/home/thrymr/Downloads/dec_agri_cleaned_sale.xlsx", index=False)
+df[df["Vertical"] == "Commerce Business"].to_excel("/home/thrymr/Downloads/dec_cons_cleaned_sale.xlsx", index=False)
 
 print("🎉 DONE! Files saved successfully.")

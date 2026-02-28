@@ -4,21 +4,55 @@ from datetime import datetime
 import os
 
 
+# def load_multiple_files(file_list):
+#     dfs = []
+#     for file in file_list:
+#         print(f"Reading: {file}")
+#         if file.endswith('.xlsx') or file.endswith('.xls'):
+#             df = pd.read_excel(file)
+#         else:
+#             df = pd.read_csv(file)
+#         dfs.append(df)
+#         print(f" → Loaded {len(df)} rows")
+    
+#     # Combine all
+#     final_df = pd.concat(dfs, ignore_index=True)
+#     print(f"\n✅ Total Combined Rows: {len(final_df)}")
+#     return final_df
+
 def load_multiple_files(file_list):
     dfs = []
+    ZOHO_COL = "Zoho Invoice"   # adjust name if needed
+
     for file in file_list:
         print(f"Reading: {file}")
         if file.endswith('.xlsx') or file.endswith('.xls'):
             df = pd.read_excel(file)
         else:
             df = pd.read_csv(file)
-        dfs.append(df)
+
         print(f" → Loaded {len(df)} rows")
-    
+
+        # ----------------------------------------
+        # REMOVE rows where Zoho Invoice has data
+        # ----------------------------------------
+        if ZOHO_COL in df.columns:
+            before = len(df)
+            df = df[df[ZOHO_COL].isna() | (df[ZOHO_COL].astype(str).str.strip() == "")]
+            after = len(df)
+            print(f"   Zoho Invoice filtered: {before - after} rows removed")
+        else:
+            print(f"   ⚠️ Column '{ZOHO_COL}' not found in this file")
+
+        dfs.append(df)
+        print(f" → Remaining rows after filter: {len(df)}")
+
     # Combine all
     final_df = pd.concat(dfs, ignore_index=True)
-    print(f"\n✅ Total Combined Rows: {len(final_df)}")
+    print(f"\n✅ Total Combined Rows After Zoho Filter: {len(final_df)}")
+
     return final_df
+
 
 
 def create_sales_pivot(input_file_path, output_file_path):
@@ -238,12 +272,12 @@ def create_combined_file(input_file_path, output_file_path):
     print(f"✅ Combined file saved: {output_file_path}")
     return output_file_path
 
-OUTPUT_PATH = "/home/thrymr/Desktop/sales 25-26/final sales 25-26 (apr-sep)/sep_PIVOT.xlsx"
+OUTPUT_PATH = "/home/thrymr/Downloads/AUGUST_25/aug_pivot.xlsx"
 
 if __name__ == "__main__":
     input_files = [
-        "/home/thrymr/Desktop/sales 25-26/25-26(apr-sep)/may_sales_with_customerids_part1.xlsx",
-        "/home/thrymr/Desktop/sales 25-26/25-26(apr-sep)/may_sales_with_customerids_part2.xlsx"
+        "/home/thrymr/Downloads/AUGUST_25/aug_agri_cleaned_sale.xlsx",
+        "/home/thrymr/Downloads/AUGUST_25/aug_cons_cleaned_sale.xlsx"
     ]
 
     qty_pivot, val_pivot = create_sales_pivot(input_files, OUTPUT_PATH)

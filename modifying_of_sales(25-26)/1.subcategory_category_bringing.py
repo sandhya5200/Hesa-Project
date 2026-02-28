@@ -2,11 +2,11 @@ import pandas as pd
 from rapidfuzz import process, fuzz
 
 # --- FILE PATHS ---
-zoho_path = "/home/thrymr/Downloads/agri.xlsx"
+zoho_path = "/home/thrymr/Downloads/Dec - Consumer For Review.xlsx"
 products_path = "/home/thrymr/Important/my_products_file.xlsx"
 
 # --- READ FILES ---
-zoho = pd.read_excel(zoho_path, sheet_name='Sheet1')
+zoho = pd.read_excel(zoho_path)
 products = pd.read_excel(products_path)
 
 # Columns for matching
@@ -50,7 +50,7 @@ zoho.loc[needs_fill, "Sub Category"] = zoho.loc[needs_fill, "match_index"].apply
 zoho = zoho.drop(columns=["match_data", "match_index", "Match_Score"], errors="ignore")
 
 # Save the output file
-output_path = "/home/thrymr/Downloads/agri_zoho_filled_categories.xlsx"
+output_path = "/home/thrymr/Downloads/cons_dec.xlsx"
 zoho.to_excel(output_path, index=False)
 
 print("Done! File saved at:", output_path)

@@ -1,11 +1,11 @@
 import pandas as pd
 import random
 
-input_file = "/home/thrymr/Downloads/purchase_september(25-26).xlsx"
+input_file = "/home/thrymr/Downloads/SEPTEMBER_25/sep_purchase.xlsx"
 
 
 zone_file = "/home/thrymr/Important/new_hessathi_with_additional_people_details (copy).xlsx"
-output_file = "/home/thrymr/Desktop/purchases 25-26(apr-sep)/purchase_september(25-26).xlsx"
+output_file = "/home/thrymr/Downloads/SEPTEMBER_25/september_purchase(25-26).xlsx"
 
 # Load data
 input_df = pd.read_excel(input_file)
@@ -91,3 +91,4 @@ input_df["Hesaathi Code"] = input_df["PO Number"].map(hesaathi_assignments)
 input_df.to_excel(output_file, index=False)
 
 print(f"Updated file saved as {output_file}")
+

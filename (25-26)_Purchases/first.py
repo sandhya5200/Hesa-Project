@@ -19,9 +19,9 @@ business_dict = {
 
 def purchase():
     print("before")
-    product_quantity = pd.read_excel("/home/thrymr/Desktop/sales 25-26/final sales 25-26 (apr-sep)/sep_PIVOT.xlsx", sheet_name="Product Qty")
+    product_quantity = pd.read_excel("/home/thrymr/Downloads/SEPTEMBER_25/sep_pivot.xlsx", sheet_name="Product Qty")
    
-    product_gross = pd.read_excel("/home/thrymr/Desktop/sales 25-26/final sales 25-26 (apr-sep)/sep_PIVOT.xlsx", sheet_name="Taxable value")
+    product_gross = pd.read_excel("/home/thrymr/Downloads/SEPTEMBER_25/sep_pivot.xlsx", sheet_name="Taxable value")
     
     zone_df = pd.read_excel("/home/thrymr/Important/new_hessathi_with_additional_people_details (copy).xlsx")
     products_data = pd.read_excel("/home/thrymr/Important/my_products_file.xlsx")
@@ -205,7 +205,7 @@ def purchase():
                 missed_quantity+=init_q
     df = pd.DataFrame(rows)
     print(len(rows))                
-    df.to_excel("/home/thrymr/Downloads/SEPTEMBER.xlsx")
+    df.to_excel("/home/thrymr/Downloads/SEPTEMBER_25/sep.xlsx")
     print("completed")
     
 purchase()

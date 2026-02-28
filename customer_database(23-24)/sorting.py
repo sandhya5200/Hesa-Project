@@ -3,8 +3,8 @@ import os
 from math import ceil
 
 # === CONFIGURATION ===
-folder_path = "/home/thrymr/Desktop/Customer_data"  # Change this to your actual folder path
-output_folder = "/home/thrymr/Desktop/Customer_data/sorted_output"  # Folder to save output files
+folder_path = "/home/thrymr/Downloads/customer_new"  # Change this to your actual folder path
+output_folder = "/home/thrymr/Downloads/customer_db"  # Folder to save output files
 rows_per_file = 1048500 # Adjust based on size of each file
 
 # === CREATE OUTPUT FOLDER IF NOT EXISTS ===
@@ -19,7 +19,7 @@ for file in os.listdir(folder_path):
 
 # === STEP 2: Combine and Sort ===
 combined_df = pd.concat(all_dfs, ignore_index=True)
-combined_df.sort_values(by="CustomerID", inplace=True)
+combined_df.sort_values(by="Customer_ID", inplace=True)
 
 # === STEP 3: Split and Save into multiple Excel files ===
 total_rows = len(combined_df)
@@ -30,7 +30,7 @@ for i in range(num_files):
     end = (i + 1) * rows_per_file
     chunk_df = combined_df.iloc[start:end]
     
-    output_path = os.path.join(output_folder, f"sorted_customers_part_{i+1}.xlsx")
+    output_path = os.path.join(output_folder, f"new_hessathis_customerdatabase_according_to_25-26_{i+1}.xlsx")
 
     chunk_df.to_excel(output_path, index=False)
 
