@@ -4,8 +4,8 @@ from random import randint, sample
 # -----------------------------
 # Load your files
 # -----------------------------
-agri_path = "/home/thrymr/Downloads/agri_dec.xlsx"
-consumer_path = "/home/thrymr/Downloads/cons_dec.xlsx"
+agri_path = r"c:\Users\ksand\Downloads\agri_nov.xlsx"
+consumer_path = r"c:\Users\ksand\Downloads\cons_nov.xlsx"
 
 df_consumer = pd.read_excel(consumer_path)
 df_agri = pd.read_excel(agri_path)
@@ -191,7 +191,7 @@ final_columns = [
     "MRP", "UOM", "Net Price PU", "Product Qty", "Taxable Value",
     "gst_rate", "Disc_percent", "Disc PU", "Currency", "Facilitator",
     "igst", "cgst", "sgst", "Total",
-    "Assigned Hesaathi Code", "Assigned Hesaathi Onboarding Month",
+    "Assigned Hesaathi Code",
     "Customer ID", "Invoice No", "Order ID", "Zoho Invoice"
 ]
 
@@ -200,7 +200,7 @@ df = df[final_columns]
 # -----------------------------
 # SAVE OUTPUT FILES
 # -----------------------------
-df[df["Vertical"] == "Agri Business"].to_excel("/home/thrymr/Downloads/dec_agri_cleaned_sale.xlsx", index=False)
-df[df["Vertical"] == "Commerce Business"].to_excel("/home/thrymr/Downloads/dec_cons_cleaned_sale.xlsx", index=False)
+df[df["Vertical"] == "Agri Business"].to_excel(r"c:\Users\ksand\Downloads\nov_agri_cleaned_sale.xlsx", index=False)
+df[df["Vertical"] == "Commerce Business"].to_excel(r"c:\Users\ksand\Downloads\nov_cons_cleaned_sale.xlsx", index=False)
 
 print("🎉 DONE! Files saved successfully.")

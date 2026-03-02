@@ -3,7 +3,7 @@ import pandas as pd
 # -----------------------------
 # Load allocated sales file
 # -----------------------------
-input_path = "/home/thrymr/Downloads/sales_with_bank_details_cons_sep.xlsx"
+input_path = r"c:\Users\ksand\Downloads\nov_cons_cleaned_sale.xlsx"
 df = pd.read_excel(input_path)
 
 # -----------------------------
@@ -24,17 +24,17 @@ summary = (
         Zoho_Invoice=("Zoho Invoice", lambda x: x.dropna().iloc[0] if not x.dropna().empty else ""),
         
         Invoice_Total=("Total", "sum"),
-        Paid_through_BT=("Bank Amount Allocated", "sum"),
-        Paid_through_Wallet=("Wallet Amount", "sum"),
+        # Paid_through_BT=("Bank Amount Allocated", "sum"),
+        # Paid_through_Wallet=("Wallet Amount", "sum"),
 
         # ---- BANK DETAILS (first non-null) ----
-        Mode=("Mode", lambda x: x.dropna().iloc[0] if not x.dropna().empty else ""),
-        Description=("Description", lambda x: x.dropna().iloc[0] if not x.dropna().empty else ""),
-        Amount=("Amount", lambda x: x.dropna().iloc[0] if not x.dropna().empty else ""),
-        Customer_Name=("Customer Name", lambda x: x.dropna().iloc[0] if not x.dropna().empty else ""),
-        Deposit_To=("Deposit To", lambda x: x.dropna().iloc[0] if not x.dropna().empty else ""),
+        # Mode=("Mode", lambda x: x.dropna().iloc[0] if not x.dropna().empty else ""),
+        # Description=("Description", lambda x: x.dropna().iloc[0] if not x.dropna().empty else ""),
+        # Amount=("Amount", lambda x: x.dropna().iloc[0] if not x.dropna().empty else ""),
+        # Customer_Name=("Customer Name", lambda x: x.dropna().iloc[0] if not x.dropna().empty else ""),
+        # Deposit_To=("Deposit To", lambda x: x.dropna().iloc[0] if not x.dropna().empty else ""),
 
-        Transaction_Date=("Date", "first")
+        # Transaction_Date=("Date", "first")
     )
     .reset_index()
 )
@@ -42,9 +42,9 @@ summary = (
 # -----------------------------
 # Deposit To (Bank / Wallet) — Allocation based
 # -----------------------------
-summary["Deposit to"] = summary["Paid_through_BT"].apply(
-    lambda x: "Bank" if x > 0 else "Wallet"
-)
+# summary["Deposit to"] = summary["Paid_through_BT"].apply(
+#     lambda x: "Bank" if x > 0 else "Wallet"
+# )
 
 # -----------------------------
 # Serial Number
@@ -64,26 +64,26 @@ summary = summary[
         "Zoho_Invoice",
         "Order_Id",
 
-        "Deposit to",        # Bank / Wallet
-        "Deposit_To",        # Bank column
+        # "Deposit to",        # Bank / Wallet
+        # "Deposit_To",        # Bank column
 
         "Invoice_Total",
-        "Paid_through_BT",
-        "Paid_through_Wallet",
+        # "Paid_through_BT",
+        # "Paid_through_Wallet",
 
-        "Mode",
-        "Description",
-        "Amount",
-        "Customer_Name",
+        # "Mode",
+        # "Description",
+        # "Amount",
+        # "Customer_Name",
 
-        "Transaction_Date",
+        # "Transaction_Date",
     ]
 ]
 
 # -----------------------------
 # Save Summary File
 # -----------------------------
-output_path = "/home/thrymr/Downloads/summary_of_sep_cons.xlsx"
+output_path = r"c:\Users\ksand\Downloads\summary_of_nov_cons.xlsx"
 summary.to_excel(output_path, index=False)
 
 print("Summary file created:", output_path)

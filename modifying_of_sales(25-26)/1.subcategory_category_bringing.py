@@ -2,8 +2,8 @@ import pandas as pd
 from rapidfuzz import process, fuzz
 
 # --- FILE PATHS ---
-zoho_path = "/home/thrymr/Downloads/Dec - Consumer For Review.xlsx"
-products_path = "/home/thrymr/Important/my_products_file.xlsx"
+zoho_path = r"c:\Users\ksand\Downloads\Nov - Consumer For Review.xlsx"
+products_path = r"c:\Users\ksand\Downloads\Important 4\Important\my_products_file.xlsx"
 
 # --- READ FILES ---
 zoho = pd.read_excel(zoho_path)
@@ -50,7 +50,7 @@ zoho.loc[needs_fill, "Sub Category"] = zoho.loc[needs_fill, "match_index"].apply
 zoho = zoho.drop(columns=["match_data", "match_index", "Match_Score"], errors="ignore")
 
 # Save the output file
-output_path = "/home/thrymr/Downloads/cons_dec.xlsx"
+output_path = r"c:\Users\ksand\Downloads\cons_nov.xlsx"
 zoho.to_excel(output_path, index=False)
 
 print("Done! File saved at:", output_path)

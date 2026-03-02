@@ -9,22 +9,31 @@ month_map = [
 ]
 
 business_dict = {
-    "Agri Inputs": [9.09, 9.09, 9.10, 9.04, 9.05, 9.05, 9.06, 9.06, 9.07, 9.07, 9.08, 9.08],
-    "Market Linkages Trading": [9.85, 9.85, 9.86, 9.80, 9.81, 9.81, 9.82, 9.82, 9.83, 9.83, 9.84, 9.84],
-    "Market Linkages Value Intervention": [15.29, 15.29, 15.30, 15.24, 15.25, 15.25, 15.26, 15.26, 15.27, 15.27, 15.28, 15.28],
-    "FMCG": [8.96, 8.96, 8.97, 8.91, 8.92, 8.92, 8.93, 8.93, 8.94, 8.94, 8.95, 8.95],
-    "White Label": [24.56, 24.57, 24.57, 24.52, 24.52, 24.53, 24.53, 24.54, 24.54, 24.55, 24.55, 24.56, 24.56]
+    "Agri Inputs": [
+        6.08, 6.08, 6.08, 5.96, 5.97, 5.97, 5.98, 5.99, 5.99, 6.00, 6.00, 6.04
+    ],
+    "Market Linkage": [
+        7.22, 7.22, 7.22, 7.05, 7.06, 7.07, 7.08, 7.08, 7.07, 7.09, 7.10, 7.14
+    ],
+    "Value Intervention": [
+        10.33, 10.33, 10.33, 10.19, 10.19, 10.20, 10.20, 10.21, 10.22, 10.23, 10.22, 10.28
+    ],
+    "FMCG": [
+        8.01, 8.01, 8.01, 7.83, 7.84, 7.85, 7.86, 7.87, 7.89, 7.91, 7.91, 7.97
+    ],
+    "White Label": [
+        22.78, 22.78, 22.78, 22.55, 22.56, 22.57,22.58, 22.59, 22.60, 22.62, 22.63, 22.69
+    ]
 }
-
 
 def purchase():
     print("before")
-    product_quantity = pd.read_excel("/home/thrymr/Downloads/SEPTEMBER_25/sep_pivot.xlsx", sheet_name="Product Qty")
+    product_quantity = pd.read_excel(r"c:\Users\ksand\Downloads\dec_pivot.xlsx", sheet_name="Product Qty")
    
-    product_gross = pd.read_excel("/home/thrymr/Downloads/SEPTEMBER_25/sep_pivot.xlsx", sheet_name="Taxable value")
+    product_gross = pd.read_excel(r"c:\Users\ksand\Downloads\dec_pivot.xlsx", sheet_name="Taxable value")
     
-    zone_df = pd.read_excel("/home/thrymr/Important/new_hessathi_with_additional_people_details (copy).xlsx")
-    products_data = pd.read_excel("/home/thrymr/Important/my_products_file.xlsx")
+    zone_df = pd.read_excel(r"c:\Users\ksand\Downloads\Important 4\Important\new_hessathi_with_additional_people_details (copy).xlsx")
+    products_data = pd.read_excel(r"c:\Users\ksand\Downloads\Important 4\Important\my_products_file.xlsx")
 
     col = product_gross.columns
     track = {}
@@ -205,7 +214,7 @@ def purchase():
                 missed_quantity+=init_q
     df = pd.DataFrame(rows)
     print(len(rows))                
-    df.to_excel("/home/thrymr/Downloads/SEPTEMBER_25/sep.xlsx")
+    df.to_excel(r"c:\Users\ksand\Downloads\dec.xlsx")
     print("completed")
     
 purchase()
