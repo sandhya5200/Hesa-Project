@@ -54,7 +54,6 @@ def load_multiple_files(file_list):
     return final_df
 
 
-
 def create_sales_pivot(input_file_path, output_file_path):
     """
     Create pivot tables from sales data and save to specified Excel file with two sheets
@@ -272,12 +271,12 @@ def create_combined_file(input_file_path, output_file_path):
     print(f"✅ Combined file saved: {output_file_path}")
     return output_file_path
 
-OUTPUT_PATH = r"c:\Users\ksand\Downloads\dec_pivot.xlsx"
+OUTPUT_PATH = "/home/thrymr/Downloads/mar_pivot.xlsx"
 
 if __name__ == "__main__":
     input_files = [
-        r"c:\Users\ksand\Downloads\dec_agri_cleaned_sale.xlsx",
-        r"c:\Users\ksand\Downloads\dec_cons_cleaned_sale.xlsx"
+        "/home/thrymr/Desktop/sales 25-26/final_revised_sales(25-26)_oct-mar/mar_agri_sale(25-26).xlsx",
+        "/home/thrymr/Desktop/sales 25-26/final_revised_sales(25-26)_oct-mar/mar_cons_sale(25-26).xlsx"
     ]
 
     qty_pivot, val_pivot = create_sales_pivot(input_files, OUTPUT_PATH)

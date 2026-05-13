@@ -5,9 +5,9 @@ import os
 # 1. LOAD CUSTOMER DATABASES (ONCE)
 # -------------------------------------------------
 customer_files = [
-    "/home/thrymr/Desktop/Customer_data/sorted_output/new_hessathis_customerdatabase_according_to_25-26_1.xlsx",
-    "/home/thrymr/Desktop/Customer_data/sorted_output/sorted_customers_part_1.xlsx",
-    "/home/thrymr/Desktop/Customer_data/sorted_output/sorted_customers_part_2.xlsx"
+    "/home/thrymr/Desktop/Customer_data/sorted_output_until_25-26(apr-sep)/new_hessathis_customerdatabase_according_to_25-26_1.xlsx",
+    "/home/thrymr/Desktop/Customer_data/sorted_output_until_25-26(apr-sep)/sorted_customers_part_1.xlsx",
+    "/home/thrymr/Desktop/Customer_data/sorted_output_until_25-26(apr-sep)/sorted_customers_part_2.xlsx"
 ]
 
 customer_df = pd.concat(
@@ -45,18 +45,19 @@ customer_df.rename(
 # 2. SALES FILE LIST
 # -------------------------------------------------
 sales_files = [
-    "/home/thrymr/Desktop/sales 25-26/revised_sales(25-26)_apr-sep/sales_agri_april(25-26).xlsx",
-    "/home/thrymr/Desktop/sales 25-26/revised_sales(25-26)_apr-sep/sales_agri_july(25-26).xlsx",
-    "/home/thrymr/Desktop/sales 25-26/revised_sales(25-26)_apr-sep/sales_agri_june(25-26).xlsx",
-    "/home/thrymr/Desktop/sales 25-26/revised_sales(25-26)_apr-sep/sales_agri_may(25-26).xlsx",
-    "/home/thrymr/Desktop/sales 25-26/revised_sales(25-26)_apr-sep/Sales_aug_agri(25-26).xlsx",
-    "/home/thrymr/Desktop/sales 25-26/revised_sales(25-26)_apr-sep/Sales_aug_cons(25-26).xlsx",
-    "/home/thrymr/Desktop/sales 25-26/revised_sales(25-26)_apr-sep/sales_cons_april(25-26).xlsx",
-    "/home/thrymr/Desktop/sales 25-26/revised_sales(25-26)_apr-sep/sales_cons_july(25-26).xlsx",
-    "/home/thrymr/Desktop/sales 25-26/revised_sales(25-26)_apr-sep/sales_cons_june(25-26).xlsx",
-    "/home/thrymr/Desktop/sales 25-26/revised_sales(25-26)_apr-sep/sales_cons_may(25-26).xlsx",
-    "/home/thrymr/Desktop/sales 25-26/revised_sales(25-26)_apr-sep/Sales_sep_agri(25-26).xlsx",
-    "/home/thrymr/Desktop/sales 25-26/revised_sales(25-26)_apr-sep/Sales_sep_cons(25-26).xlsx"
+    "/home/thrymr/Desktop/sales 25-26/final_revised_sales(25-26)_oct-mar/dec_agri_sale(25-26).xlsx",
+    "/home/thrymr/Desktop/sales 25-26/final_revised_sales(25-26)_oct-mar/dec_cons_sale(25-26).xlsx",
+    "/home/thrymr/Desktop/sales 25-26/final_revised_sales(25-26)_oct-mar/feb_agri_sale(25-26).xlsx",
+    "/home/thrymr/Desktop/sales 25-26/final_revised_sales(25-26)_oct-mar/feb_cons_sale(25-26).xlsx",
+    "/home/thrymr/Desktop/sales 25-26/final_revised_sales(25-26)_oct-mar/jan_agri_sale(25-26).xlsx",
+    "/home/thrymr/Desktop/sales 25-26/final_revised_sales(25-26)_oct-mar/jan_cons_sale(25-26).xlsx",
+    "/home/thrymr/Desktop/sales 25-26/final_revised_sales(25-26)_oct-mar/mar_agri_sale(25-26).xlsx",
+    "/home/thrymr/Desktop/sales 25-26/final_revised_sales(25-26)_oct-mar/mar_cons_sale(25-26).xlsx",
+    "/home/thrymr/Desktop/sales 25-26/final_revised_sales(25-26)_oct-mar/nov_agri_sale(25-26).xlsx",
+    "/home/thrymr/Desktop/sales 25-26/final_revised_sales(25-26)_oct-mar/nov_cons_sale(25-26).xlsx",
+    "/home/thrymr/Desktop/sales 25-26/final_revised_sales(25-26)_oct-mar/oct_agri_sale(25-26).xlsx",
+    "/home/thrymr/Desktop/sales 25-26/final_revised_sales(25-26)_oct-mar/oct_cons_sale(25-26).xlsx"
+
 ]
 
 # -------------------------------------------------

@@ -3,7 +3,7 @@ import pandas as pd
 # -----------------------------
 # Load allocated sales file
 # -----------------------------
-input_path = r"c:\Users\ksand\Downloads\nov_cons_cleaned_sale.xlsx"
+input_path = "/home/thrymr/Desktop/sales 25-26/final_revised_sales(25-26)_oct-mar/mar_cons_sale(25-26).xlsx"
 df = pd.read_excel(input_path)
 
 # -----------------------------
@@ -83,7 +83,7 @@ summary = summary[
 # -----------------------------
 # Save Summary File
 # -----------------------------
-output_path = r"c:\Users\ksand\Downloads\summary_of_nov_cons.xlsx"
+output_path = "/home/thrymr/Downloads/summary_of_mar_cons.xlsx"
 summary.to_excel(output_path, index=False)
 
 print("Summary file created:", output_path)

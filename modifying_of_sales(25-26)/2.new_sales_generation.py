@@ -4,8 +4,8 @@ from random import randint, sample
 # -----------------------------
 # Load your files
 # -----------------------------
-agri_path = r"c:\Users\ksand\Downloads\agri_nov.xlsx"
-consumer_path = r"c:\Users\ksand\Downloads\cons_nov.xlsx"
+agri_path = "/home/thrymr/Downloads/March - For Review/Mar Agri.xlsx"
+consumer_path = "/home/thrymr/Downloads/March - For Review/Mar_cons.xlsx"
 
 df_consumer = pd.read_excel(consumer_path)
 df_agri = pd.read_excel(agri_path)
@@ -200,7 +200,7 @@ df = df[final_columns]
 # -----------------------------
 # SAVE OUTPUT FILES
 # -----------------------------
-df[df["Vertical"] == "Agri Business"].to_excel(r"c:\Users\ksand\Downloads\nov_agri_cleaned_sale.xlsx", index=False)
-df[df["Vertical"] == "Commerce Business"].to_excel(r"c:\Users\ksand\Downloads\nov_cons_cleaned_sale.xlsx", index=False)
+df[df["Vertical"] == "Agri Business"].to_excel("/home/thrymr/Downloads/mar_agri_cleaned_sale.xlsx", index=False)
+df[df["Vertical"] == "Commerce Business"].to_excel("/home/thrymr/Downloads/mar_cons_cleaned_sale.xlsx", index=False)
 
 print("🎉 DONE! Files saved successfully.")

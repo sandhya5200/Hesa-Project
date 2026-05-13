@@ -33,27 +33,24 @@ import pandas as pd
 import os
 
 # Step 1: Folder path
-folder_path = "/home/thrymr/Desktop/purchases 25-26(apr-sep)"
+folder_path = "/home/thrymr/Desktop/purchases 25-26(oct-mar)"
 
 # Step 2: List of Excel files
 files = [
-    "purchase_april_(25-26).xlsx",
-    "purchase_may_(25-26).xlsx",
-    "june_purchase_(25-26).xlsx",
-    "july_purchase(25-26).xlsx",
-    "August_purchase(25-26).xlsx",
-    "september_purchase(25-26).xlsx"
+
+    "jan_purchase(25-26).xlsx"
 ]
 
 # Step 3: Define state to districts mapping
 state_district_map = {
     "Andhra Pradesh": ["Ananthapur", "Chittoor", "Cuddapah", "East Godavari", "Guntur", "Krishna", "Kurnool", "Nellore", "Prakasam", "Srikakulam", "Vijayawada", "Visakhapatnam", "Vizianagaram", "West Godavari"],
-    "Karnataka": ["Bidar", "Ballari", "Kalabuargi", "Koppal", "Raichur", "Vijayanagara", "Yadagiri"],
-    "Maharashtra": ["Ahmed Nagar", "Amravati", "Aurangabad", "Beed", "Buldhana", "Chandrapur", "Dhule", "Gadchiroli", "Jalgaon", "Kolhapur", "Latur", "Mumbai", "Nagpur", "Nanded", "Osmanabad", "Pune", "Raigarh Mh", "Raigarh(Mh)", "Satara", "Solapur", "Thane", "Yavatmal"],
-    "Odisha": ["Angul", "Balangir", "Balasore", "Baleswar", "Bargarh", "Bhadrak", "Boudh", "Cuttack", "Debagarh", "Dhenkanal", "Gajapati", "Ganjam", "Jagatsinghapur", "Jajapur", "Kalahandi", "Kendrapara", "Kendujhar", "Khorda", "Mayurbhanj", "Nayagarh", "Puri", "Rayagada", "Sonapur", "Sundergarh"],
-    "Tamil Nadu": ["Chennai", "Coimbatore", "Cuddalore", "Dharmapuri", "Erode", "Kanchipuram", "Kanyakumari", "Karur", "Krishnagiri", "Madurai", "Namakkal", "Nilgiris", "Ramanathapuram", "Salem", "Tiruchirappalli", "Tirunelveli", "Tiruppur", "Tiruvannamalai", "Vellore"],
-    "Telangana": ["Adilabad", "Hyderabad", "Karim Nagar", "Khammam", "Mahabub Nagar", "Medak", "Nalgonda", "Nizamabad", "Rangareddy", "Sangareddy", "Vikarabad", "Wanaparthy", "Warangal"],
-    "Madhya Pradesh": ["Dewas", "Dhar", "Indore", "Kukshi", "Ujjain"]
+    "Karnataka": ["Bidar", "Ballari", "Kalabuargi", "Koppal", "Raichur", "Vijayanagara", "Yadagiri", "kalaburagi"],
+    "Maharashtra": ["Ahmed Nagar", "Amravati", "Aurangabad", "Beed", "Buldhana", "Chandrapur", "Dhule", "Gadchiroli", "Jalgaon", "Kolhapur", "Latur", "Mumbai", "Nagpur", "Nanded", "Osmanabad", "Pune", "Raigarh Mh", "Raigarh(Mh)", "Satara", "Solapur", "Thane", "Yavatmal", "raigarh", ],
+    "Odisha": ["Angul", "Balangir", "Balasore", "Baleswar", "Bargarh", "Bhadrak", "Boudh", "Cuttack", "Debagarh", "Dhenkanal", "Gajapati", "Ganjam", "Jagatsinghapur", "Jajapur", "Kalahandi", "Kendrapara", "Kendujhar", "Khorda", "Mayurbhanj", "Nayagarh", "Puri", "Rayagada", "Sonapur", "Sundergarh", "Khordha"],
+    "Tamil Nadu": ["Chennai", "Coimbatore", "Cuddalore", "Dharmapuri", "Erode", "Kanchipuram", "Kanyakumari", "Karur", "Krishnagiri", "Madurai", "Namakkal", "Nilgiris", "Ramanathapuram", "Salem", "Tiruchirappalli", "Tirunelveli", "Tiruppur", "Tiruvannamalai", "Vellore", "Tirupathur"],
+    "Telangana": ["Adilabad", "Hyderabad", "Karim Nagar", "Khammam", "Mahabub Nagar", "Mancherial", "Medak", "Nalgonda", "Nizamabad", "Rangareddy", "Sangareddy", "Vikarabad", "Wanaparthy", "Warangal"],
+    "Madhya Pradesh": ["Dewas", "Dhar", "Indore", "Kukshi", "Ujjain"],
+    "Gujarat": ["Kheda"]
 }
 
 # Step 4: Create district-to-state mapping

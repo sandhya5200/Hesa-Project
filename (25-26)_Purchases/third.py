@@ -1,11 +1,11 @@
 import pandas as pd
 import random
 
-input_file = r"c:\Users\ksand\Downloads\dec_purchase.xlsx"
+input_file = "/home/thrymr/Downloads/mar_purchase.xlsx"
 
 
-zone_file = r"c:\Users\ksand\Downloads\Important 4\Important\new_hessathi_with_additional_people_details (copy).xlsx"
-output_file = r"c:\Users\ksand\Downloads\dec_purchase(25-26).xlsx"
+zone_file = "/home/thrymr/Important/new_hessathi_with_additional_people_details (copy).xlsx"
+output_file = "/home/thrymr/Downloads/mar_purchase(25-26).xlsx"
 
 # Load data
 input_df = pd.read_excel(input_file)

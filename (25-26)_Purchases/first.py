@@ -10,30 +10,30 @@ month_map = [
 
 business_dict = {
     "Agri Inputs": [
-        6.08, 6.08, 6.08, 5.96, 5.97, 5.97, 5.98, 5.99, 5.99, 6.00, 6.00, 6.04
+        6.08, 6.11, 6.15, 5.96, 5.97, 5.97, 5.98, 5.99, 5.99, 6.00, 6.00, 6.04
     ],
     "Market Linkage": [
-        7.22, 7.22, 7.22, 7.05, 7.06, 7.07, 7.08, 7.08, 7.07, 7.09, 7.10, 7.14
+        7.22, 7.25, 7.28, 7.05, 7.06, 7.07, 7.08, 7.08, 7.07, 7.09, 7.10, 7.14
     ],
     "Value Intervention": [
-        10.33, 10.33, 10.33, 10.19, 10.19, 10.20, 10.20, 10.21, 10.22, 10.23, 10.22, 10.28
+        10.33, 10.36, 10.40, 10.19, 10.19, 10.20, 10.20, 10.21, 10.22, 10.23, 10.22, 10.28
     ],
     "FMCG": [
-        8.01, 8.01, 8.01, 7.83, 7.84, 7.85, 7.86, 7.87, 7.89, 7.91, 7.91, 7.97
+        8.01, 8.03, 8.06, 7.83, 7.84, 7.85, 7.86, 7.87, 7.89, 7.91, 7.91, 7.97
     ],
     "White Label": [
-        22.78, 22.78, 22.78, 22.55, 22.56, 22.57,22.58, 22.59, 22.60, 22.62, 22.63, 22.69
+        22.78, 22.81, 22.88, 22.55, 22.56, 22.57,22.58, 22.59, 22.60, 22.62, 22.63, 22.69
     ]
 }
 
 def purchase():
     print("before")
-    product_quantity = pd.read_excel(r"c:\Users\ksand\Downloads\dec_pivot.xlsx", sheet_name="Product Qty")
+    product_quantity = pd.read_excel("/home/thrymr/Downloads/mar_pivot.xlsx", sheet_name="Product Qty")
    
-    product_gross = pd.read_excel(r"c:\Users\ksand\Downloads\dec_pivot.xlsx", sheet_name="Taxable value")
+    product_gross = pd.read_excel("/home/thrymr/Downloads/mar_pivot.xlsx", sheet_name="Taxable value")
     
-    zone_df = pd.read_excel(r"c:\Users\ksand\Downloads\Important 4\Important\new_hessathi_with_additional_people_details (copy).xlsx")
-    products_data = pd.read_excel(r"c:\Users\ksand\Downloads\Important 4\Important\my_products_file.xlsx")
+    zone_df = pd.read_excel("/home/thrymr/Important/new_hessathi_with_additional_people_details (copy).xlsx")
+    products_data = pd.read_excel("/home/thrymr/Important/my_products_file.xlsx")
 
     col = product_gross.columns
     track = {}
@@ -214,7 +214,7 @@ def purchase():
                 missed_quantity+=init_q
     df = pd.DataFrame(rows)
     print(len(rows))                
-    df.to_excel(r"c:\Users\ksand\Downloads\dec.xlsx")
+    df.to_excel("/home/thrymr/Downloads/mar.xlsx")
     print("completed")
     
 purchase()
