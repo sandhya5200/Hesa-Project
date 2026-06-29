@@ -22,12 +22,11 @@ state_files = {
     "andhrapradesh": pd.read_excel("/home/thrymr/Desktop/new_vendor_databases/Vendor_databases_as_per_25-26/AP_Vendors.xlsx"),
     "maharashtra": pd.read_excel("/home/thrymr/Desktop/new_vendor_databases/Vendor_databases_as_per_25-26/Maharashtra_Vendors.xlsx"),
     "odisha": pd.read_excel("/home/thrymr/Desktop/new_vendor_databases/Vendor_databases_as_per_25-26/ODISSA_Vendors.xlsx"),
-    "tamilnadu": pd.read_excel("/home/thrymr/Desktop/new_vendor_databases/Vendor_databases_as_per_25-26/tamilnadu_Vendors.xlsx"),
+    "tamilnadu": pd.read_excel("/home/thrymr/Desktop/new_vendor_databases/Vendor_databases_as_per_25-26/tamilnadu_150_Vendors.xlsx"),
     "telangana": pd.read_excel("/home/thrymr/Desktop/new_vendor_databases/Vendor_databases_as_per_25-26/telangana_Vendors.xlsx"),
     "karnataka": pd.read_excel("/home/thrymr/Desktop/new_vendor_databases/Vendor_databases_as_per_25-26/Karnataka_vendors.xlsx"),
-    # "haryana": pd.read_excel("/home/thrymr/Desktop/vendors/Haryana_Vendor_Database.xlsx"),
-    # "bihar": pd.read_excel("/home/thrymr/Desktop/vendors/Bihar_Vendor_Database.xlsx"),
-    "madhyapradesh": pd.read_excel("/home/thrymr/Desktop/new_vendor_databases/Vendor_databases_as_per_25-26/MP_Vendors.xlsx")
+    "madhyapradesh": pd.read_excel("/home/thrymr/Desktop/new_vendor_databases/Vendor_databases_as_per_25-26/MP_Vendors.xlsx"),
+    "gujarat": pd.read_excel("/home/thrymr/Desktop/new_vendor_databases/Vendor_databases_as_per_25-26/GUJARAT_VENDORS.xlsx")
 }
 
 
@@ -119,7 +118,7 @@ for file in input_files:
 
     final_df = pd.DataFrame(merged_rows)
     final_df.to_excel(
-        f"/home/thrymr/Downloads/{file_name}_with_vendor_data.xlsx",
+        f"/home/thrymr/Desktop/New Folder/{file_name}_with_vendor_data.xlsx",
         index=False
     )
 

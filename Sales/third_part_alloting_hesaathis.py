@@ -163,14 +163,15 @@ def clean(text):
     return text
 
 print("🔄 Loading input files...")
-sales_df1 = pd.read_excel("/home/thrymr/Downloads/products_cons_dec_part_1.xlsx")
-sales_df2 = pd.read_excel("/home/thrymr/Downloads/products_cons_dec_part_2.xlsx")
-sales_df3 = pd.read_excel("/home/thrymr/Downloads/products_agri_dec_part_1.xlsx")
-# sales_df4 = pd.read_excel("/home/thrymr/Downloads/products_cons_jan_part_2.xlsx")
+sales_df1 = pd.read_excel("/home/thrymr/Downloads/products_agri_apr_part_1.xlsx")
+sales_df2 = pd.read_excel("/home/thrymr/Downloads/products_cons_apr_part_1.xlsx")
+# sales_df3 = pd.read_excel("/home/thrymr/Downloads/products_agri_dec_part_1.xlsx")
+# # sales_df4 = pd.read_excel("/home/thrymr/Downloads/products_cons_jan_part_2.xlsx")
 hesaathi_df = pd.read_excel("/home/thrymr/Important/new_hessathi_with_additional_people_details (copy).xlsx")
 
 print("🧩 Combining and shuffling sales data...")
-sales_df = pd.concat([sales_df1, sales_df2, sales_df3], ignore_index=True)
+# sales_df = pd.concat([sales_df1, sales_df2, sales_df3], ignore_index=True)
+sales_df = pd.concat([sales_df1, sales_df2], ignore_index=True)
 sales_df = sales_df.sample(frac=1, random_state=42).reset_index(drop=True)
 print(f"🧾 Total sales rows: {len(sales_df)}")
 
@@ -182,7 +183,7 @@ hesaathi_df['state_clean'] = hesaathi_df['State'].apply(clean)
 hesaathi_df['district_clean'] = hesaathi_df['District'].apply(clean)
 
 print("📅 Filtering Hesaathi data by onboarding month...")
-selected_month = "Dec'25"            ###################################################################----CHANGE-----#################################################################################
+selected_month = "April'26"            ###################################################################----CHANGE-----#################################################################################
 month_order = [
     "April'20", "May'20", "Jun'20", "Jul'20", "Aug'20", "Sep'20", "Oct'20", "Nov'20", "Dec'20",
     "Jan'21", "Feb'21", "Mar'21", "April'21", "May'21", "Jun'21", "Jul'21", "Aug'21", "Sep'21", "Dec'21",
@@ -190,7 +191,7 @@ month_order = [
     "Jan'23", "Feb'23", "Mar'23", "April'23", "May'23", "Jun'23", "Jul'23", "Aug'23", "Sep'23", "Oct'23", "Nov'23", "Dec'23",
     "Jan'24", "Feb'24", "Mar'24", "April'24", "May'24", "Jun'24", "Jul'24", "Aug'24", "Sep'24", "Oct'24", "Nov'24", "Dec'24",
     "Jan'25", "Feb'25", "Mar'25", "April'25", "May'25", "Jun'25", "Jul'25", "Aug'25", "Sep'25", "Oct'25", "Nov'25", "Dec'25",
-    "Jan'26", "Feb'26", "Mar'26"
+    "Jan'26", "Feb'26", "Mar'26", "April'26", "May'26"
 ]
 valid_months = month_order[:month_order.index(selected_month) + 1]
 filtered_hesaathi_all = hesaathi_df[hesaathi_df['Onboarding Month'].isin(valid_months)].copy()
@@ -359,7 +360,7 @@ for i in range(num_files):
     end = start + chunk_size
     chunk_df = sales_df.iloc[start:end]
 
-    file_path = f"/home/thrymr/Downloads/dec_sales_with_hesaathis_part{i+1}.xlsx"
+    file_path = f"/home/thrymr/Downloads/apr_sales_with_hesaathis_part{i+1}.xlsx"
     chunk_df.to_excel(file_path, index=False)
     print(f"📄 Saved: {file_path} ({len(chunk_df)} rows)")
 

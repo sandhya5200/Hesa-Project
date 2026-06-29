@@ -64,8 +64,8 @@ from datetime import datetime
 #  CONFIG — EDIT THESE
 # ════════════════════════════════════════════════════════════
 
-INPUT_EXCEL  = "/home/thrymr/Downloads/san/Feb_2026_Wallet_Statement.xlsx"
-OUTPUT_PDF   = "/home/thrymr/Downloads/san/Feb_2026_Wallet_Statement.pdf"
+INPUT_EXCEL  = "/home/thrymr/Downloads/july_wallet_file.xlsx"   #date should be manually added in the code 242 line
+OUTPUT_PDF   = "/home/thrymr/Downloads/july_2025_Wallet_Statement.pdf"
 LOGO_PATH    = "/home/thrymr/Pictures/Screenshots/Screenshot from 2026-04-21 15-32-55.png"
 
 ENTITY_NAME      = "Hesa Enterprises Private Limited"
@@ -239,11 +239,8 @@ def draw_header(cv):
     cv.drawString(rx, HDR_BOT + 32, ADDRESS_LINE2)
     cv.drawString(rx, HDR_BOT + 23, ADDRESS_LINE3)
     cv.drawString(rx, HDR_BOT + 13, "CIN : " + CIN)
-    cv.drawString(rx, HDR_BOT + 2, "Statement Period : 01-Feb-2026 TO 28-Feb-2026")
+    cv.drawString(rx, HDR_BOT + 2, "Statement Period : 01-Jul-2025 TO 31-Jul-2025")    ######################################################################
 
-# ════════════════════════════════════════════════════════════
-#  TABLE HEADER ROW
-# ════════════════════════════════════════════════════════════
 
 def draw_table_header_row(cv, top_y):
     cv.setFillColor(C_HDR_BG)

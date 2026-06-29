@@ -1,9 +1,9 @@
 import pandas as pd
 
-sample_df = pd.read_excel("/home/thrymr/Important/output_summary_may.xlsx")
-projections_df = pd.read_excel("/home/thrymr/Important/projections_for_sales_25-26.xlsx")
+sample_df = pd.read_excel("/home/thrymr/Important/output_summary_April.xlsx")
+projections_df = pd.read_excel("/home/thrymr/Important/projections_for_sales_26-27.xlsx")
 
-projections_df.rename(columns={"Dec'25": "projected_amount_cr"}, inplace=True) ####################---CHANGE---############################
+projections_df.rename(columns={"Apr'26": "projected_amount_cr"}, inplace=True) ####################---CHANGE---############################
 projections_df['projected_amount'] = projections_df['projected_amount_cr'] * 1_00_00_000
 
 merged_df = pd.merge(
@@ -22,7 +22,7 @@ merged_df['Taxable_Amount'] = (merged_df['normalized_percentage'] * merged_df['p
 merged_df.rename(columns={'GST Rate': 'gst_rate'}, inplace=True)
 
 merged_df['Date'] = pd.to_datetime(merged_df['Date'])
-merged_df['Date'] = merged_df['Date'].apply(lambda d: pd.Timestamp(year=2025, month=12, day=d.day))   #############---CHANGE---###############
+merged_df['Date'] = merged_df['Date'].apply(lambda d: pd.Timestamp(year=2026, month=4, day=d.day))   #############---CHANGE---###############
 
 # merged_df["Cohort"] = "May'25"  #######################---CHANGE---#####################
 
@@ -44,9 +44,9 @@ final_df = merged_df[[
 
 
 agri_df = final_df[final_df['Vertical'] == 'Agri Business']
-agri_df.to_excel("/home/thrymr/Downloads/output_agri_dec.xlsx", index=False)
+agri_df.to_excel("/home/thrymr/Downloads/output_agri_apr.xlsx", index=False)
 
 consumer_df = final_df[final_df['Vertical'] == 'Commerce Business']
-consumer_df.to_excel("/home/thrymr/Downloads/output_cons_dec.xlsx", index=False)
+consumer_df.to_excel("/home/thrymr/Downloads/output_cons_apr.xlsx", index=False)
 
 
